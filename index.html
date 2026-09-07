@@ -60,7 +60,7 @@ input[type=number]{-moz-appearance:textfield} input[type=number]::-webkit-inner-
 input[type=time],input[type=date]{min-width:0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px} .grid2 .field.span{grid-column:1/-1}
 @media(max-width:380px){.grid2{grid-template-columns:1fr}}
-@media(min-width:700px){.form .grid2{grid-template-columns:1fr 1fr 1fr}.hdr .grid2{grid-template-columns:1fr 1fr 1fr}}
+@media(min-width:700px){.form .grid2{grid-template-columns:1fr 1fr 1fr}.hdr .grid2{grid-template-columns:1fr 1fr 1fr}.form .grid2 .field.span{grid-column:auto}}
 .arrow{color:var(--muted);flex:0 0 auto}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{min-height:42px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:.95rem;text-align:left}
@@ -104,6 +104,10 @@ input[type=time],input[type=date]{min-width:0}
 
 .linkbtn{background:transparent;border:0;color:var(--green-d);font-weight:600;padding:8px 2px;cursor:pointer;font-size:.92rem}
 @media(max-width:560px){.grid2 .field:has(input[type=time]){grid-column:1/-1}}
+.strip{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.chip.sm{min-height:36px;min-width:36px;padding:4px 8px;font-size:.95rem;justify-content:center;border-radius:8px}
+.inp.sm{width:90px;min-height:36px;padding:4px 8px}
+.cnt-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap} .cnt-l{font-weight:600;min-width:64px;font-size:.92rem}
 </style>
 </head>
 <body>
@@ -116,7 +120,7 @@ const SPECIES_LIST=SPECIES_DATA.map(([g,L,M,E])=>({g,L,M,E}));
 <script>/* ===== BRCC Mongolia — core (i18n, constants, storage, export) ===== */
 const { html, render, useState, useEffect, useRef, useMemo, useCallback } = htmPreact;
 
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.0";
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const pad2 = n => String(n).padStart(2, "0");
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
@@ -163,7 +167,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Сесс", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", ageOther: "Бусад (гараар)",
   },
   en: {
     appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
@@ -202,7 +206,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", ageOther: "Other (free text)",
   }
 };
 let LANG = "mn";
@@ -213,10 +217,11 @@ const GROUPS = { B: { mn: "Шувуу", en: "Bird" }, M: { mn: "Хөхтөн", e
 const gLabel = g => (GROUPS[g] ? GROUPS[g][LANG] : g);
 
 const AGE = {
-  B: ["Adult (Бие гүйцсэн)", "Subadult (Залуу)", "Juvenile (Дөнгөж нисэж эхэлсэн залуу)", "Chick (Дэгдээхэй)", "Unknown (Тодорхойгүй)"],
-  M: ["Adult (Бие гүйцсэн)", "Subadult (Залуу)", "Young (Төл)", "Unknown (Тодорхойгүй)"],
+  B: [["AD", "Adult (Бие гүйцсэн)"], ["SA", "Subadult (Залуу)"], ["JU", "Juvenile (Дөнгөж нисэж эхэлсэн залуу)"], ["CH", "Chick (Дэгдээхэй)"], ["UN", "Unknown (Тодорхойгүй)"]],
+  M: [["AD", "Adult (Бие гүйцсэн)"], ["SA", "Subadult (Залуу)"], ["JU", "Young (Төл)"], ["UN", "Unknown (Тодорхойгүй)"]],
 };
-const SEX = ["Male (Эр)", "Female (Эм)", "Unknown (Тодорхойгүй)"];
+const AGE_COLS = [["AD", "Adult"], ["SA", "Subadult"], ["JU", "Juvenile / Young"], ["CH", "Chick"], ["UN", "Unknown"]];
+const SEX = [["M", "Male (Эр)"], ["F", "Female (Эм)"], ["U", "Unknown (Тодорхойгүй)"]];
 const ACT = {
   B: [["FL", "Flying (Нисэх)"], ["PE", "Perching (Суух)"], ["FE", "Feeding (Хооллох)"], ["CA", "Calling (Дуугарах)"], ["WA", "Walking (Алхах)"], ["SO", "Soaring (Халин нисэх)"],
     ["HU", "Hunting (Ан хийх)"], ["SI", "Singing (Жиргэх)"], ["MG", "Migrating (Нүүдэллэх)"], ["SW", "Swimming (Сэлэх)"], ["DI", "Diving (Шумбах)"], ["RU", "Running (Гүйх)"],
@@ -406,6 +411,13 @@ function useStore() {
   return Store.s;
 }
 
+function migrateSession(v) {
+  for (const r of v.records || []) {
+    if (typeof r.age === "string") { const a = r.age; r.ageC = {}; r.ageOther = ""; if (a) { const hit = [...AGE.B, ...AGE.M].find(([, l]) => l === a); if (hit) r.ageC[hit[0]] = ""; else r.ageOther = a; } delete r.age; }
+    if (typeof r.sex === "string") { const x = r.sex; r.sexC = {}; if (x) { const hit = SEX.find(([, l]) => l === x); if (hit) r.sexC[hit[0]] = ""; } delete r.sex; }
+    if (!r.ageC) r.ageC = {}; if (r.ageOther === undefined) r.ageOther = ""; if (!r.sexC) r.sexC = {};
+  }
+}
 const defaultMeta = () => ({ studies: [], visits: [], settings: { lang: "mn", night: false, sheetsUrl: "", observer: "" }, customSpecies: [], customActivities: { B: [], M: [] }, noteSeq: {} });
 
 async function loadAll() {
@@ -415,7 +427,7 @@ async function loadAll() {
   s.meta.customSpecies = s.meta.customSpecies || []; s.meta.customActivities = s.meta.customActivities || { B: [], M: [] }; s.meta.noteSeq = s.meta.noteSeq || {};
   for (const k of keys) {
     if (typeof k !== "string") continue;
-    if (k.startsWith("session:")) { const v = await DB.get(k); if (v) s.sessions[v.id] = v; }
+    if (k.startsWith("session:")) { const v = await DB.get(k); if (v) { migrateSession(v); s.sessions[v.id] = v; } }
     else if (k.startsWith("note:")) { const v = await DB.get(k); if (v) s.notes[v.id] = v; }
   }
   // purge trash > 30 days
@@ -445,10 +457,10 @@ function updRecord(sessionId, recId, fn) {
   return updSession(sessionId, s => { s.records = s.records.map(r => { if (r.id !== recId) return r; const n = { ...r }; fn(n); n.updatedAt = Date.now(); return n; }); });
 }
 function newRecord(sess, extra = {}) {
-  const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: nowHM(), count: "", age: "", sex: "", activities: [], habitat: "", notes: "",
+  const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: nowHM(), count: "", ageC: {}, ageOther: "", sexC: {}, activities: [], habitat: "", notes: "",
     weather: { cloud: "", precip: "", wind: "", note: "" } };
   if (sess.type === "VP") Object.assign(base, { duration: "", timerStart: null, dirFrom: "", dirTo: "", hMin: "", hMax: "", distFirst: "", distLast: "", turbine: "", turbineDist: "" });
-  else Object.assign(base, { dist: "", azimuth: "", lat: "", lng: "", acc: "", aLat: "", aLng: "" });
+  else Object.assign(base, { dist: "", azimuth: "", lat: "", lng: "", acc: "", aLat: "", aLng: "", dirFrom: "", dirTo: "" });
   // prefill from previous record
   const prev = [...sess.records].reverse().find(r => r.status === "saved");
   if (prev) { base.weather = { ...prev.weather }; base.habitat = prev.habitat || ""; }
@@ -546,7 +558,7 @@ const H = [ // key, header
   ["study", "Study"], ["windFarm", "Wind farm"], ["visitDate", "Visit date"], ["type", "Survey type"], ["number", "VP / Transect No."], ["observer", "Observer"],
   ["start", "Start time"], ["end", "Finished at"], ["plannedH", "Planned duration (h)"],
   ["aimag", "Aimag"], ["soum", "Soum"], ["place", "Place name"], ["tHabitat", "Transect habitat"], ["width", "Transect width (m)"], ["length", "Transect length (m)"], ["startLat", "Transect start N"], ["startLng", "Transect start E"], ["endLat", "Transect end N"], ["endLng", "Transect end E"],
-  ["recNo", "No."], ["group", "Group"], ["spM", "Species (MN)"], ["spE", "Species (EN)"], ["spL", "Species (Latin)"], ["time", "Time observed"], ["count", "No. of ind."], ["age", "Age"], ["sex", "Sex"],
+  ["recNo", "No."], ["group", "Group"], ["spM", "Species (MN)"], ["spE", "Species (EN)"], ["spL", "Species (Latin)"], ["time", "Time observed"], ["count", "No. of ind."], ["ageAD", "Age: Adult"], ["ageSA", "Age: Subadult"], ["ageJU", "Age: Juvenile / Young"], ["ageCH", "Age: Chick"], ["ageUN", "Age: Unknown"], ["ageOther", "Age: other"], ["sexM", "Sex: Male"], ["sexF", "Sex: Female"], ["sexU", "Sex: Unknown"],
   ["turbine", "Closest turbine"], ["turbineDist", "Distance from the closest turbine (m)"], ["duration", "Duration of over-fly (sec)"],
   ["dirFrom", "Flight direction from (°)"], ["dirTo", "Flight direction to (°)"], ["hMin", "Flight height min (m)"], ["hMax", "Flight height max (m)"], ["distFirst", "Distance from observer first time (m)"], ["distLast", "Distance from observer by the time disappeared (m)"],
   ["dist", "Distance to animal (m)"], ["azimuth", "Azimuth (°)"], ["lat", "Observer N"], ["lng", "Observer E"], ["acc", "GPS accuracy (m)"], ["aLat", "Animal N"], ["aLng", "Animal E"],
@@ -559,9 +571,12 @@ function sessionHeader(s) {
   return { study: st.name || "", windFarm: st.windFarm ? "yes" : "", visitDate: v.date || s.date || "", type: s.type, number: s.number || "", observer: s.observer || "", start: s.start || "", end: s.end || "", plannedH: s.type === "VP" ? num(s.plannedH) : "",
     aimag: s.aimag || "", soum: s.soum || "", place: s.place || "", tHabitat: s.habitat || "", width: num(s.width), length: num(s.length), startLat: num(s.startLat), startLng: num(s.startLng), endLat: num(s.endLat), endLng: num(s.endLng), sessionId: s.id };
 }
+const cnt = (obj, k) => obj && k in obj ? (obj[k] === "" ? "x" : num(obj[k])) : "";
+function ageSexCols(r) { return { ageAD: cnt(r.ageC, "AD"), ageSA: cnt(r.ageC, "SA"), ageJU: cnt(r.ageC, "JU"), ageCH: cnt(r.ageC, "CH"), ageUN: cnt(r.ageC, "UN"), ageOther: r.ageOther || "", sexM: cnt(r.sexC, "M"), sexF: cnt(r.sexC, "F"), sexU: cnt(r.sexC, "U") }; }
+const ageSexText = r => { const parts = []; for (const [k, l] of AGE_COLS) if (r.ageC && k in r.ageC) parts.push(l + (r.ageC[k] !== "" ? " " + r.ageC[k] : "")); if (r.ageOther) parts.push(r.ageOther); for (const [k, l] of SEX) if (r.sexC && k in r.sexC) parts.push(l.split(" (")[0] + (r.sexC[k] !== "" ? " " + r.sexC[k] : "")); return parts.join(", "); };
 function recordRow(s, r, idx) {
   const sp = r.species || {};
-  return { ...sessionHeader(s), recNo: idx + 1, group: sp.g ? GROUPS[sp.g].en : "", spM: sp.M || "", spE: sp.E || "", spL: sp.L || "", time: r.time || "", count: num(r.count), age: r.age || "", sex: r.sex || "",
+  return { ...sessionHeader(s), recNo: idx + 1, group: sp.g ? GROUPS[sp.g].en : "", spM: sp.M || "", spE: sp.E || "", spL: sp.L || "", time: r.time || "", count: num(r.count), ...ageSexCols(r),
     turbine: r.turbine || "", turbineDist: num(r.turbineDist), duration: num(r.duration), dirFrom: num(r.dirFrom), dirTo: num(r.dirTo), hMin: num(r.hMin), hMax: num(r.hMax), distFirst: num(r.distFirst), distLast: num(r.distLast),
     dist: num(r.dist), azimuth: num(r.azimuth), lat: num(r.lat), lng: num(r.lng), acc: num(r.acc), aLat: num(r.aLat), aLng: num(r.aLng),
     activity: (r.activities || []).join("; "), cloud: r.weather?.cloud || "", precip: r.weather?.precip || "", wind: num(r.weather?.wind), wNote: r.weather?.note || "", habitat: r.habitat || "", notes: r.notes || "",
@@ -585,7 +600,7 @@ function kmzForSession(s) {
   const pms = [], lines = [];
   s.records.forEach((r, i) => {
     const sp = r.species || {}; const nm = `${i + 1}. ${sp.E || sp.M || sp.L || "?"}${r.count ? " ×" + r.count : ""}`;
-    const data = { Time: r.time || "", "Species (MN)": sp.M || "", "Species (EN)": sp.E || "", "Species (Latin)": sp.L || "", Count: r.count || "", Age: r.age || "", Sex: r.sex || "", "Distance (m)": r.dist || "", "Azimuth": r.azimuth || "", Behaviour: (r.activities || []).join("; "), Habitat: r.habitat || "", Notes: r.notes || "" };
+    const data = { Time: r.time || "", "Species (MN)": sp.M || "", "Species (EN)": sp.E || "", "Species (Latin)": sp.L || "", Count: r.count || "", "Age / Sex": ageSexText(r), "Distance (m)": r.dist || "", "Azimuth": r.azimuth || "", Behaviour: (r.activities || []).join("; "), Habitat: r.habitat || "", Notes: r.notes || "" };
     if (r.lat && r.lng) pms.push({ name: nm + " (observer)", lat: r.lat, lng: r.lng, style: "obs", data });
     if (r.aLat && r.aLng) { pms.push({ name: nm, lat: r.aLat, lng: r.aLng, style: "animal", data }); if (r.lat && r.lng) lines.push({ name: nm, pts: [{ lat: r.lat, lng: r.lng }, { lat: r.aLat, lng: r.aLng }] }); }
   });
@@ -748,16 +763,32 @@ function WeatherFields({ value, onChange, disabled }) {
   </div>`;
 }
 
-/* ---------- Age picker ---------- */
-function AgePicker({ group, value, onChange, disabled }) {
-  const opts = AGE[group];
-  const [custom, setCustom] = useState(false);
-  if (!opts) return html`<${Input} value=${value} onChange=${onChange} placeholder=${t("freeText")} disabled=${disabled}/>`;
-  const isStd = !value || opts.includes(value);
+/* ---------- Count strip (1–9, 9+) ---------- */
+function CountStrip({ value, onChange, disabled }) {
+  const [manual, setManual] = useState(value !== "" && (+value > 9 || isNaN(+value)));
+  return html`<div class="strip">
+    ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => html`<button type="button" key=${n} class=${`chip sm ${String(value) === String(n) && !manual ? "on" : ""}`} disabled=${disabled} onClick=${() => { setManual(false); onChange(String(value) === String(n) ? "" : String(n)); }}>${n}</button>`)}
+    <button type="button" class=${`chip sm ${manual ? "on" : ""}`} disabled=${disabled} onClick=${() => { setManual(true); if (+value <= 9) onChange(""); }}>9+</button>
+    ${manual ? html`<input type="number" inputmode="numeric" min="1" class="inp sm" value=${value} onInput=${e => onChange(e.target.value)} disabled=${disabled}/>` : null}
+  </div>`;
+}
+/* ---------- Category + count picker (age, sex) ---------- */
+function CountedChips({ options, value, onChange, disabled }) {
+  const v = value || {};
+  const toggle = k => { if (disabled) return; const n = { ...v }; if (k in n) delete n[k]; else n[k] = ""; onChange(n); };
   return html`<div>
-    <${Chips} options=${opts} value=${isStd && !custom ? value : ""} onChange=${v => { setCustom(false); onChange(v); }} disabled=${disabled}/>
-    ${!disabled ? html`<button type="button" class=${`chip mt ${(!isStd || custom) ? "on" : ""}`} onClick=${() => { setCustom(true); if (isStd) onChange(""); }}>${t("add")}</button>` : null}
-    ${(custom || !isStd) ? html`<${Input} value=${!isStd ? value : ""} onChange=${onChange} placeholder=${t("freeText")} disabled=${disabled} class="mt"/>` : null}
+    <${Chips} options=${options.map(o => o[1])} value=${options.filter(o => o[0] in v).map(o => o[1])} multi onChange=${labels => { const n = {}; for (const [k, l] of options) if (labels.includes(l)) n[k] = k in v ? v[k] : ""; onChange(n); }} disabled=${disabled}/>
+    ${options.filter(o => o[0] in v).map(([k, l]) => html`<div class="cnt-row" key=${k}><span class="cnt-l">${l.split(" (")[0]}</span><${CountStrip} value=${v[k]} onChange=${x => onChange({ ...v, [k]: x })} disabled=${disabled}/></div>`)}
+  </div>`;
+}
+function AgePicker({ group, value, other, onChange, onOther, disabled }) {
+  const opts = AGE[group];
+  const [custom, setCustom] = useState(!!other);
+  if (!opts) return html`<${Input} value=${other} onChange=${onOther} placeholder=${t("freeText")} disabled=${disabled}/>`;
+  return html`<div>
+    <${CountedChips} options=${opts} value=${value} onChange=${onChange} disabled=${disabled}/>
+    ${!disabled ? html`<button type="button" class=${`chip mt ${(custom || other) ? "on" : ""}`} onClick=${() => { if (custom || other) { setCustom(false); onOther(""); } else setCustom(true); }}>${t("add")}</button>` : null}
+    ${(custom || other) ? html`<${Input} value=${other} onChange=${onOther} placeholder=${t("ageOther")} disabled=${disabled} class="mt"/>` : null}
   </div>`;
 }
 </script>
@@ -909,7 +940,7 @@ function SessionView({ id, recId }) {
 
     <section class="section card hdr">
       <div class="grid2">
-        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} inputmode="numeric"/><//>
+        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} placeholder="U1"/><//>
         <${Field} label=${t("observer")}><${Input} value=${sess.observer} onChange=${v => { set("observer")(v); Store.s.meta.settings.observer = v; saveMeta(); }} disabled=${locked}/><//>
         <${Field} label=${t("date")}><input type="date" class="inp" value=${sess.date} onInput=${e => set("date")(e.target.value)} disabled=${locked}/><//>
         ${isVP ? html`<${Field} label=${t("plannedDur")}><${NumInput} decimal value=${sess.plannedH} onChange=${set("plannedH")} min="0" disabled=${locked}/><//>` : null}
@@ -970,7 +1001,7 @@ function RecordCard({ r, idx, lang, isVP, onOpen, onStop }) {
       <div class="rec-n">${idx}</div>
       <div class="rec-b">
         <div class="card-t">${r.species ? speciesName(r.species, lang) : html`<span class="warn">${t("species")}?</span>`}${r.count ? html` <span class="muted">× ${r.count}</span>` : null}</div>
-        <div class="card-s">${r.time}${isVP ? html`${r.duration ? ` · ${r.duration} s` : ""}${r.dirFrom || r.dirTo ? ` · ${r.dirFrom || "?"}°→${r.dirTo || "?"}°` : ""}${r.hMin || r.hMax ? ` · ${r.hMin || "?"}–${r.hMax || "?"} m` : ""}` : html`${r.dist ? ` · ${r.dist} m` : ""}${r.azimuth ? ` · ${r.azimuth}°` : ""}${r.lat ? ` · ${r.lat}, ${r.lng}` : ""}`}${r.age ? ` · ${r.age.split(" (")[0]}` : ""}</div>
+        <div class="card-s">${r.time}${isVP ? html`${r.duration ? ` · ${r.duration} s` : ""}${r.dirFrom || r.dirTo ? ` · ${r.dirFrom || "?"}°→${r.dirTo || "?"}°` : ""}${r.hMin || r.hMax ? ` · ${r.hMin || "?"}–${r.hMax || "?"} m` : ""}` : html`${r.dist ? ` · ${r.dist} m` : ""}${r.azimuth ? ` · ${r.azimuth}°` : ""}${r.lat ? ` · ${r.lat}, ${r.lng}` : ""}`}${ageSexText(r) ? ` · ${ageSexText(r)}` : ""}</div>
         ${r.activities && r.activities.length ? html`<div class="card-s">${r.activities.map(a => a.split(" (")[0]).join(", ")}</div>` : null}
         ${r.status === "draft" ? html`<div class="card-s warn">${t("drafts")}</div>` : null}
       </div>
@@ -984,7 +1015,7 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   useTick(1000);
   const isVP = sess.type === "VP"; const r = rec; const dis = locked;
   const upd = fn => updRecord(sess.id, r.id, fn); const set = k => v => upd(x => { x[k] = v; });
-  const g = r.species ? r.species.g : null; const showFlight = isVP && (!g || g === "B");
+  const g = r.species ? r.species.g : null; const showHeight = isVP && (!g || g === "B");
   const running = r.timerStart && !r.duration;
   const [gpsMsg, setGpsMsg] = useState("");
   const getGps = async () => { setGpsMsg(t("gpsSearching")); try { const p = await getPosition(); upd(x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); setGpsMsg(`±${p.acc} m`); } catch (e) { setGpsMsg(t("gpsFail")); } };
@@ -992,8 +1023,12 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   // computed animal position
   useEffect(() => { if (!isVP && r.lat && r.lng && r.dist !== "" && r.azimuth !== "" && !isNaN(+r.dist) && !isNaN(+r.azimuth)) { const p = destPoint(+r.lat, +r.lng, +r.azimuth, +r.dist); if (p.lat !== r.aLat || p.lng !== r.aLng) upd(x => { x.aLat = p.lat; x.aLng = p.lng; }); } }, [r.lat, r.lng, r.dist, r.azimuth]);
   const valid = !!r.species;
+  const sexVals = Object.values(r.sexC || {}).filter(x => x !== "" && !isNaN(+x)).map(Number); const sexSum = sexVals.reduce((a, b) => a + b, 0);
+  const sexWarn = sexVals.length > 0 && r.count !== "" && !isNaN(+r.count) && sexSum !== +r.count;
   const save = (next) => {
     if (!valid) { showToast(t("species") + "?"); return; }
+    if (sexVals.length && r.count === "") upd(x => { x.count = String(sexSum); });
+    else if (sexWarn) { showToast(t("sexMismatch")); return; }
     upd(x => { x.status = "saved"; if (x.timerStart && !x.duration) { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); } x.timerStart = null; });
     const s2 = Store.s.sessions[sess.id]; const r2 = s2.records.find(x => x.id === r.id); enqueueRow("record", recordRow(s2, r2, s2.records.indexOf(r2)));
     showToast(t("saved"));
@@ -1005,23 +1040,23 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   return html`<div class="page">
     <${TopBar} title=${`${t("records")} № ${idx}`} sub=${`${sess.type} ${sess.number ? "№ " + sess.number : ""} · ${sess.date}`} right=${r.status === "draft" ? html`<span class="tag warn">${t("drafts")}</span>` : null}/>
     <form class="form" onSubmit=${e => e.preventDefault()}>
-      <${Field} label=${t("species")}><${SpeciesPicker} value=${r.species} onChange=${v => upd(x => { x.species = v; if (v && x.age && AGE[x.species?.g] && !AGE[x.species.g].includes(x.age)) x.age = ""; })} lang=${lang} disabled=${dis} autoFocus=${!r.species}/><//>
+      <${Field} label=${t("species")}><${SpeciesPicker} value=${r.species} onChange=${v => upd(x => { x.species = v; if (v && AGE[v.g]) { const ok = AGE[v.g].map(o => o[0]); for (const k of Object.keys(x.ageC || {})) if (!ok.includes(k)) delete x.ageC[k]; } })} lang=${lang} disabled=${dis} autoFocus=${!r.species}/><//>
       <div class="grid2">
         <${Field} label=${t("timeObserved")}><${TimeInput} value=${r.time} onChange=${set("time")} disabled=${dis}/><//>
-        ${isVP ? html`<${Field} label=${t("duration")}>
+        ${isVP ? html`<${Field} label=${t("duration")} span>
           <div class="row"><${NumInput} value=${r.duration} onChange=${set("duration")} min="0" disabled=${dis || running}/>
           ${!dis ? (running ? html`<${Btn} kind="danger" small onClick=${() => upd(x => { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); x.timerStart = null; })}>■ ${Math.round((Date.now() - r.timerStart) / 1000)}s<//>` : html`<${Btn} kind="ghost" small onClick=${() => upd(x => { x.timerStart = Date.now(); x.duration = ""; })}>▶ ${t("timerStart")}<//>`) : null}</div>
         <//>` : null}
       </div>
       <${Field} label=${t("count")}><${CountPicker} value=${r.count} onChange=${set("count")} disabled=${dis}/><//>
-      <${Field} label=${t("age")}><${AgePicker} group=${g} value=${r.age} onChange=${set("age")} disabled=${dis}/><//>
-      <${Field} label=${t("sex")}><${Chips} options=${SEX} value=${r.sex} onChange=${set("sex")} disabled=${dis}/><//>
+      <${Field} label=${t("age")}><${AgePicker} group=${g} value=${r.ageC} other=${r.ageOther} onChange=${set("ageC")} onOther=${set("ageOther")} disabled=${dis}/><//>
+      <${Field} label=${t("sex")} hint=${sexWarn ? html`<span class="warn">${t("sexMismatch")}</span>` : null}><${CountedChips} options=${SEX} value=${r.sexC} onChange=${set("sexC")} disabled=${dis}/><//>
       ${isVP && windFarm ? html`<div class="grid2">
         <${Field} label=${t("turbine")}><${Input} value=${r.turbine} onChange=${set("turbine")} disabled=${dis}/><//>
         <${Field} label=${t("turbineDist")}><${NumInput} value=${r.turbineDist} onChange=${set("turbineDist")} min="0" disabled=${dis}/><//>
       </div>` : null}
-      ${showFlight ? html`
-        <${Field} label=${t("direction")}><div class="row"><${NumInput} value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/></div><//>
+      <${Field} label=${t("direction")}><div class="row"><${NumInput} value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/></div><//>
+      ${showHeight ? html`
         <${Field} label=${t("height")}><div class="row"><${NumInput} value=${r.hMin} onChange=${set("hMin")} min="0" placeholder=${t("min")} disabled=${dis}/><span class="arrow">–</span><${NumInput} value=${r.hMax} onChange=${set("hMax")} min="0" placeholder=${t("max")} disabled=${dis}/></div><//>` : null}
       ${isVP ? html`<${Field} label=${t("distance")}><div class="row"><${NumInput} value=${r.distFirst} onChange=${set("distFirst")} min="0" placeholder=${t("distFirst")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.distLast} onChange=${set("distLast")} min="0" placeholder=${t("distLast")} disabled=${dis}/></div><//>` : html`
         <div class="grid2">
