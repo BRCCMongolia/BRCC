@@ -110,6 +110,14 @@ input[type=time],input[type=date]{min-width:0}
 .cnt-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap} .cnt-l{font-weight:600;min-width:64px;font-size:.92rem}
 .cbadge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;margin-left:8px;border-radius:999px;background:#fff;color:var(--green-d);font-weight:700;font-size:.9rem}
 .chip.editing{box-shadow:0 0 0 3px var(--focus)} .chip.sm.del{color:var(--red);border-color:#E4B9B9;font-size:1.1rem}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--green-l);color:var(--green-d);border:2px solid transparent}
+.pill.LT{background:#E3ECF5;color:var(--blue)} body.night .pill.LT{background:#1F2C3A;color:#9CC3E8}
+.pill.open{border-color:var(--amber)}
+.tag.big.LT{background:#E3ECF5;color:var(--blue)} body.night .tag.big.LT{background:#1F2C3A;color:#9CC3E8}
+.card.sess{border-left-color:var(--green)} .card.sess.open{border-left-color:var(--amber)}
+.sess-row{display:flex;align-items:baseline;gap:10px} .sess-no{font-size:1.25rem;font-weight:700;flex:1;letter-spacing:.02em} .sess-date{color:var(--muted);font-size:.95rem}
+.sess-sub{margin-top:4px;padding-left:2px}
 </style>
 </head>
 <body>
@@ -122,7 +130,8 @@ const SPECIES_LIST=SPECIES_DATA.map(([g,L,M,E])=>({g,L,M,E}));
 <script>/* ===== BRCC Mongolia — core (i18n, constants, storage, export) ===== */
 const { html, render, useState, useEffect, useRef, useMemo, useCallback } = htmPreact;
 
-const APP_VERSION = "1.1.1";
+const APP_VERSION = "1.1.2";
+const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxjIWgF4zwSSjlpZbZ_tlRvMdn-2s3KbxGyKThTfTyBQ2xO3txEjuOqvXTPgAQ1kI-d/exec";
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const pad2 = n => String(n).padStart(2, "0");
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
@@ -157,7 +166,7 @@ const I18N = {
     aimag: "Аймаг", soum: "Сум", place: "Газрын нэр", width: "Замналын өргөн (м)", length: "Замналын урт (м)", startPt: "Эхэлсэн цэг", endPt: "Дууссан цэг", lat: "N", lng: "E",
     startTrack: "Замнал эхлэх", tracking: "Замнал бичиж байна", stopTrack: "Замнал дуусгах", trackPts: "цэг", distWalked: "Явсан зай", gpsAcc: "Нарийвчлал", resumeTrack: "Бичилтийг үргэлжлүүлэх", trackPaused: "Бичилт зогссон",
     exportXlsx: "Excel татах", exportKmz: "KMZ татах", share: "Хуваалцах", exportAll: "Бүх өгөгдөл (Excel)", exportVisit: "Энэ явалт (Excel)", exportStudy: "Энэ судалгаа (Excel)",
-    settings: "Тохиргоо", language: "Интерфейсийн хэл", night: "Шөнийн горим", sheetsUrl: "Google Sheets холбоос (Apps Script)", sheetsHint: "Заавар: README файлд. Хоосон бол илгээхгүй.",
+    settings: "Тохиргоо", language: "Интерфейсийн хэл", night: "Шөнийн горим", sheetsUrl: "Google Sheets холбоос (Apps Script)", sheetsHint: "БНХТ-ийн хүснэгтийн холбоос урьдчилан орсон. Өөрчлөх шаардлагагүй.",
     syncNow: "Одоо илгээх", pending: "Илгээгээгүй", synced: "Илгээсэн", backup: "Нөөцлөх (файл татах)", restore: "Нөөцөөс сэргээх", trash: "Хогийн сав", about: "Тухай",
     restoreConfirm: "Нөөц файлын өгөгдлийг одоогийнхтой нэгтгэх үү?", restored: "Сэргээлээ",
     trashEmpty: "Хогийн сав хоосон", restoreItem: "Сэргээх", deleteForever: "Бүрмөсөн устгах", trashHint: "Устгасан зүйл 30 хоног хадгалагдаж, дараа нь автоматаар арилна.",
@@ -169,7 +178,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Сесс", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", ageOther: "Бусад (гараар)",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", ageOther: "Бусад (гараар)",
   },
   en: {
     appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
@@ -196,7 +205,7 @@ const I18N = {
     aimag: "Aimag", soum: "Soum", place: "Place name", width: "Transect width (m)", length: "Transect length (m)", startPt: "Start point", endPt: "End point", lat: "N", lng: "E",
     startTrack: "Start transect", tracking: "Recording track", stopTrack: "Finish transect", trackPts: "pts", distWalked: "Distance walked", gpsAcc: "Accuracy", resumeTrack: "Resume recording", trackPaused: "Recording paused",
     exportXlsx: "Download Excel", exportKmz: "Download KMZ", share: "Share", exportAll: "All data (Excel)", exportVisit: "This visit (Excel)", exportStudy: "This study (Excel)",
-    settings: "Settings", language: "Interface language", night: "Night mode", sheetsUrl: "Google Sheets link (Apps Script)", sheetsHint: "See README for setup. Leave empty to disable.",
+    settings: "Settings", language: "Interface language", night: "Night mode", sheetsUrl: "Google Sheets link (Apps Script)", sheetsHint: "BRCC sheet link is preset. No change needed.",
     syncNow: "Send now", pending: "Pending", synced: "Sent", backup: "Backup (download file)", restore: "Restore from backup", trash: "Trash", about: "About",
     restoreConfirm: "Merge the backup file into current data?", restored: "Restored",
     trashEmpty: "Trash is empty", restoreItem: "Restore", deleteForever: "Delete forever", trashHint: "Deleted items are kept for 30 days, then removed automatically.",
@@ -208,7 +217,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", ageOther: "Other (free text)",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", ageOther: "Other (free text)",
   }
 };
 let LANG = "mn";
@@ -420,12 +429,14 @@ function migrateSession(v) {
     if (!r.ageC) r.ageC = {}; if (r.ageOther === undefined) r.ageOther = ""; if (!r.sexC) r.sexC = {};
   }
 }
-const defaultMeta = () => ({ studies: [], visits: [], settings: { lang: "mn", night: false, sheetsUrl: "", observer: "" }, customSpecies: [], customActivities: { B: [], M: [] }, noteSeq: {} });
+const defaultMeta = () => ({ studies: [], visits: [], settings: { lang: "mn", night: false, sheetsUrl: DEFAULT_SHEETS_URL, observer: "" }, customSpecies: [], customActivities: { B: [], M: [] }, noteSeq: {} });
 
 async function loadAll() {
   const keys = await DB.keys();
   const s = { meta: (await DB.get("meta")) || defaultMeta(), sessions: {}, notes: {}, trash: (await DB.get("trash")) || [], queue: (await DB.get("queue")) || [] };
   s.meta.settings = { ...defaultMeta().settings, ...(s.meta.settings || {}) };
+  if (!(s.meta.settings.sheetsUrl || "").trim()) s.meta.settings.sheetsUrl = DEFAULT_SHEETS_URL;
+  if (!s.meta.settings.sheetsUrl) s.meta.settings.sheetsUrl = DEFAULT_SHEETS_URL;
   s.meta.customSpecies = s.meta.customSpecies || []; s.meta.customActivities = s.meta.customActivities || { B: [], M: [] }; s.meta.noteSeq = s.meta.noteSeq || {};
   for (const k of keys) {
     if (typeof k !== "string") continue;
@@ -502,7 +513,9 @@ const sessionLabel = s => `${s.type} ${s.number || ""} · ${s.date}`;
 const recordLabel = (r, s) => `${r.species ? speciesName(r.species, "en") : "?"} ${r.time || ""}`;
 
 /* ----- Google Sheets sync ----- */
-function enqueueRow(kind, row) {
+let _LABEL = null;
+function labelRow(row, kind) { if (!_LABEL) { _LABEL = Object.fromEntries(H); _LABEL.observations = "Observations"; _LABEL.status = kind === "session" ? "Status" : "Record status"; } const out = {}; for (const [k, v] of Object.entries(row)) { if (k === "id") continue; if (k === "sessionId" && kind === "session") continue; out[k === "status" ? (kind === "session" ? "Status" : "Record status") : (_LABEL[k] || k)] = v; } out.id = row.id; return out; }
+function enqueueRow(kind, row) { row = labelRow(row, kind);
   Store.s.queue = Store.s.queue.filter(q => q.row.id !== row.id).concat([{ kind, row, at: Date.now() }]); saveQueue();
   setTimeout(flushQueue, 500);
 }
@@ -854,8 +867,9 @@ function StudyView({ id }) {
     <${TopBar} title=${st.name} sub=${`${t("speciesLang")}: ${{ mn: "Монгол", en: "English", la: "Latin" }[st.speciesLang]}${st.windFarm ? " · Wind farm" : ""}`} right=${html`<button class="iconbtn" onClick=${() => setEdit(true)}>✎</button>`}/>
     <section class="section">
       <div class="sec-h"><h2>${t("visits")}</h2><${Btn} onClick=${newVisit}>+ ${t("newVisit")}<//></div>
-      ${visits.length ? visits.map(v => { const ss = sessionsOf(v.id); const open = ss.filter(x => x.status === "open").length;
-        return html`<button key=${v.id} class="card link" onClick=${() => nav("#/visit/" + v.id)}><div class="card-t">${v.date}</div><div class="card-s">${t("sessions")}: ${ss.length}${open ? html` · <span class="warn">${t("open")}: ${open}</span>` : null} · ${t("records")}: ${ss.reduce((a, x) => a + x.records.length, 0)}</div></button>`; })
+      ${visits.length ? visits.map(v => { const ss = [...sessionsOf(v.id)].reverse();
+        return html`<button key=${v.id} class="card link" onClick=${() => nav("#/visit/" + v.id)}><div class="card-t">${v.date}</div>
+          <div class="pills">${ss.length ? ss.map(x => html`<span key=${x.id} class=${`pill ${x.type} ${x.status === "open" ? "open" : ""}`}>${x.type} ${x.number || ""}</span>`) : html`<span class="muted">${t("emptySessions")}</span>`}</div></button>`; })
         : html`<${Empty}>${t("emptyVisits")}<//>`}
     </section>
     <section class="section">
@@ -892,9 +906,9 @@ function VisitView({ id }) {
         <button class="pickbtn" onClick=${() => create("VP")}><div class="pk">VP</div><div>${t("vpTitle")}</div></button>
         <button class="pickbtn" onClick=${() => create("LT")}><div class="pk">LT</div><div>${t("ltTitle")}</div></button>
       </div>` : null}
-      ${sess.length ? sess.map(x => html`<button key=${x.id} class=${`card link ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
-        <div class="card-t"><span class="tag big">${x.type}</span> ${x.number ? `№ ${x.number}` : ""} <span class="muted">${x.observer}</span></div>
-        <div class="card-s">${x.start || "—"} – ${x.end || "…"} · ${t("records")}: ${x.records.length}${x.records.some(r => r.status === "draft") ? html` · <span class="warn">${t("drafts")}: ${x.records.filter(r => r.status === "draft").length}</span>` : null} · ${x.status === "open" ? html`<span class="warn">${t("open")}</span>` : t("closed")}</div>
+      ${sess.length ? sess.map(x => html`<button key=${x.id} class=${`card link sess ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
+        <div class="sess-row"><span class=${`tag big ${x.type}`}>${x.type}</span><span class="sess-no">${x.number || ""}</span><span class="sess-date">${x.date}</span></div>
+        <div class="card-s sess-sub">${x.start || "—"} – ${x.end || "…"} · ${x.records.length} ${t("recordsLow")}${x.records.some(r => r.status === "draft") ? html` · <span class="warn">${t("drafts")}: ${x.records.filter(r => r.status === "draft").length}</span>` : null}${x.status === "open" ? html` <span class="tag warn">${t("open")}</span>` : null}</div>
       </button>`) : (!pick ? html`<${Empty}>${t("emptySessions")}<//>` : null)}
     </section>
     <section class="section"><div class="row wrap"><${Btn} kind="secondary" onClick=${exportVisit} disabled=${busy}>${t("exportVisit")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div></section>
@@ -944,7 +958,7 @@ function SessionView({ id, recId }) {
   const trackOn = Tracker.sessionId === id && Tracker.status === "tracking";
 
   return html`<div class="page">
-    <${TopBar} title=${`${sess.type} ${sess.number ? "№ " + sess.number : ""}`} sub=${`${st.name} · ${sess.date}`} right=${locked ? html`<span class="lock">🔒</span>` : null}/>
+    <${TopBar} title=${`${sess.type} ${sess.number || ""} · ${sess.date}`} sub=${st.name} right=${locked ? html`<span class="lock">🔒</span>` : null}/>
     ${locked ? html`<div class="banner lock"><span>${t("locked")}</span><${Btn} small kind="ghost" onClick=${reopen}>${t("reopen")}<//></div>` : null}
 
     <section class="section card hdr">
@@ -1047,7 +1061,7 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteRecord(sess.id, r.id); showToast(t("deleted")); goBack(); } };
   const idx = sess.records.indexOf(r) + 1;
   return html`<div class="page">
-    <${TopBar} title=${`${t("records")} № ${idx}`} sub=${`${sess.type} ${sess.number ? "№ " + sess.number : ""} · ${sess.date}`} right=${r.status === "draft" ? html`<span class="tag warn">${t("drafts")}</span>` : null}/>
+    <${TopBar} title=${`${t("records")} № ${idx}`} sub=${`${sess.type} ${sess.number || ""} · ${sess.date}`} right=${r.status === "draft" ? html`<span class="tag warn">${t("drafts")}</span>` : null}/>
     <form class="form" onSubmit=${e => e.preventDefault()}>
       <${Field} label=${t("species")}><${SpeciesPicker} value=${r.species} onChange=${v => upd(x => { x.species = v; if (v && AGE[v.g]) { const ok = AGE[v.g].map(o => o[0]); for (const k of Object.keys(x.ageC || {})) if (!ok.includes(k)) delete x.ageC[k]; } })} lang=${lang} disabled=${dis} autoFocus=${!r.species}/><//>
       <div class="grid2">
