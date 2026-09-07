@@ -108,6 +108,8 @@ input[type=time],input[type=date]{min-width:0}
 .chip.sm{min-height:36px;min-width:36px;padding:4px 8px;font-size:.95rem;justify-content:center;border-radius:8px}
 .inp.sm{width:90px;min-height:36px;padding:4px 8px}
 .cnt-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap} .cnt-l{font-weight:600;min-width:64px;font-size:.92rem}
+.cbadge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;margin-left:8px;border-radius:999px;background:#fff;color:var(--green-d);font-weight:700;font-size:.9rem}
+.chip.editing{box-shadow:0 0 0 3px var(--focus)} .chip.sm.del{color:var(--red);border-color:#E4B9B9;font-size:1.1rem}
 </style>
 </head>
 <body>
@@ -120,7 +122,7 @@ const SPECIES_LIST=SPECIES_DATA.map(([g,L,M,E])=>({g,L,M,E}));
 <script>/* ===== BRCC Mongolia — core (i18n, constants, storage, export) ===== */
 const { html, render, useState, useEffect, useRef, useMemo, useCallback } = htmPreact;
 
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.1.1";
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const pad2 = n => String(n).padStart(2, "0");
 const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
@@ -774,11 +776,18 @@ function CountStrip({ value, onChange, disabled }) {
 }
 /* ---------- Category + count picker (age, sex) ---------- */
 function CountedChips({ options, value, onChange, disabled }) {
-  const v = value || {};
-  const toggle = k => { if (disabled) return; const n = { ...v }; if (k in n) delete n[k]; else n[k] = ""; onChange(n); };
+  const v = value || {}; const [openKey, setOpenKey] = useState(null);
+  const tap = k => { if (disabled) return; if (!(k in v)) { onChange({ ...v, [k]: "" }); setOpenKey(k); } else setOpenKey(openKey === k ? null : k); };
+  const setCount = (k, n) => { onChange({ ...v, [k]: n }); if (n !== "" && +n <= 9) setOpenKey(null); };
+  const remove = k => { const n = { ...v }; delete n[k]; onChange(n); setOpenKey(null); };
+  const open = openKey && openKey in v ? openKey : null;
   return html`<div>
-    <${Chips} options=${options.map(o => o[1])} value=${options.filter(o => o[0] in v).map(o => o[1])} multi onChange=${labels => { const n = {}; for (const [k, l] of options) if (labels.includes(l)) n[k] = k in v ? v[k] : ""; onChange(n); }} disabled=${disabled}/>
-    ${options.filter(o => o[0] in v).map(([k, l]) => html`<div class="cnt-row" key=${k}><span class="cnt-l">${l.split(" (")[0]}</span><${CountStrip} value=${v[k]} onChange=${x => onChange({ ...v, [k]: x })} disabled=${disabled}/></div>`)}
+    <div class="chips">${options.map(([k, l]) => html`<button type="button" key=${k} class=${`chip ${k in v ? "on" : ""} ${open === k ? "editing" : ""}`} disabled=${disabled} onClick=${() => tap(k)}>${l}${k in v && v[k] !== "" ? html`<span class="cbadge">${v[k]}</span>` : null}</button>`)}</div>
+    ${open ? html`<div class="strip mt">
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => html`<button type="button" key=${n} class=${`chip sm ${String(v[open]) === String(n) ? "on" : ""}`} onClick=${() => setCount(open, String(v[open]) === String(n) ? "" : String(n))}>${n}</button>`)}
+      <input type="number" inputmode="numeric" min="1" placeholder="9+" class="inp sm" value=${+v[open] > 9 ? v[open] : ""} onInput=${e => setCount(open, e.target.value)}/>
+      <button type="button" class="chip sm del" onClick=${() => remove(open)}>×</button>
+    </div>` : null}
   </div>`;
 }
 function AgePicker({ group, value, other, onChange, onOther, disabled }) {
