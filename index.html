@@ -525,9 +525,14 @@ const recordLabel = (r, s) => `${r.species ? speciesName(r.species, "en") : "?"}
 /* ----- Google Sheets sync ----- */
 let _LABEL = null;
 function labelRow(row, kind) { if (!_LABEL) { _LABEL = Object.fromEntries(H); _LABEL.observations = "Observations"; _LABEL.status = kind === "session" ? "Status" : "Record status"; } const out = {}; for (const [k, v] of Object.entries(row)) { if (k === "id") continue; if (k === "sessionId" && kind === "session") continue; out[k === "status" ? (kind === "session" ? "Status" : "Record status") : (_LABEL[k] || k)] = v; } out.id = row.id; return out; }
-function enqueueRow(kind, row) { row = labelRow(row, kind);
-  Store.s.queue = Store.s.queue.filter(q => q.row.id !== row.id).concat([{ kind, row, at: Date.now() }]); saveQueue();
+function enqueueRow(kind, row, extra) { if (kind !== "note") row = labelRow(row, kind);
+  Store.s.queue = Store.s.queue.filter(q => q.row.id !== row.id).concat([{ kind, row, at: Date.now(), ...(extra || {}) }]); saveQueue();
   setTimeout(flushQueue, 500);
+}
+async function enqueueNote(n) {
+  const st = getStudy(n.studyId) || {};
+  const photos = []; for (const pid of n.photos || []) { const p = await DB.get("photo:" + pid); if (p) photos.push({ id: pid, data: p }); }
+  enqueueRow("note", { Study: st.name || "", "Note No.": n.n, Date: n.date || "", Text: n.text || "", Observer: Store.s.meta.settings.observer || "", Photos: photos.map(p => p.id).join(","), id: n.id }, { photos });
 }
 let flushing = false;
 async function flushQueue() {
@@ -535,8 +540,9 @@ async function flushQueue() {
   if (!url || flushing || !navigator.onLine || !Store.s.queue.length) return;
   flushing = true;
   try {
-    const batch = Store.s.queue.slice(0, 50);
-    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ items: batch.map(b => ({ kind: b.kind, row: b.row })) }) });
+    let batch = Store.s.queue.slice(0, 50); const big = batch.findIndex(b => b.photos && b.photos.length);
+    if (big === 0) batch = [batch[0]]; else if (big > 0) batch = batch.slice(0, big);
+    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ items: batch.map(b => ({ kind: b.kind, row: b.row, photos: b.photos || [] })) }) });
     const sent = new Set(batch.map(b => b.row.id + "|" + b.at));
     Store.s.queue = Store.s.queue.filter(q => !sent.has(q.row.id + "|" + q.at)); saveQueue();
     if (Store.s.queue.length) setTimeout(flushQueue, 1000);
@@ -1099,9 +1105,11 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
 function NoteView({ id }) {
   const s = useStore(); const n = s.notes[id]; const [photos, setPhotos] = useState({}); const fileRef = useRef();
   useEffect(() => { (async () => { if (!n) return; const out = {}; for (const pid of n.photos || []) out[pid] = await DB.get("photo:" + pid); setPhotos(out); })(); }, [id, n && (n.photos || []).length]);
+  const dirty = useRef(false);
+  useEffect(() => () => { const cur = Store.s.notes[id]; if (dirty.current && cur && (cur.text || (cur.photos || []).length)) enqueueNote(cur); }, [id]);
   if (!n) return html`<div class="page"><${TopBar} title="?"/></div>`;
   const st = getStudy(n.studyId) || {};
-  const upd = fn => { const x = { ...n }; fn(x); x.updatedAt = Date.now(); saveNote(x); };
+  const upd = fn => { const x = { ...n }; fn(x); x.updatedAt = Date.now(); saveNote(x); dirty.current = true; };
   const addPhoto = async e => {
     const f = e.target.files && e.target.files[0]; if (!f) return; e.target.value = "";
     const url = await new Promise(res => { const img = new Image(); img.onload = () => { const max = 1400, sc = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL("image/jpeg", 0.75)); }; img.src = URL.createObjectURL(f); });
