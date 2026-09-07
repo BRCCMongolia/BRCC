@@ -75,7 +75,7 @@ input[type=time],input[type=date]{min-width:0}
 .sp-sel{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--green-l);border:1px solid var(--green);border-radius:var(--r);padding:8px 6px 8px 12px}
 .weather{padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)} .weather .field{margin-bottom:8px}
 .form{padding-top:4px}
-.sticky-actions{position:sticky;bottom:0;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom));margin-top:8px;border-top:1px solid var(--line)}
+.sticky-actions{position:sticky;bottom:0;z-index:15;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom));margin-top:8px;border-top:1px solid var(--line)}
 .pick2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 12px}
 .pickbtn{min-height:110px;border-radius:var(--r);border:2px solid var(--green);background:var(--card);color:var(--ink);cursor:pointer;font-weight:600;font-size:.95rem;padding:10px}
 .pickbtn .pk{font-size:2rem;font-weight:800;color:var(--green);letter-spacing:.02em} .pickbtn:active{background:var(--green-l)}
@@ -126,6 +126,7 @@ input[type=time],input[type=date]{min-width:0}
 .addbtn b{font-size:1.15rem;white-space:nowrap} .addbtn.note b{font-size:.98rem} .addbtn span{font-size:.72rem;opacity:.92;line-height:1.1;text-align:center}
 .addbtn.vp{background:var(--green)} .addbtn.lt{background:var(--blue)} .addbtn.note{background:var(--amber)}
 .addbtn:active{filter:brightness(.9)}
+.sticky-actions .row{flex:1;justify-content:flex-end} .sticky-actions .btn{padding-left:12px;padding-right:12px}
 </style>
 </head>
 <body>
@@ -186,7 +187,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Сесс", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", ageOther: "Бусад (гараар)",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
   en: {
     appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
@@ -225,7 +226,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", ageOther: "Other (free text)",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
 };
 let LANG = "mn";
@@ -626,7 +627,23 @@ function buildWorkbook(sessions, notes) {
   if (notes && notes.length) sheets.push({ name: "Notes", rows: [["Study", "Note No.", "Date", "Text", "Photos"], ...notes.map(n => [(getStudy(n.studyId) || {}).name || "", n.n, n.date, n.text || "", (n.photos || []).length])] });
   return makeXlsx(sheets);
 }
-function kmzForSession(s) {
+function buildCsv(sessions) {
+  sessions = [...sessions].sort((a, b) => (a.date || "").localeCompare(b.date || "") || a.createdAt - b.createdAt);
+  const q = v => { const t = String(v === undefined || v === null ? "" : v); return /[",\n;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const lines = [H.map(h => q(h[1])).join(",")];
+  for (const s of sessions) s.records.forEach((r, i) => { const row = recordRow(s, r, i); lines.push(H.map(h => q(row[h[0]])).join(",")); });
+  return "\uFEFF" + lines.join("\r\n");
+}
+async function shareCsv(name, sessions) {
+  const csv = buildCsv(sessions);
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent); const file = new File([csv], name, { type: "text/csv" });
+  const canShare = navigator.canShare && navigator.canShare({ files: [file] });
+  if (!canShare && isIOS && !window.matchMedia("(display-mode: standalone)").matches) {
+    try { await navigator.clipboard.writeText(csv); showToast(t("csvCopied")); return; } catch (e) { }
+  }
+  return saveFile(name, csv, "text/csv");
+}
+function kmzKml(s) {
   const st = getStudy(s.studyId) || {}; const name = `${st.name || "BRCC"} LT${s.number || ""} ${s.date || ""}`;
   const pms = [], lines = [];
   s.records.forEach((r, i) => {
@@ -637,7 +654,37 @@ function kmzForSession(s) {
   });
   if (s.startLat && s.startLng) pms.push({ name: "Start", lat: s.startLat, lng: s.startLng, data: { Time: s.start || "" } });
   if (s.endLat && s.endLng) pms.push({ name: "End", lat: s.endLat, lng: s.endLng, data: { Time: s.end || "" } });
-  return makeZip([{ name: "doc.kml", data: makeKml(name, s.track || [], pms, lines) }]);
+  return makeKml(name, s.track || [], pms, lines);
+}
+const kmzForSession = s => makeZip([{ name: "doc.kml", data: kmzKml(s) }]);
+function kmlAllTransects(st, sessions) {
+  const lts = sessions.filter(x => x.type === "LT");
+  let k = `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${xmlEsc(st.name || "BRCC")} — all transects</name>`;
+  const strip = kml => kml.slice(kml.indexOf("<Document>") + 10, kml.lastIndexOf("</Document>")).replace(/^<name>[\s\S]*?<\/name>/, "").replace(/<Style id="[^"]*">[\s\S]*?<\/Style>\s*/g, "");
+  const styles = makeKml("x", [], [], []).match(/<Style id="[^"]*">[\s\S]*?<\/Style>/g).join("");
+  k += styles;
+  for (const s of lts) { const inner = kmzKml(s); k += `<Folder><name>LT ${xmlEsc(s.number || "")} · ${xmlEsc(s.date || "")}</name>${strip(inner)}</Folder>`; }
+  return k + "</Document></kml>";
+}
+const dataUrlBytes = u => { const b64 = String(u).split(",")[1] || ""; const bin = atob(b64); const out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; };
+async function studyZip(st, sessions, notes) {
+  const base = safeName(st.name); const files = [];
+  files.push({ name: `${base}_data.xlsx`, data: buildWorkbook(sessions, notes) });
+  files.push({ name: `${base}_data.csv`, data: buildCsv(sessions) });
+  const lts = sessions.filter(x => x.type === "LT" && ((x.track || []).length || x.records.length));
+  for (const x of lts) files.push({ name: `KMZ/LT_${safeName(x.number || x.id.slice(-4))}_${x.date || ""}.kmz`, data: kmzForSession(x) });
+  if (lts.length > 1) files.push({ name: `KMZ/ALL_transects_${base}.kmz`, data: makeZip([{ name: "doc.kml", data: kmlAllTransects(st, lts) }]) });
+  const sortedNotes = [...notes].sort((a, b) => a.n - b.n);
+  if (sortedNotes.length) {
+    let txt = "\uFEFF" + `${st.name}\n${"=".repeat(40)}\n\n`;
+    for (const n of sortedNotes) {
+      const photos = n.photos || []; let i = 0;
+      for (const pid of photos) { const p = await DB.get("photo:" + pid); if (p) { i++; files.push({ name: `Notes_photos/Note${n.n}_${i}.jpg`, data: dataUrlBytes(p) }); } }
+      txt += `Тэмдэглэл ${n.n} · ${n.date}${i ? ` · зураг ${i}` : ""}\n${n.text || ""}\n\n`;
+    }
+    files.push({ name: `${base}_notes.txt`, data: txt });
+  }
+  return makeZip(files);
 }
 const safeName = s => (s || "").replace(/[^\w\u0400-\u04FF\- ]+/g, "").trim().replace(/\s+/g, "_") || "BRCC";
 
@@ -885,6 +932,7 @@ function StudyView({ id }) {
   };
   const newNote = () => { const n = (Store.s.meta.noteSeq[id] || 0) + 1; Store.s.meta.noteSeq[id] = n; saveMeta(); const note = { id: uid(), studyId: id, n, date: todayISO(), text: "", photos: [], createdAt: Date.now(), updatedAt: Date.now() }; saveNote(note); nav("#/note/" + note.id); };
   const exportStudy = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${todayISO()}.xlsx`, buildWorkbook(sess, notes), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const exportZip = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${todayISO()}.zip`, await studyZip(st, sess, notes), "application/zip"); } finally { setBusy(false); } };
   const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteStudy(id); showToast(t("deleted")); nav("#/"); } };
   return html`<div class="page">
     <${TopBar} title=${st.name} sub=${`${t("speciesLang")}: ${{ mn: "Монгол", en: "English", la: "Latin" }[st.speciesLang]}${st.windFarm ? " · Wind farm" : ""}`} right=${html`<button class="iconbtn" onClick=${() => setEdit(true)}>✎</button>`}/>
@@ -902,7 +950,9 @@ function StudyView({ id }) {
       ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
     </section>
     <section class="section">
-      <div class="row wrap"><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
+      <div class="row wrap"><${Btn} onClick=${exportZip} disabled=${busy}>${t("exportZip")}<//><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_${safeName(st.name)}_${todayISO()}.csv`, sess)} disabled=${busy}>${t("csvShare")}<//></div>
+      <div class="hint">${t("exportZipHint")}</div>
+      <div class="row wrap mt"><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
     </section>
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
   </div>`;
@@ -951,7 +1001,7 @@ function SessionView({ id, recId }) {
     if (!isVP) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) updRecord(id, r.id, x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else try { const p = await getPosition(); updRecord(id, r.id, x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); } catch (e) { } }
   };
   const del = () => { if (confirmDlg(t("confirmDelete"))) { Tracker.stop(); deleteSession(id); showToast(t("deleted")); nav("#/study/" + sess.studyId); } };
-  const exportKmz = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_LT${sess.number || ""}_${sess.date}.kmz`, kmzForSession(sess), "application/vnd.google-earth.kmz"); } finally { setBusy(false); } };
+  const exportKmz = async () => { setBusy(true); try { await saveFile(`LT_${safeName(sess.number || "")}_${sess.date}.kmz`, kmzForSession(sess), "application/vnd.google-earth.kmz"); } finally { setBusy(false); } };
   const exportX = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${sess.type}${sess.number || ""}_${sess.date}.xlsx`, buildWorkbook([sess], []), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
   const drafts = sess.records.filter(r => r.status === "draft"); const running = sess.records.filter(r => r.timerStart && !r.duration && r.status === "draft");
   const trackOn = Tracker.sessionId === id && Tracker.status === "tracking";
@@ -1009,6 +1059,7 @@ function SessionView({ id, recId }) {
 
     <section class="section"><div class="row wrap">
       <${Btn} kind="secondary" onClick=${exportX} disabled=${busy}>${t("exportXlsx")}<//>
+      <${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_${safeName(st.name)}_${sess.type}${sess.number || ""}_${sess.date}.csv`, [sess])} disabled=${busy}>${t("csvShare")}<//>
       ${!isVP ? html`<${Btn} kind="secondary" onClick=${exportKmz} disabled=${busy}>${t("exportKmz")}<//>` : null}
       ${!locked ? html`<${Btn} kind="danger" small onClick=${del}>${t("delete")}<//>` : null}
     </div></section>
@@ -1148,6 +1199,7 @@ function SettingsView() {
       <hr/>
       <div class="row wrap">
         <${Btn} kind="secondary" onClick=${exportAll} disabled=${busy}>${t("exportAll")}<//>
+        <${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_all_${todayISO()}.csv`, Object.values(s.sessions))} disabled=${busy}>${t("csvShare")}<//>
         <${Btn} kind="secondary" onClick=${exportBackup}>${t("backup")}<//>
         <${Btn} kind="ghost" onClick=${() => fileRef.current.click()}>${t("restore")}<//>
         <input type="file" accept="application/json,.json" ref=${fileRef} style="display:none" onChange=${restore}/>
