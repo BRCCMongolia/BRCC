@@ -118,6 +118,9 @@ input[type=time],input[type=date]{min-width:0}
 .card.sess{border-left-color:var(--green)} .card.sess.open{border-left-color:var(--amber)}
 .sess-row{display:flex;align-items:baseline;gap:10px} .sess-no{font-size:1.25rem;font-weight:700;flex:1;letter-spacing:.02em} .sess-date{color:var(--muted);font-size:.95rem}
 .sess-sub{margin-top:4px;padding-left:2px}
+.datehd{font-weight:700;color:var(--muted);font-size:.9rem;margin:10px 0 6px;padding-left:2px}
+.dategroup .card{margin-bottom:6px}
+.btn.lt{background:var(--blue)} body.night .btn.lt{background:#3F76AD}
 </style>
 </head>
 <body>
@@ -443,6 +446,8 @@ async function loadAll() {
     if (k.startsWith("session:")) { const v = await DB.get(k); if (v) { migrateSession(v); s.sessions[v.id] = v; } }
     else if (k.startsWith("note:")) { const v = await DB.get(k); if (v) s.notes[v.id] = v; }
   }
+  // migrate: visit layer removed — make sure every session has its own date
+  for (const sess of Object.values(s.sessions)) { if (!sess.date) { const v = (s.meta.visits || []).find(x => x.id === sess.visitId); sess.date = v ? v.date : todayISO(); Store.queueWrite("session:" + sess.id, sess); } }
   // purge trash > 30 days
   const cutoff = Date.now() - 30 * 864e5; const before = s.trash.length;
   s.trash = s.trash.filter(x => x.deletedAt > cutoff);
@@ -582,8 +587,8 @@ const H = [ // key, header
 ];
 const num = v => (v === "" || v === null || v === undefined || isNaN(+v)) ? (v || "") : +v;
 function sessionHeader(s) {
-  const st = getStudy(s.studyId) || {}, v = getVisit(s.visitId) || {};
-  return { study: st.name || "", windFarm: st.windFarm ? "yes" : "", visitDate: v.date || s.date || "", type: s.type, number: s.number || "", observer: s.observer || "", start: s.start || "", end: s.end || "", plannedH: s.type === "VP" ? num(s.plannedH) : "",
+  const st = getStudy(s.studyId) || {};
+  return { study: st.name || "", windFarm: st.windFarm ? "yes" : "", visitDate: s.date || "", type: s.type, number: s.number || "", observer: s.observer || "", start: s.start || "", end: s.end || "", plannedH: s.type === "VP" ? num(s.plannedH) : "",
     aimag: s.aimag || "", soum: s.soum || "", place: s.place || "", tHabitat: s.habitat || "", width: num(s.width), length: num(s.length), startLat: num(s.startLat), startLng: num(s.startLng), endLat: num(s.endLat), endLng: num(s.endLng), sessionId: s.id };
 }
 const cnt = (obj, k) => obj && k in obj ? (obj[k] === "" ? "x" : num(obj[k])) : "";
@@ -825,10 +830,10 @@ function Home() {
     <section class="section">
       <div class="sec-h"><h2>${t("studies")}</h2><${Btn} onClick=${() => setCreating(true)}>+ ${t("newStudy")}<//></div>
       ${studies.length ? studies.map(st => {
-        const nv = visitsOf(st.id).length, ns = Object.values(s.sessions).filter(x => x.studyId === st.id).length;
+        const ss = Object.values(s.sessions).filter(x => x.studyId === st.id); const nvp = ss.filter(x => x.type === "VP").length, nlt = ss.length - nvp;
         return html`<button key=${st.id} class="card link" onClick=${() => nav("#/study/" + st.id)}>
           <div class="card-t">${st.name}${st.windFarm ? html`<span class="tag">WF</span>` : null}</div>
-          <div class="card-s">${t("visits")}: ${nv} · ${t("sessions")}: ${ns} · ${t("notes")}: ${notesOf(st.id).length}</div>
+          <div class="card-s">VP ${nvp} · LT ${nlt} · ${t("notes")} ${notesOf(st.id).length}</div>
         </button>`;
       }) : html`<${Empty}>${t("emptyStudies")}<//>`}
     </section>
@@ -858,19 +863,23 @@ function StudyModal({ study, onClose }) {
 function StudyView({ id }) {
   const s = useStore(); const st = getStudy(id); const [edit, setEdit] = useState(false); const [busy, setBusy] = useState(false);
   if (!st) return html`<div class="page"><${TopBar} title="?"/><${Empty}>${t("empty")}<//></div>`;
-  const visits = visitsOf(id), notes = notesOf(id);
-  const newVisit = () => { const v = { id: uid(), studyId: id, date: todayISO(), createdAt: Date.now() }; Store.s.meta.visits.push(v); saveMeta(); nav("#/visit/" + v.id); };
+  const notes = notesOf(id);
+  const sess = Object.values(s.sessions).filter(x => x.studyId === id).sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.createdAt - a.createdAt);
+  const groups = []; for (const x of sess) { const g = groups[groups.length - 1]; if (g && g.date === x.date) g.items.push(x); else groups.push({ date: x.date, items: [x] }); }
+  const create = type => {
+    const base = { id: uid(), studyId: id, visitId: null, type, date: todayISO(), number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
+    if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
+    else Object.assign(base, { aimag: "", soum: "", place: "", habitat: "", width: "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false });
+    saveSession(base); nav("#/session/" + base.id);
+  };
   const newNote = () => { const n = (Store.s.meta.noteSeq[id] || 0) + 1; Store.s.meta.noteSeq[id] = n; saveMeta(); const note = { id: uid(), studyId: id, n, date: todayISO(), text: "", photos: [], createdAt: Date.now(), updatedAt: Date.now() }; saveNote(note); nav("#/note/" + note.id); };
-  const exportStudy = async () => { setBusy(true); try { const sess = Object.values(Store.s.sessions).filter(x => x.studyId === id); await saveFile(`BRCC_${safeName(st.name)}_${todayISO()}.xlsx`, buildWorkbook(sess, notes), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const exportStudy = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${todayISO()}.xlsx`, buildWorkbook(sess, notes), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
   const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteStudy(id); showToast(t("deleted")); nav("#/"); } };
   return html`<div class="page">
     <${TopBar} title=${st.name} sub=${`${t("speciesLang")}: ${{ mn: "Монгол", en: "English", la: "Latin" }[st.speciesLang]}${st.windFarm ? " · Wind farm" : ""}`} right=${html`<button class="iconbtn" onClick=${() => setEdit(true)}>✎</button>`}/>
     <section class="section">
-      <div class="sec-h"><h2>${t("visits")}</h2><${Btn} onClick=${newVisit}>+ ${t("newVisit")}<//></div>
-      ${visits.length ? visits.map(v => { const ss = [...sessionsOf(v.id)].reverse();
-        return html`<button key=${v.id} class="card link" onClick=${() => nav("#/visit/" + v.id)}><div class="card-t">${v.date}</div>
-          <div class="pills">${ss.length ? ss.map(x => html`<span key=${x.id} class=${`pill ${x.type} ${x.status === "open" ? "open" : ""}`}>${x.type} ${x.number || ""}</span>`) : html`<span class="muted">${t("emptySessions")}</span>`}</div></button>`; })
-        : html`<${Empty}>${t("emptyVisits")}<//>`}
+      <div class="sec-h"><h2>${t("sessions")}</h2><div class="row"><${Btn} onClick=${() => create("VP")}>+ VP<//><${Btn} onClick=${() => create("LT")} cls="lt">+ LT<//></div></div>
+      ${groups.length ? groups.map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}
     </section>
     <section class="section">
       <div class="sec-h"><h2>${t("notes")}</h2><${Btn} kind="secondary" onClick=${newNote}>+ ${t("newNote")}<//></div>
@@ -882,37 +891,11 @@ function StudyView({ id }) {
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
   </div>`;
 }
-
-/* ---------- Visit ---------- */
-function VisitView({ id }) {
-  const s = useStore(); const v = getVisit(id); const [pick, setPick] = useState(false); const [busy, setBusy] = useState(false);
-  if (!v) return html`<div class="page"><${TopBar} title="?"/></div>`;
-  const st = getStudy(v.studyId) || {}; const sess = sessionsOf(id);
-  const setDate = d => { Store.s.meta.visits = Store.s.meta.visits.map(x => x.id === id ? { ...x, date: d } : x); for (const ss of sess) updSession(ss.id, n => { n.date = d; }); saveMeta(); };
-  const create = type => {
-    const base = { id: uid(), studyId: v.studyId, visitId: id, type, date: v.date, number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
-    if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
-    else Object.assign(base, { aimag: "", soum: "", place: "", habitat: "", width: "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false });
-    saveSession(base); setPick(false); nav("#/session/" + base.id);
-  };
-  const exportVisit = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${v.date}.xlsx`, buildWorkbook(sess, []), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
-  const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteVisit(id); showToast(t("deleted")); nav("#/study/" + v.studyId); } };
-  return html`<div class="page">
-    <${TopBar} title=${`${st.name} — ${v.date}`} sub=${t("visits")}/>
-    <section class="section"><${Field} label=${t("visitDate")}><input type="date" class="inp" value=${v.date} onInput=${e => setDate(e.target.value)}/><//></section>
-    <section class="section">
-      <div class="sec-h"><h2>${t("sessions")}</h2><${Btn} onClick=${() => setPick(true)}>+ ${t("newObservation")}<//></div>
-      ${pick ? html`<div class="pick2">
-        <button class="pickbtn" onClick=${() => create("VP")}><div class="pk">VP</div><div>${t("vpTitle")}</div></button>
-        <button class="pickbtn" onClick=${() => create("LT")}><div class="pk">LT</div><div>${t("ltTitle")}</div></button>
-      </div>` : null}
-      ${sess.length ? sess.map(x => html`<button key=${x.id} class=${`card link sess ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
-        <div class="sess-row"><span class=${`tag big ${x.type}`}>${x.type}</span><span class="sess-no">${x.number || ""}</span><span class="sess-date">${x.date}</span></div>
-        <div class="card-s sess-sub">${x.start || "—"} – ${x.end || "…"} · ${x.records.length} ${t("recordsLow")}${x.records.some(r => r.status === "draft") ? html` · <span class="warn">${t("drafts")}: ${x.records.filter(r => r.status === "draft").length}</span>` : null}${x.status === "open" ? html` <span class="tag warn">${t("open")}</span>` : null}</div>
-      </button>`) : (!pick ? html`<${Empty}>${t("emptySessions")}<//>` : null)}
-    </section>
-    <section class="section"><div class="row wrap"><${Btn} kind="secondary" onClick=${exportVisit} disabled=${busy}>${t("exportVisit")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div></section>
-  </div>`;
+function SessionCard({ x }) {
+  return html`<button class=${`card link sess ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
+    <div class="sess-row"><span class=${`tag big ${x.type}`}>${x.type}</span><span class="sess-no">${x.number || ""}</span></div>
+    <div class="card-s sess-sub">${x.start || "—"} – ${x.end || "…"} · ${x.records.length} ${t("recordsLow")}${x.records.some(r => r.status === "draft") ? html` · <span class="warn">${t("drafts")}: ${x.records.filter(r => r.status === "draft").length}</span>` : null}${x.status === "open" ? html` <span class="tag warn">${t("open")}</span>` : null}</div>
+  </button>`;
 }
 
 /* ---------- Session (VP / LT) ---------- */
@@ -951,7 +934,7 @@ function SessionView({ id, recId }) {
     const r = newRecord(sess, extra); updSession(id, n => { n.records = [...n.records, r]; }); showToast(`${t("quickCapture")} · ${t("detailsLater")}`);
     if (!isVP) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) updRecord(id, r.id, x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else try { const p = await getPosition(); updRecord(id, r.id, x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); } catch (e) { } }
   };
-  const del = () => { if (confirmDlg(t("confirmDelete"))) { Tracker.stop(); deleteSession(id); showToast(t("deleted")); nav("#/visit/" + sess.visitId); } };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { Tracker.stop(); deleteSession(id); showToast(t("deleted")); nav("#/study/" + sess.studyId); } };
   const exportKmz = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_LT${sess.number || ""}_${sess.date}.kmz`, kmzForSession(sess), "application/vnd.google-earth.kmz"); } finally { setBusy(false); } };
   const exportX = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${sess.type}${sess.number || ""}_${sess.date}.xlsx`, buildWorkbook([sess], []), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
   const drafts = sess.records.filter(r => r.status === "draft"); const running = sess.records.filter(r => r.timerStart && !r.duration && r.status === "draft");
@@ -1201,7 +1184,6 @@ function App() {
   let view;
   switch (r.view) {
     case "study": view = html`<${StudyView} id=${r.id}/>`; break;
-    case "visit": view = html`<${VisitView} id=${r.id}/>`; break;
     case "session": view = html`<${SessionView} id=${r.id} recId=${r.sub === "rec" ? r.subId : null}/>`; break;
     case "note": view = html`<${NoteView} id=${r.id}/>`; break;
     case "settings": view = html`<${SettingsView}/>`; break;
