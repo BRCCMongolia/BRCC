@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#2E7D1E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BRCC">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>BRCC Mongolia — хээрийн судалгааны бүртгэл</title>
+<style>:root{
+  --green:#2E7D1E; --green-d:#215C15; --green-l:#E6F1E2; --bg:#F3F5F0; --card:#FFFFFF; --ink:#1B2418; --muted:#5E6C5A; --line:#D3DACD;
+  --amber:#B8730F; --amber-l:#FBF1DF; --red:#B03030; --red-l:#F8E4E4; --blue:#2F5D8A; --focus:#7FBF6A; --shadow:0 1px 2px rgba(20,40,15,.08);
+  --r:10px; --tap:48px;
+}
+body.night{ --bg:#141A12; --card:#1E261B; --ink:#E7EDE2; --muted:#A6B3A0; --line:#3A4635; --green:#3E9A2B; --green-d:#A9DD98; --green-l:#24361F; --amber:#E0A44A; --amber-l:#3A2C12; --red:#E27373; --red-l:#3D1F1F; --shadow:none; }
+body.night .btn.primary{color:#fff} body.night .chip.on{color:#fff} body.night .btn.danger{border-color:#6B3A3A}
+*{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:16px;line-height:1.35;padding-bottom:env(safe-area-inset-bottom)}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--green)}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em} h2{font-size:1.15rem} h3{font-size:1.05rem}
+.app{max-width:820px;margin:0 auto;min-height:100vh}
+.page{padding:0 14px 96px}
+@media(min-width:700px){.page{padding:0 24px 96px}}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;background:var(--bg);padding:10px 0 8px;margin:0 0 6px;border-bottom:1px solid var(--line)}
+.topbar-title{flex:1;min-width:0} .tt{font-weight:650;font-size:1.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .ts{font-size:.85rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-right{display:flex;gap:6px;align-items:center}
+.logo-sm{height:34px;width:auto} .logo-lg{width:180px;max-width:70%;display:block;margin:12px auto}
+.iconbtn{min-width:44px;height:44px;border:0;background:transparent;border-radius:var(--r);font-size:1.5rem;line-height:1;display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer}
+.iconbtn:active{background:var(--green-l)}
+.section{margin:12px 0} .sec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.card{background:var(--card);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:8px}
+.card.link{display:block;width:100%;text-align:left;cursor:pointer;border-left:5px solid var(--green)} .card.link:active{background:var(--green-l)}
+.card.open{border-left-color:var(--amber)}
+.card-t{font-weight:600;font-size:1.02rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap} .card-s{color:var(--muted);font-size:.9rem;margin-top:2px}
+.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--green-l);color:var(--green-d);vertical-align:middle}
+.tag.big{font-size:.9rem;padding:2px 8px} .tag.warn{background:var(--amber-l);color:var(--amber)}
+.muted{color:var(--muted);font-weight:400} .warn{color:var(--amber);font-weight:600} .hint{font-size:.84rem;color:var(--muted);margin-top:4px} .hint.pad{padding:0 2px}
+.empty{padding:26px 12px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);background:var(--card)}
+.btn{min-height:var(--tap);padding:10px 16px;border-radius:var(--r);border:1px solid transparent;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;white-space:nowrap}
+.btn.primary{background:var(--green);color:#fff} .btn.primary:active{background:var(--green-d)}
+.btn.secondary{background:var(--green-l);color:var(--green-d);border-color:var(--green-l)}
+.btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line)}
+.btn.danger{background:var(--card);color:var(--red);border-color:#E4B9B9}
+.btn.small{min-height:38px;padding:6px 12px;font-size:.92rem}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,.inp:focus-visible,.chip:focus-visible,.iconbtn:focus-visible{outline:3px solid var(--focus);outline-offset:1px}
+.row{display:flex;gap:8px;align-items:center} .row.end{justify-content:flex-end} .row.between{justify-content:space-between} .row.wrap{flex-wrap:wrap} .row>.inp{min-width:0}
+.mt{margin-top:8px} .mb{margin-bottom:8px}
+.field{margin-bottom:12px;min-width:0} .field.span{grid-column:1/-1} .lbl{display:block;font-size:.88rem;color:var(--muted);margin-bottom:5px;font-weight:600}
+.inp{width:100%;min-height:var(--tap);padding:10px 12px;border-radius:var(--r);border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1.05rem}
+.inp:disabled{opacity:.7;background:var(--bg)} .ta{min-height:64px;resize:vertical;line-height:1.4} .ta.note{min-height:220px;font-size:1.02rem}
+input[type=number]{-moz-appearance:textfield} input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=time],input[type=date]{min-width:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px} .grid2 .field.span{grid-column:1/-1}
+@media(max-width:380px){.grid2{grid-template-columns:1fr}}
+@media(min-width:700px){.form .grid2{grid-template-columns:1fr 1fr 1fr}.hdr .grid2{grid-template-columns:1fr 1fr 1fr}}
+.arrow{color:var(--muted);flex:0 0 auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:42px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:.95rem;text-align:left}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff} .chip.add{border-style:dashed;color:var(--green-d)} .chip:disabled{opacity:.6;cursor:default}
+.chip b{font-weight:700;opacity:.75;margin-right:2px}
+.countgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px} .chip.big{min-height:52px;font-size:1.25rem;font-weight:600;justify-content:center;text-align:center;border-radius:var(--r);padding:8px 4px}
+.check{display:block;padding:8px 0;font-weight:500} .check input{width:22px;height:22px;vertical-align:middle;margin-right:6px;accent-color:var(--green)}
+.sp-wrap{position:relative}
+.sp-list{position:absolute;left:0;right:0;top:100%;z-index:30;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:52vh;overflow:auto;margin-top:4px}
+.sp-item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:10px 12px;cursor:pointer} .sp-item:active{background:var(--green-l)} .sp-item.add{color:var(--green-d);font-weight:600}
+.sp-main{display:block;font-weight:600;font-size:1.02rem} .sp-sub{display:block;font-size:.82rem;color:var(--muted)}
+.sp-sel{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--green-l);border:1px solid var(--green);border-radius:var(--r);padding:8px 6px 8px 12px}
+.weather{padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)} .weather .field{margin-bottom:8px}
+.form{padding-top:4px}
+.sticky-actions{position:sticky;bottom:0;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom));margin-top:8px;border-top:1px solid var(--line)}
+.pick2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 12px}
+.pickbtn{min-height:110px;border-radius:var(--r);border:2px solid var(--green);background:var(--card);color:var(--ink);cursor:pointer;font-weight:600;font-size:.95rem;padding:10px}
+.pickbtn .pk{font-size:2rem;font-weight:800;color:var(--green);letter-spacing:.02em} .pickbtn:active{background:var(--green-l)}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:var(--r);margin:8px 0;font-weight:600}
+.banner.lock{background:var(--amber-l);color:var(--amber)}
+.notice{background:var(--amber-l);color:var(--amber);padding:8px 12px;border-radius:var(--r);margin:8px 0;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.timer{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:8px;padding:10px 12px;border-radius:var(--r);background:var(--green-l)} .timer.over{background:var(--amber-l)}
+.tl{display:block;font-size:.78rem;color:var(--muted)} .tv{display:block;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.rec{display:flex;align-items:stretch;padding:0;overflow:hidden;border-left:5px solid var(--green)} .rec.draft{border-left-color:var(--amber);background:var(--amber-l)}
+.rec-main{flex:1;display:flex;gap:10px;align-items:flex-start;text-align:left;border:0;background:transparent;padding:10px 12px;cursor:pointer;min-width:0;color:inherit}
+.rec-n{font-size:1.4rem;font-weight:700;color:var(--green);min-width:30px;text-align:right;font-variant-numeric:tabular-nums} .rec.draft .rec-n{color:var(--amber)} .rec-b{flex:1;min-width:0}
+.stopbtn{margin:8px;align-self:center;font-variant-numeric:tabular-nums}
+.sum{display:flex;gap:14px;margin-top:8px} .sum div{flex:1;text-align:center;padding:10px;background:var(--green-l);border-radius:var(--r)} .sum b{display:block;font-size:1.6rem} .sum span{font-size:.8rem;color:var(--muted)}
+.lock{font-size:1.2rem}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin:8px 0} .ph{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--line)} .ph img{width:100%;height:100%;object-fit:cover;display:block} .ph .del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.55);color:#fff;min-width:32px;height:32px;font-size:1.2rem;border-radius:8px}
+.modal-bg{position:fixed;inset:0;background:rgba(10,20,8,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.modal-bg{align-items:center}}
+.modal{background:var(--card);width:100%;max-width:560px;border-radius:14px 14px 0 0;max-height:92vh;overflow:auto;padding:0 16px 20px} @media(min-width:600px){.modal{border-radius:14px}}
+.modal-h{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;position:sticky;top:0;background:var(--card)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;z-index:60;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center;max-width:92vw}
+.toast button{background:transparent;border:0;color:var(--focus);font-weight:700}
+.offline{background:var(--amber);color:#fff;text-align:center;font-size:.85rem;padding:4px 8px;font-weight:600}
+.foot{margin-top:30px;color:var(--muted);font-size:.82rem;text-align:center} .foot-links{margin-bottom:10px} .own{line-height:1.45;max-width:60ch;margin:0 auto}
+.about p{max-width:60ch} hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+@media(prefers-reduced-motion:no-preference){.chip,.btn{transition:background .12s,color .12s}}
+
+.linkbtn{background:transparent;border:0;color:var(--green-d);font-weight:600;padding:8px 2px;cursor:pointer;font-size:.92rem}
+@media(max-width:560px){.grid2 .field:has(input[type=time]){grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div id="root"><div style="padding:40px;text-align:center;color:#5E6C5A;font-family:sans-serif">BRCC Mongolia…</div></div>
+<script>!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports):"function"==typeof define&&define.amd?define(["exports"],n):n(e.htmPreact={})}(this,function(e){var n,_,t,o,r,u,l,i={},c=[],f=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(e,n){for(var _ in n)e[_]=n[_];return e}function a(e){var n=e.parentNode;n&&n.removeChild(e)}function p(e,_,t){var o,r,u,l={};for(u in _)"key"==u?o=_[u]:"ref"==u?r=_[u]:l[u]=_[u];if(arguments.length>2&&(l.children=arguments.length>3?n.call(arguments,2):t),"function"==typeof e&&null!=e.defaultProps)for(u in e.defaultProps)void 0===l[u]&&(l[u]=e.defaultProps[u]);return h(e,l,o,r,null)}function h(e,n,o,r,u){var l={type:e,props:n,key:o,ref:r,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==u?++t:u};return null!=_.vnode&&_.vnode(l),l}function d(e){return e.children}function v(e,n){this.props=e,this.context=n}function y(e,n){if(null==n)return e.__?y(e.__,e.__.__k.indexOf(e)+1):null;for(var _;n<e.__k.length;n++)if(null!=(_=e.__k[n])&&null!=_.__e)return _.__e;return"function"==typeof e.type?y(e):null}function m(e){var n,_;if(null!=(e=e.__)&&null!=e.__c){for(e.__e=e.__c.base=null,n=0;n<e.__k.length;n++)if(null!=(_=e.__k[n])&&null!=_.__e){e.__e=e.__c.base=_.__e;break}return m(e)}}function g(e){(!e.__d&&(e.__d=!0)&&o.push(e)&&!k.__r++||u!==_.debounceRendering)&&((u=_.debounceRendering)||r)(k)}function k(){for(var e;k.__r=o.length;)e=o.sort(function(e,n){return e.__v.__b-n.__v.__b}),o=[],e.some(function(e){var n,_,t,o,r,u;e.__d&&(r=(o=(n=e).__v).__e,(u=n.__P)&&(_=[],(t=s({},o)).__v=o.__v+1,D(u,o,t,n.__n,void 0!==u.ownerSVGElement,null!=o.__h?[r]:null,_,null==r?y(o):r,o.__h),w(_,o),o.__e!=r&&m(o)))})}function b(e,n,_,t,o,r,u,l,f,s){var a,p,v,m,g,k,b,H=t&&t.__k||c,E=H.length;for(_.__k=[],a=0;a<n.length;a++)if(null!=(m=_.__k[a]=null==(m=n[a])||"boolean"==typeof m?null:"string"==typeof m||"number"==typeof m||"bigint"==typeof m?h(null,m,null,null,m):Array.isArray(m)?h(d,{children:m},null,null,null):m.__b>0?h(m.type,m.props,m.key,null,m.__v):m)){if(m.__=_,m.__b=_.__b+1,null===(v=H[a])||v&&m.key==v.key&&m.type===v.type)H[a]=void 0;else for(p=0;p<E;p++){if((v=H[p])&&m.key==v.key&&m.type===v.type){H[p]=void 0;break}v=null}D(e,m,v=v||i,o,r,u,l,f,s),g=m.__e,(p=m.ref)&&v.ref!=p&&(b||(b=[]),v.ref&&b.push(v.ref,null,m),b.push(p,m.__c||g,m)),null!=g?(null==k&&(k=g),"function"==typeof m.type&&null!=m.__k&&m.__k===v.__k?m.__d=f=C(m,f,e):f=x(e,m,v,H,g,f),s||"option"!==_.type?"function"==typeof _.type&&(_.__d=f):e.value=""):f&&v.__e==f&&f.parentNode!=e&&(f=y(v))}for(_.__e=k,a=E;a--;)null!=H[a]&&("function"==typeof _.type&&null!=H[a].__e&&H[a].__e==_.__d&&(_.__d=y(t,a+1)),A(H[a],H[a]));if(b)for(a=0;a<b.length;a++)U(b[a],b[++a],b[++a])}function C(e,n,_){var t,o;for(t=0;t<e.__k.length;t++)(o=e.__k[t])&&(o.__=e,n="function"==typeof o.type?C(o,n,_):x(_,o,o,e.__k,o.__e,n));return n}function x(e,n,_,t,o,r){var u,l,i;if(void 0!==n.__d)u=n.__d,n.__d=void 0;else if(null==_||o!=r||null==o.parentNode)e:if(null==r||r.parentNode!==e)e.appendChild(o),u=null;else{for(l=r,i=0;(l=l.nextSibling)&&i<t.length;i+=2)if(l==o)break e;e.insertBefore(o,r),u=r}return void 0!==u?u:o.nextSibling}function H(e,n,_){"-"===n[0]?e.setProperty(n,_):e[n]=null==_?"":"number"!=typeof _||f.test(n)?_:_+"px"}function E(e,n,_,t,o){var r;e:if("style"===n)if("string"==typeof _)e.style.cssText=_;else{if("string"==typeof t&&(e.style.cssText=t=""),t)for(n in t)_&&n in _||H(e.style,n,"");if(_)for(n in _)t&&_[n]===t[n]||H(e.style,n,_[n])}else if("o"===n[0]&&"n"===n[1])r=n!==(n=n.replace(/Capture$/,"")),n=n.toLowerCase()in e?n.toLowerCase().slice(2):n.slice(2),e.l||(e.l={}),e.l[n+r]=_,_?t||e.addEventListener(n,r?S:P,r):e.removeEventListener(n,r?S:P,r);else if("dangerouslySetInnerHTML"!==n){if(o)n=n.replace(/xlink[H:h]/,"h").replace(/sName$/,"s");else if("href"!==n&&"list"!==n&&"form"!==n&&"tabIndex"!==n&&"download"!==n&&n in e)try{e[n]=null==_?"":_;break e}catch(e){}"function"==typeof _||(null!=_&&(!1!==_||"a"===n[0]&&"r"===n[1])?e.setAttribute(n,_):e.removeAttribute(n))}}function P(e){this.l[e.type+!1](_.event?_.event(e):e)}function S(e){this.l[e.type+!0](_.event?_.event(e):e)}function D(e,n,t,o,r,u,l,i,c){var f,a,p,h,y,m,g,k,C,x,H,E=n.type;if(void 0!==n.constructor)return null;null!=t.__h&&(c=t.__h,i=n.__e=t.__e,n.__h=null,u=[i]),(f=_.__b)&&f(n);try{e:if("function"==typeof E){if(k=n.props,C=(f=E.contextType)&&o[f.__c],x=f?C?C.props.value:f.__:o,t.__c?g=(a=n.__c=t.__c).__=a.__E:("prototype"in E&&E.prototype.render?n.__c=a=new E(k,x):(n.__c=a=new v(k,x),a.constructor=E,a.render=M),C&&C.sub(a),a.props=k,a.state||(a.state={}),a.context=x,a.__n=o,p=a.__d=!0,a.__h=[]),null==a.__s&&(a.__s=a.state),null!=E.getDerivedStateFromProps&&(a.__s==a.state&&(a.__s=s({},a.__s)),s(a.__s,E.getDerivedStateFromProps(k,a.__s))),h=a.props,y=a.state,p)null==E.getDerivedStateFromProps&&null!=a.componentWillMount&&a.componentWillMount(),null!=a.componentDidMount&&a.__h.push(a.componentDidMount);else{if(null==E.getDerivedStateFromProps&&k!==h&&null!=a.componentWillReceiveProps&&a.componentWillReceiveProps(k,x),!a.__e&&null!=a.shouldComponentUpdate&&!1===a.shouldComponentUpdate(k,a.__s,x)||n.__v===t.__v){a.props=k,a.state=a.__s,n.__v!==t.__v&&(a.__d=!1),a.__v=n,n.__e=t.__e,n.__k=t.__k,n.__k.forEach(function(e){e&&(e.__=n)}),a.__h.length&&l.push(a);break e}null!=a.componentWillUpdate&&a.componentWillUpdate(k,a.__s,x),null!=a.componentDidUpdate&&a.__h.push(function(){a.componentDidUpdate(h,y,m)})}a.context=x,a.props=k,a.state=a.__s,(f=_.__r)&&f(n),a.__d=!1,a.__v=n,a.__P=e,f=a.render(a.props,a.state,a.context),a.state=a.__s,null!=a.getChildContext&&(o=s(s({},o),a.getChildContext())),p||null==a.getSnapshotBeforeUpdate||(m=a.getSnapshotBeforeUpdate(h,y)),H=null!=f&&f.type===d&&null==f.key?f.props.children:f,b(e,Array.isArray(H)?H:[H],n,t,o,r,u,l,i,c),a.base=n.__e,n.__h=null,a.__h.length&&l.push(a),g&&(a.__E=a.__=null),a.__e=!1}else null==u&&n.__v===t.__v?(n.__k=t.__k,n.__e=t.__e):n.__e=T(t.__e,n,t,o,r,u,l,c);(f=_.diffed)&&f(n)}catch(e){n.__v=null,(c||null!=u)&&(n.__e=i,n.__h=!!c,u[u.indexOf(i)]=null),_.__e(e,n,t)}}function w(e,n){_.__c&&_.__c(n,e),e.some(function(n){try{e=n.__h,n.__h=[],e.some(function(e){e.call(n)})}catch(e){_.__e(e,n.__v)}})}function T(e,_,t,o,r,u,l,c){var f,s,p,h=t.props,d=_.props,v=_.type,m=0;if("svg"===v&&(r=!0),null!=u)for(;m<u.length;m++)if((f=u[m])&&(f===e||(v?f.localName==v:3==f.nodeType))){e=f,u[m]=null;break}if(null==e){if(null===v)return document.createTextNode(d);e=r?document.createElementNS("http://www.w3.org/2000/svg",v):document.createElement(v,d.is&&d),u=null,c=!1}if(null===v)h===d||c&&e.data===d||(e.data=d);else{if(u=u&&n.call(e.childNodes),s=(h=t.props||i).dangerouslySetInnerHTML,p=d.dangerouslySetInnerHTML,!c){if(null!=u)for(h={},m=0;m<e.attributes.length;m++)h[e.attributes[m].name]=e.attributes[m].value;(p||s)&&(p&&(s&&p.__html==s.__html||p.__html===e.innerHTML)||(e.innerHTML=p&&p.__html||""))}if(function(e,n,_,t,o){var r;for(r in _)"children"===r||"key"===r||r in n||E(e,r,null,_[r],t);for(r in n)o&&"function"!=typeof n[r]||"children"===r||"key"===r||"value"===r||"checked"===r||_[r]===n[r]||E(e,r,n[r],_[r],t)}(e,d,h,r,c),p)_.__k=[];else if(m=_.props.children,b(e,Array.isArray(m)?m:[m],_,t,o,r&&"foreignObject"!==v,u,l,u?u[0]:t.__k&&y(t,0),c),null!=u)for(m=u.length;m--;)null!=u[m]&&a(u[m]);c||("value"in d&&void 0!==(m=d.value)&&(m!==e.value||"progress"===v&&!m)&&E(e,"value",m,h.value,!1),"checked"in d&&void 0!==(m=d.checked)&&m!==e.checked&&E(e,"checked",m,h.checked,!1))}return e}function U(e,n,t){try{"function"==typeof e?e(n):e.current=n}catch(e){_.__e(e,t)}}function A(e,n,t){var o,r;if(_.unmount&&_.unmount(e),(o=e.ref)&&(o.current&&o.current!==e.__e||U(o,null,n)),null!=(o=e.__c)){if(o.componentWillUnmount)try{o.componentWillUnmount()}catch(e){_.__e(e,n)}o.base=o.__P=null}if(o=e.__k)for(r=0;r<o.length;r++)o[r]&&A(o[r],n,"function"!=typeof e.type);t||null==e.__e||a(e.__e),e.__e=e.__d=void 0}function M(e,n,_){return this.constructor(e,_)}n=c.slice,_={__e:function(e,n){for(var _,t,o;n=n.__;)if((_=n.__c)&&!_.__)try{if((t=_.constructor)&&null!=t.getDerivedStateFromError&&(_.setState(t.getDerivedStateFromError(e)),o=_.__d),null!=_.componentDidCatch&&(_.componentDidCatch(e),o=_.__d),o)return _.__E=_}catch(n){e=n}throw e}},t=0,v.prototype.setState=function(e,n){var _;_=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof e&&(e=e(s({},_),this.props)),e&&s(_,e),null!=e&&this.__v&&(n&&this.__h.push(n),g(this))},v.prototype.forceUpdate=function(e){this.__v&&(this.__e=!0,e&&this.__h.push(e),g(this))},v.prototype.render=d,o=[],r="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,k.__r=0,l=0;var F,L,N,W=0,R=[],I=_.__b,O=_.__r,V=_.diffed,q=_.__c,B=_.unmount;function $(e,n){_.__h&&_.__h(L,e,W||n),W=0;var t=L.__H||(L.__H={__:[],__h:[]});return e>=t.__.length&&t.__.push({}),t.__[e]}function j(e){return W=1,G(ee,e)}function G(e,n,_){var t=$(F++,2);return t.t=e,t.__c||(t.__=[_?_(n):ee(void 0,n),function(e){var n=t.t(t.__[0],e);t.__[0]!==n&&(t.__=[n,t.__[1]],t.__c.setState({}))}],t.__c=L),t.__}function z(e,n){var t=$(F++,4);!_.__s&&Z(t.__H,n)&&(t.__=e,t.__H=n,L.__h.push(t))}function J(e,n){var _=$(F++,7);return Z(_.__H,n)&&(_.__=e(),_.__H=n,_.__h=e),_.__}function K(){R.forEach(function(e){if(e.__P)try{e.__H.__h.forEach(X),e.__H.__h.forEach(Y),e.__H.__h=[]}catch(n){e.__H.__h=[],_.__e(n,e.__v)}}),R=[]}_.__b=function(e){L=null,I&&I(e)},_.__r=function(e){O&&O(e),F=0;var n=(L=e.__c).__H;n&&(n.__h.forEach(X),n.__h.forEach(Y),n.__h=[])},_.diffed=function(e){V&&V(e);var n=e.__c;n&&n.__H&&n.__H.__h.length&&(1!==R.push(n)&&N===_.requestAnimationFrame||((N=_.requestAnimationFrame)||function(e){var n,_=function(){clearTimeout(t),Q&&cancelAnimationFrame(n),setTimeout(e)},t=setTimeout(_,100);Q&&(n=requestAnimationFrame(_))})(K)),L=void 0},_.__c=function(e,n){n.some(function(e){try{e.__h.forEach(X),e.__h=e.__h.filter(function(e){return!e.__||Y(e)})}catch(t){n.some(function(e){e.__h&&(e.__h=[])}),n=[],_.__e(t,e.__v)}}),q&&q(e,n)},_.unmount=function(e){B&&B(e);var n=e.__c;if(n&&n.__H)try{n.__H.__.forEach(X)}catch(e){_.__e(e,n.__v)}};var Q="function"==typeof requestAnimationFrame;function X(e){var n=L;"function"==typeof e.__c&&e.__c(),L=n}function Y(e){var n=L;e.__c=e.__(),L=n}function Z(e,n){return!e||e.length!==n.length||n.some(function(n,_){return n!==e[_]})}function ee(e,n){return"function"==typeof n?n(e):n}var ne=function(e,n,_,t){var o;n[0]=0;for(var r=1;r<n.length;r++){var u=n[r++],l=n[r]?(n[0]|=u?1:2,_[n[r++]]):n[++r];3===u?t[0]=l:4===u?t[1]=Object.assign(t[1]||{},l):5===u?(t[1]=t[1]||{})[n[++r]]=l:6===u?t[1][n[++r]]+=l+"":u?(o=e.apply(l,ne(e,l,_,["",null])),t.push(o),l[0]?n[0]|=2:(n[r-2]=0,n[r]=o)):t.push(l)}return t},_e=new Map,te=function(e){var n=_e.get(this);return n||(n=new Map,_e.set(this,n)),(n=ne(this,n.get(e)||(n.set(e,n=function(e){for(var n,_,t=1,o="",r="",u=[0],l=function(e){1===t&&(e||(o=o.replace(/^\s*\n\s*|\s*\n\s*$/g,"")))?u.push(0,e,o):3===t&&(e||o)?(u.push(3,e,o),t=2):2===t&&"..."===o&&e?u.push(4,e,0):2===t&&o&&!e?u.push(5,0,!0,o):t>=5&&((o||!e&&5===t)&&(u.push(t,0,o,_),t=6),e&&(u.push(t,e,0,_),t=6)),o=""},i=0;i<e.length;i++){i&&(1===t&&l(),l(i));for(var c=0;c<e[i].length;c++)n=e[i][c],1===t?"<"===n?(l(),u=[u],t=3):o+=n:4===t?"--"===o&&">"===n?(t=1,o=""):o=n+o[0]:r?n===r?r="":o+=n:'"'===n||"'"===n?r=n:">"===n?(l(),t=1):t&&("="===n?(t=5,_=o,o=""):"/"===n&&(t<5||">"===e[i][c+1])?(l(),3===t&&(u=u[0]),t=u,(u=u[0]).push(2,0,t),t=0):" "===n||"\t"===n||"\n"===n||"\r"===n?(l(),t=2):o+=n),3===t&&"!--"===o&&(t=4,u=u[0])}return l(),u}(e)),n),arguments,[])).length>1?n:n[0]}.bind(p);e.h=p,e.html=te,e.render=function(e,t,o){var r,u,l;_.__&&_.__(e,t),u=(r="function"==typeof o)?null:o&&o.__k||t.__k,l=[],D(t,e=(!r&&o||t).__k=p(d,null,[e]),u||i,i,void 0!==t.ownerSVGElement,!r&&o?[o]:u?null:t.firstChild?n.call(t.childNodes):null,l,!r&&o?o:u?u.__e:t.firstChild,r),w(l,e)},e.Component=v,e.createContext=function(e,n){var _={__c:n="__cC"+l++,__:e,Consumer:function(e,n){return e.children(n)},Provider:function(e){var _,t;return this.getChildContext||(_=[],(t={})[n]=this,this.getChildContext=function(){return t},this.shouldComponentUpdate=function(e){this.props.value!==e.value&&_.some(g)},this.sub=function(e){_.push(e);var n=e.componentWillUnmount;e.componentWillUnmount=function(){_.splice(_.indexOf(e),1),n&&n.call(e)}}),e.children}};return _.Provider.__=_.Consumer.contextType=_},e.useState=j,e.useReducer=G,e.useEffect=function(e,n){var t=$(F++,3);!_.__s&&Z(t.__H,n)&&(t.__=e,t.__H=n,L.__H.__h.push(t))},e.useLayoutEffect=z,e.useRef=function(e){return W=5,J(function(){return{current:e}},[])},e.useImperativeHandle=function(e,n,_){W=6,z(function(){"function"==typeof e?e(n()):e&&(e.current=n())},null==_?_:_.concat(e))},e.useMemo=J,e.useCallback=function(e,n){return W=8,J(function(){return e},n)},e.useContext=function(e){var n=L.context[e.__c],_=$(F++,9);return _.c=e,n?(null==_.__&&(_.__=!0,n.sub(L)),n.props.value):e.__},e.useDebugValue=function(e,n){_.useDebugValue&&_.useDebugValue(n?n(e):e)},e.useErrorBoundary=function(e){var n=$(F++,10),_=j();return n.__=e,L.componentDidCatch||(L.componentDidCatch=function(e){n.__&&n.__(e),_[1](e)}),[_[0],function(){_[1](void 0)}]}});
+</script>
+<script>const SPECIES_DATA=[["A","Salamandrella keyserlingii","Шивэр гүлмэр","Siberian Newt"],["A","Bufotes pewzowi","Певцовын бах","Pewzow’s Toad"],["A","Strauchbufo raddei","Монгол бах","Mongolian Toad"],["A","Dryophytes japonicus","Модны мэлхий","Japanese Tree Toad"],["A","Rana amurensis","Шивэр мэлхий","Siberian Wood Frog"],["A","Rana chensinensis","Дорнодын мэлхий","Eastern Frog"],["R","Alsophylax pipiens","Төмөр гүрвэл","Kaspischer Even-fingered Gecko"],["R","Cyrtopodion elongatus","Говийн махир хуруут гүрвэл","Naked-toed Gecko"],["R","Teratoscincus przewalskii","Нохой гүрвэл","Plate-tailed Gecko"],["R","Laudakia stoliczkana","Замба гүрвэл","Mongolian Agama"],["R","Phrynocephalus versicolor","Цоохор хонин гүрвэл","Toad-headed Agama"],["R","Eremias argus","Монгол гүрвэл","Mongolian Racerunner"],["R","Phrynocephalus helioscopus","Тойрмын хонин гүрвэл","Sunwatcher"],["R","Eremias arguta","Толбот гүрвэл","Stepperunner"],["R","Eremias multiocellata","Могой гүрвэл","Multi-ocellated Racerunner"],["R","Eremias dzungarica","Зүүнгарын гүрвэл","Dzungarian Racerunner"],["R","Lacerta agilis","Гавшгай гүрвэл","Sand Lizard"],["R","Eremias przewalskii","Говийн гүрвэл","Gobi Racerunner"],["R","Eremias vermiculata","Загалт гүрвэл","Variegated Racerunner"],["R","Zootoca vivipara","Зулзагалагч гүрвэл","Viviparous Lizard"],["R","Eryx tataricus","Тэмээн сүүл могой","Tatary Sand Boa"],["R","Coluber spinalis","Нарийн могой","Slender Racer"],["R","Elaphe schrenckii","Хар мөрний цариг могой","Great Black Coluber"],["R","Elaphe dione","Рашааны могой","Pallas Coluber"],["R","Natrix natrix","Усны могой","Grass Snake"],["R","Psammophis lineolatus","Сум могой","Steppe Ribbon Racer"],["R","Gloydius ussuriensis","Дорнодын бамбай хоншоорт могой","Ussuri Mamushi"],["R","Vipera berus","Эгэл загалмайт могой","Adder"],["R","Gloydius halys","Эгэл бамбай хоншоорт могой","Halys Viper"],["B","Dendrocygna javanica","Модны анхир","Lesser Whistling-duck"],["B","Anser anser","Бор галуу","Greylag Goose"],["B","Anser fabalis","Буурал галуу","Bean Goose"],["B","Anser indicus","Хээрийн галуу","Bar-headed Goose"],["B","Anser cygnoides","Хошуу галуу","Swan Goose"],["B","Anser albifrons","Манхин галуу","Greater White-fronted Goose"],["B","Anser erythropus","Одой галуу","Lesser White-fronted Goose"],["B","Cygnus columbianus","Гунгар хун","Tundra Swan"],["B","Tadorna tadorna","Анхидал ангир","Common Shelduck"],["B","Cygnus olor","Хуруут хун","Mute Swan"],["B","Cygnus cygnus","Гангар хун","Whooper Swan"],["B","Tadorna ferruginea","Хондон ангир","Ruddy Shelduck"],["B","Aix galericulata","Мандир уранхажин","Mandarin Duck"],["B","Spatula querquedula","Цагаан хөмсөгт нугас","Garganey"],["B","Mareca strepera","Бор нугас","Gadwall"],["B","Sibirionetta formosa","Байгалийн нугас","Baikal Teal"],["B","Spatula clypeata","Халбага нугас","Northern Shoveler"],["B","Mareca falcata","Гэзэгт нугас","Falcated Duck"],["B","Mareca penelope","Зээрд нугас","Eurasian Wigeon"],["B","Anas platyrhynchos","Зэрлэг нугас","Mallard"],["B","Anas crecca","Ногоохон нугас","Eurasian Teal"],["B","Anas zonorhyncha","Зэрлэгшир нугас","Eastern Spot-billed Duck"],["B","Anas acuta","Шовтгор алаг нугас","Northern Pintail"],["B","Netta rufina","Улаан хошуут биваан","Red-crested Pochard"],["B","Aythya ferina","Улаан хүзүүт шумбуур","Common Pochard"],["B","Aythya nyroca","Ундар нүдэн шумбуур","Ferruginous Duck"],["B","Aythya marila","Тэнгисийн шумбуур","Greater Scaup"],["B","Aythya baeri","Ухаа шумбуур","Baer’s Pochard"],["B","Aythya fuligula","Гэзэгт шумбуур","Tufted Duck"],["B","Histrionicus histrionicus","Хотгуужин чөрх","Harlequin Duck"],["B","Melanitta deglandi","Тольт монхдой","White-winged Scoter"],["B","Bucephala clangula","Алаг шунгаач","Common Goldeneye"],["B","Mergus merganser","Хумхин бохио","Common Merganser"],["B","Clangula hyemalis","Мөнгөлөг шунгаахай","Long-tailed Duck"],["B","Mergellus albellus","Цахиур бохио","Smew"],["B","Mergus serrator","Сэвгэр бохио","Red-breasted Merganser"],["B","Oxyura leucocephala","Ямаан сүүлт нугас","White-headed Duck"],["B","Tetrastes bonasia","Шивэр хөтүү","Hazel Grouse"],["B","Tetrao urogalloides","Нургийн сойр","Black-billed Capercaillie"],["B","Tetrao urogallus","Эгэл сойр","Western Capercaillie"],["B","Lyrurus tetrix","Хар хур","Black Grouse"],["B","Lagopus muta","Цэвдгийн ахууна","Rock Ptarmigan"],["B","Tetraogallus altaicus","Алтайн хойлог","Altai Snowcock"],["B","Perdix dauurica","Дагуур ятуу","Daurian Partridge"],["B","Lagopus lagopus","Цагаан ахууна","Willow Ptarmigan"],["B","Alectoris chukar","Хахилаг","Chukar Partridge"],["B","Coturnix coturnix","Эгэл бөднө","Common Quail"],["B","Coturnix japonica","Наран бөднө","Japanese Quail"],["B","Gavia stellata","Улаан гүеэт гахуун","Red-throated Loon"],["B","Tachybaptus ruficollis","Хурган шунгуур","Little Grebe"],["B","Phasianus colchicus","Зэрлэг гургуул","Common Pheasant"],["B","Gavia arctica","Хилэн гүеэт гахуун","Black-throated Loon"],["B","Podiceps grisegena","Буурал шунгуур","Red-necked Grebe"],["B","Podiceps cristatus","Отгот шунгуур","Great Crested Grebe"],["B","Podiceps nigricollis","Халтар шунгуур","Black-necked Grebe"],["B","Phoenicopterus roseus","Ягаан нал","Greater Flamingo"],["B","Podiceps auritus","Ухаа шунгуур","Horned Grebe"],["B","Ciconia nigra","Хар өрөвтас","Black Stork"],["B","Threskiornis melanocephalus","Хүрэн түрүүт билүүс","Black-headed Ibis"],["B","Ciconia boyciana","Дорнын өрөвтас","Oriental Stork"],["B","Platalea leucorodia","Халбаган хошуут","Eurasian Spoonbill"],["B","Botaurus stellaris","Усны бухшувуу","Eurasian Bittern"],["B","Ixobrychus eurhythmus","Бөртөт бухшувуу","Von Schrenck‘s Bittern"],["B","Butorides striata","Ногоон дэглэй","Striated Heron"],["B","Ixobrychus minutus","Бичил бухшувуу","Little Bittern"],["B","Nycticorax nycticorax","Ногоовор зашин","Black-crowned Night Heron"],["B","Ardeola bacchus","Цагаан сахлаг дэглэй","Chinese Pond Heron"],["B","Bubulcus coromandus","Хотны дэглэй","Eastern Cattle Egret"],["B","Ardea purpurea","Зээрд дэглий","Purple Heron"],["B","Ardea intermedia","Бэсрэг дэглий","Intermediate Egret"],["B","Ardea cinerea","Хөх дэглий","Grey Heron"],["B","Ardea alba","Цасч дэглий","Great Egret"],["B","Egretta garzetta","Хурган дэглий","Little Egret"],["B","Pelecanus crispus","Борцгор хотон","Dalmatian Pelican"],["B","Phalacrocorax carbo","Тураг гогой","Great Cormorant"],["B","Pandion haliaetus","Загасч явлаг","Western Osprey"],["B","Gypaetus barbatus","Ооч ёл","Bearded Vulture"],["B","Pernis apivorus","Балч гоорбис","European Honey-buzzard"],["B","Gyps himalayensis","Хималайн хажир","Himalayan Vulture"],["B","Neophron percnopterus","Дэлт ёл","Egyptian Vulture"],["B","Pernis ptilorhynchus","Согсоот гоорбис","Crested Honey buzzard"],["B","Gyps fulvus","Ухаа хажир","Griffon Vulture"],["B","Aegypius monachus","Нөмрөг тас","Cinereous Vulture"],["B","Circaetus gallicus","Могойч загалай","Short-toed Snake Eagle"],["B","Nisaetus nipalensis","Уулын согсоот бүргэд","Mountain Hawk-eagle"],["B","Hieraaetus pennatus","Могойч загалай","Short-toed Snake Eagle"],["B","Clanga clanga","Бор бүргэд","Greater Spotted Eagle"],["B","Aquila nipalensis","Тарважи бүргэд","Steppe Eagle"],["B","Aquila heliaca","Хан бүргэд","Eastern Imperial Eagle"],["B","Aquila fasciata","Харсун бүргэд","Bonelli’s Eagle"],["B","Accipiter gularis","Шунгаач харцага","Japanese Sparrowhawk"],["B","Aquila chrysaetos","Цармын бүргэд","Golden Eagle"],["B","Accipiter badius","Үүрсээ харцага","Shikra"],["B","Accipiter nisus","Морин харцага","Eurasian Sparrowhawk"],["B","Accipiter gentilis","Үлэг харцага","Northern Goshawk"],["B","Circus spilonotus","Дорнын хулд","Eastern Marsh Harrier"],["B","Circus macrourus","Хээрийн хулд","Pallid Harrier"],["B","Circus aeruginosus","Намгийн хулд","Western Marsh Harrier"],["B","Circus cyaneus","Саарал хулд","Hen Harrier"],["B","Circus melanoleucos","Алаг хулд","Pied Harrier"],["B","Circus pygargus","Нугын хулд","Montagu’s Harrier"],["B","Haliaeetus leucoryphus","Усны нөмрөг бүргэд","Pallas’s Fish Eagle"],["B","Butastur indicus","Саржуу харцгай","Grey-faced Buzzard"],["B","Milvus migrans","Сохор элээ","Black Kite"],["B","Haliaeetus albicilla","Цагаан сүүлт нөмрөг бүргэд","White-tailed Eagle"],["B","Buteo lagopus","Тарлан сар","Rough-legged Buzzard"],["B","Buteo hemilasius","Шилийн сар","Upland Buzzard"],["B","Buteo rufinus","Талын сар","Long-legged Buzzard"],["B","Falco naumanni","Зээрд шонхор","Lesser Kestrel"],["B","Buteo japonicus","Дорнын сар","Eastern Buzzard"],["B","Buteo buteo","Ойн сар","Common Buzzard"],["B","Falco tinnunculus","Начин шонхор","Common Kestrel"],["B","Falco vespertinus","Турамтай шонхор","Red-footed Falcon"],["B","Falco columbarius","Хайргууна шонхор","Merlin"],["B","Falco cherrug","Идлэг шонхор","Saker Falcon"],["B","Falco amurensis","Амарын шонхор","Amur Falcon"],["B","Falco subbuteo","Шууман шонхор","Eurasian Hobby"],["B","Falco rusticolus","Цагаан шонхор","Gyrfalcon"],["B","Falco peregrinus","Эгэл шонхор","Peregrine Falcon"],["B","Otis tarda","Хонин тоодог","Great Bustard"],["B","Falco pelegrinoides","Шилийн шонхор","Barbary Falcon"],["B","Chlamydotis macqueenii","Жороо тоодог","Macqueen’s Bustard"],["B","Coturnicops exquisitus","Бичилхэн түнжүүр","Swinhoe’s Rail"],["B","Rallus indicus","Дорнын түнжүүр","Brown-cheeked Rail"],["B","Amaurornis phoenicurus","Цагаан омруут түнжүүр","White-breasted Waterhen"],["B","Rallus aquaticus","Усны түнжүүр","Western Water Rail"],["B","Crex crex","Тариан түнжүүр","Corn Crake"],["B","Porzana parva","Хурган түнжүүр","Little Crake"],["B","Porzana pusilla","Оодон түнжүүр","Baillon’s Crake"],["B","Porzana fusca","Зосон өехийт түнжүүр","Ruddy-breasted Crake"],["B","Gallinula chloropus","Хажилгат ханчир","Common Moorhen"],["B","Porzana porzana","Тоодон түнжүүр","Spotted Crake"],["B","Porzana paykullii","Зээрд түнжүүр","Band-bellied Crake"],["B","Fulica atra","Халзан түнжүүр","Eurasian Coot"],["B","Leucogeranus leucogeranus","Цагаан тогоруу","Siberian Crane"],["B","Antigone canadensis","Орог тогоруу","Sandhill Crane"],["B","Grus japonensis","Алаг тогоруу","Red-crowned Crane"],["B","Antigone vipio","Цэн тогоруу","White-naped Crane"],["B","Grus virgo","Өвөгт тогоруу","Demoiselle Crane"],["B","Grus grus","Хархираа тогоруу","Common Crane"],["B","Grus monacha","Хар тогоруу","Hooded Crane"],["B","Turnix tanki","Гурван шивнүүрт","Yellow-legged Buttonquail"],["B","Burhinus oedicnemus","Эгэл шарандан","Eurasain Stone-curlew"],["B","Himantopus himantopus","Эгэл хилэнжигүүр","Black-winged Stilt"],["B","Vanellus vanellus","Умардын хавтгаалж","Northern Lapwing"],["B","Vanellus gregarius","Хээрийн хавтгаалж","Sociable Lapwing"],["B","Recurvirostra avosetta","Алаг ээтэн","Pied Avocet"],["B","Vanellus cinereus","Саарал хавтгаалж","Grey-headed Lapwing"],["B","Pluvialis fulva","Азийн сүвээцагаан","Pacific Golden Plover"],["B","Pluvialis squatarola","Буурал сүвээцагаан","Grey Plover"],["B","Charadrius dubius","Нарийн хиазат","Little Ringed Plover"],["B","Charadrius mongolus","Монгол хиазат","Mongolian Sandplover"],["B","Charadrius hiaticula","Хүзүүвчит хиазат","Common Ringed Plover"],["B","Charadrius alexandrinus","Тэнгисийн хиазат","Kentish Plover"],["B","Charadrius leschenaultii","Зэвэн хиазат","Greater Sandplover"],["B","Charadrius veredus","Дорнын хиазат","Oriental Plover"],["B","Rostratula benghalensis","Өнгөт хараалжир","Greater Painted-snipe"],["B","Eudromias morinellus","Урианхайн хиазат","Eurasian Dotterel"],["B","Numenius phaeopus","Бэсрэг тутгалжин","Whimbrel"],["B","Numenius madagascariensis","Мадагаскар тутгалжин","Far Eastern Curlew"],["B","Limosa lapponica","Хурган цууцал","Bar-tailed Godwit"],["B","Numenius minutus","Бичилхэн тутгалжин","Little Curlew"],["B","Numenius arquata","Морин тутгалжин","Eurasian Curlew"],["B","Limosa limosa","Морин цууцал","Black-tailed Godwit"],["B","Arenaria interpres","Алаг хайргач","Ruddy Turnstone"],["B","Calidris canutus","Шармаг элсэг","Red Knot"],["B","Calidris falcinellus","Сямби элсэг","Broad-billed Sandpiper"],["B","Calidris tenuirostris","Бор элсэг","Great Knot"],["B","Calidris pugnax","Ноцоо элсэг","Ruff"],["B","Calidris acuminata","Сүүл элсэг","Sharp-tailed Sandpiper"],["B","Calidris ferruginea","Хадуур элсэг","Curlew Sandpiper"],["B","Calidris subminuta","Савар элсэг","Long-toed Stint"],["B","Calidris alba","Гурвалж элсэг","Sanderling"],["B","Calidris temminckii","Темминкийн элсэг","Temminck’s Stint"],["B","Calidris ruficollis","Улбар түрүүт элсэг","Red-necked Stint"],["B","Calidris alpina","Хар элсэг","Dunlin"],["B","Calidris bairdii","Бэйрдийн элсэг","Baird’s Sandpiper"],["B","Calidris subruficollis","Ухаа элсэг","Buff-breasted Sandpiper"],["B","Limnodromus semipalmatus","Азийн цууцил","Asian Dowitcher"],["B","Calidris minuta","Одой элсэг","Little Stint"],["B","Calidris melanotos","Орог элсэг","Pectoral Sandpiper"],["B","Limnodromus scolopaceus","Хараалжин цууцил","Long-billed Dowitcher"],["B","Scolopax rusticola","Буурал хомноот","Eurasian Woodcock"],["B","Gallinago solitaria","Өнчин хараалж","Solitary Snipe"],["B","Gallinago megala","Шугуйн хараалж","Swinhoe’s Snipe"],["B","Xenus cinereus","Матигар хөгчүү","Terek Sandpiper"],["B","Lymnocryptes minimus","Бичил салалж","Jack Snipe"],["B","Gallinago stenura","Замбын хараалж","Pin-tailed Snipe"],["B","Gallinago gallinago","Шөвгөн хараалж","Common Snipe"],["B","Phalaropus lobatus","Нарийн сэлээхэй","Red-necked Phalarope"],["B","Phalaropus fulicarius","Улаан сэлээхэй","Red Phalarope"],["B","Tringa ochropus","Цагаан сүүлт хөгчүү","Green Sandpiper"],["B","Tringa brevipes","Буурал хөгчүү","Grey-tailed Tattler"],["B","Actitis hypoleucos","Хайргын хөгчүү","Common Sandpiper"],["B","Tringa incana","Цэлдэн хөгчүү","Wandering Tattler"],["B","Tringa totanus","Улаан хөлт хөгчүү","Common Redshank"],["B","Tringa stagnatilis","Бүрдний хөгчүү","Marsh Sandpiper"],["B","Tringa erythropus","Хар хөгчүү","Spotted Redshank"],["B","Glareola pratincola","Улбар сугат хөгт","Collared Pratincole"],["B","Tringa glareola","Шугуйн хөгчүү","Wood Sandpiper"],["B","Tringa nebularia","Үхэр хөгчүү","Common Greenshank"],["B","Glareola maldivarum","Ухаа сугат хөгт","Oriental Pratincole"],["B","Rissa tridactyla","Гурван хуруут цахлай","Black-legged Kittiwake"],["B","Chroicocephalus brunnicephalus","Бор толгойт цахлай","Brown-headed Gull"],["B","Hydrocoloeus minutus","Хурган цахлай","Little Gull"],["B","Chroicocephalus genei","Шөвгөр цахлай","Slender-billed Gull"],["B","Chroicocephalus ridibundus","Хүрэн толгойт цахлай","Black-headed Gull"],["B","Rhodostethia rosea","Ягаан цахлай","Ross’s Gull"],["B","Ichthyaetus relictus","Реликт цахлай","Relict Gull"],["B","Larus crassirostris","Хар сүүлт цахлай","Black-tailed Gull"],["B","Larus hyperboreus","Мөсний цахлай","Glaucous Gull"],["B","Ichthyaetus ichthyaetus","Итэлгэн цахлай","Pallas’s Gull"],["B","Larus canus","Үүлэн цахлай","Mew Gull"],["B","Larus fuscus","Хеуглиний цахлай","Heuglin’s Gull"],["B","Larus mongolicus","Монгол цахлай","Mongolian Gull"],["B","Hydroprogne caspia","Морин хараалай","Caspian Tern"],["B","Sterna hirundo","Эгэл хараалай","Common Tern"],["B","Gelochelidon nilotica","Бахим хараалай","Gull-billed Tern"],["B","Sternula albifrons","Хурган хараалай","Little Tern"],["B","Sterna paradisaea","Умардын хараалай","Arctic Tern"],["B","Chlidonias hybrida","Цагаан шанаат хараалай","Whiskered Tern"],["B","Chlidonias niger","Хилэн хараалай","Black Tern"],["B","Stercorarius pomarinus","Бэсрэг хайлгана","Pomarine Jaeger"],["B","Chlidonias leucopterus","Буурал хараалай","White-winged Tern"],["B","Stercorarius parasiticus","Годон хайлгана","Parasitic Jaeger"],["B","Syrrhaptes paradoxus","Монгол ногтруу","Pallas’s Sandgrouse"],["B","Columba livia","Хөхвөр тагтаа","Rock Dove"],["B","Columba oenas","Хүнхэл тагтаа","Stock Dove"],["B","Columba rupestris","Хадны тагтаа","Hill Pigeon"],["B","Columba eversmanni","Хүрэвтэр тагтаа","Yellow-eyed Pigeon"],["B","Columba palumbus","Ойн тагтаа","Common Woodpigeon"],["B","Streptopelia orientalis","Дорнын хүүрзгэнэ","Oriental Turtle Dove"],["B","Streptopelia tranquebarica","Зээрд хүүрзгэнэ","Red Turtle Dove"],["B","Streptopelia turtur","Өрнийн хүүрзгэнэ","European Turtle Dove"],["B","Streptopelia decaocto","Буулгат хүүрзгэнэ","Eurasian Collared Dove"],["B","Spilopelia senegalensis","Өөдсөн хүүрзгэнэ","Laughing Dove"],["B","Cuculus poliocephalus","Хурган хөхөө","Lesser Cuckoo"],["B","Cuculus optatus","Ханамал хөхөө","Oriental Cuckoo"],["B","Otus scops","Ердийн орволго","Eurasian Scops Owl"],["B","Cuculus micropterus","Жагар хөхөө","Indian Cuckoo"],["B","Cuculus canorus","Эгэл хөхөө","Common Cuckoo"],["B","Otus sunia","Ойн орволго","Oriental Scops Owl"],["B","Bubo scandiacus","Цэвдгийн ууль","Snowy Owl"],["B","Strix uralensis","Хув бэгбаатар","Ural Owl"],["B","Surnia ulula","Харсуун ууль","Northern Hawk-Owl"],["B","Bubo bubo","Эгэл шаршувуу","Eurasian Eagle-Owl"],["B","Strix nebulosa","Угалзан бэгбаатар","Great Grey Owl"],["B","Glaucidium passerinum","Буслаг сүлэг","Eurasian Pygmy Owl"],["B","Athene noctua","Хотны бүгээхэй","Little Owl"],["B","Ninox japonica","Наран ууль","Northern Boobook"],["B","Asio flammeus","Хулгар гуйванга","Short-eared Owl"],["B","Aegolius funereus","Савагт ариан","Boreal Owl"],["B","Asio otus","Соотон гуйванга","Long-eared Owl"],["B","Caprimulgus jotaka","Лагс эргүүбор","Grey Nightjar"],["B","Hirundapus caudacutus","Ойн ураацай","White-throated Needletail"],["B","Caprimulgus europaeus","Өрнийн эргүүбор","European Nightjar"],["B","Apus apus","Хурын ураацай","Common Swift"],["B","Apus pacificus","Хондлой цагаан ураацай","Pacific Swift"],["B","Coracias garrulus","Өрнийн зүсэг","European Roller"],["B","Halcyon pileata","Хар магнайт халуу","Black-capped Kingfisher"],["B","Eurystomus orientalis","Дорнын зүсэг","Oriental Dollarbird"],["B","Alcedo atthis","Номин шогшир","Common Kingfisher"],["B","Merops persicus","Цэнхэр шанаат зөгийч","Blue-cheeked Bee-eater"],["B","Upupa epops","Бөвөөлжин өвөөлж","Common Hoopoe"],["B","Jynx torquilla","Холтсон гоётуул","Eurasian Wryneck"],["B","Merops apiaster","Шарга зөгийч","European Bee-eater"],["B","Picoides tridactylus","Гурван хумст тоншуул","Eurasian Three-toed Woodpecker"],["B","Dryobates minor","Бага алаг тоншуул","Lesser Spotted Woodpecker"],["B","Dendrocopos major","Их алаг тоншуул","Great Spotted Woodpecker"],["B","Dryocopus martius","Хар тоншуул","Black Woodpecker"],["B","Dendrocopos hyperythrus","Бор хэвлийт тоншуул","Rufous-bellied Woodpecker"],["B","Dendrocopos leucotos","Хондлой цагаан тоншуул","White-backed Woodpecker"],["B","Picus canus","Буурал тоншуул","Grey-faced Woodpecker"],["B","Pericrocotus divaricatus","Саарал авгалдайч","Ashy Minivet"],["B","Lanius bucephalus","Бухан дунхай","Bull-headed Shrike"],["B","Lanius isabellinus","Тольт дунхай","Isabelline Shrike"],["B","Lanius cristatus","Ухаа дунхай","Brown Shrike"],["B","Lanius schach","Алаг дунхай","Long-tailed Shrike"],["B","Lanius minor","Хар духт дунхай","Lesser Grey Shrike"],["B","Lanius pallidirostris","Үнсэн дунхай","Steppe Grey Shrike"],["B","Oriolus oriolus","Эгэл шаргач","Eurasian Golden Oriole"],["B","Lanius borealis","Умардын дунхай","Northern Shrike"],["B","Lanius sphenocercus","Хул дунхай","Chinese Grey Shrike"],["B","Oriolus chinensis","Дорнын шаргач","Black-naped Oriole"],["B","Dicrurus macrocercus","Хар доронго","Black Drongo"],["B","Dicrurus hottentottus","Өрвийт доронго","Hair-crested Drongo"],["B","Dicrurus leucophaeus","Үнсэн доронго","Ashy Drongo"],["B","Perisoreus infaustus","Хөвчийн дуудууш","Siberian Jay"],["B","Cyanopica cyanus","Цэнхэр шаазгай","Azure-winged Magpie"],["B","Podoces hendersoni","Монгол хулан жороо","Mongolian Ground Jay"],["B","Garrulus glandarius","Ятга шаазгай","Eurasian Jay"],["B","Pica pica","Алаг шаазгай","Eurasian Magpie"],["B","Nucifraga caryocatactes","Самарч шаазгай","Spotted Nutcracker"],["B","Pyrrhocorax pyrrhocorax","Улаан хошуут жунгаа","Red-billed Chough"],["B","Coloeus monedula","Харлаг хэрээ","Western Jackdaw"],["B","Corvus frugilegus","Турлиах хэрээ","Rook"],["B","Corvus cornix","Саарал хэрээ","Hooded Crow"],["B","Pyrrhocorax graculus","Шар хошуут жунгаа","Alpine Chough"],["B","Coloeus dauuricus","Алагтуу хэрээ","Daurian Jackdaw"],["B","Corvus corone","Хар хэрээ","Carrion Crow"],["B","Corvus corax","Хон хэрээ","Northern Raven"],["B","Bombycilla garrulus","Шивэр энхэтбялзуухай","Bohemian Waxwing"],["B","Periparus ater","Өдөрч хөхбух","Coal Tit"],["B","Poecile montanus","Хүрэн толгойт хөхбух","Willow Tit"],["B","Bombycilla japonica","Наран энхэтбялзуухай","Japanese Waxwing"],["B","Poecile palustris","Хар толгойт хөхбух","Marsh Tit"],["B","Poecile cinctus","Шивэр хөхбух","Siberian Tit"],["B","Cyanistes cyanus","Номин хөхбух","Azure Tit"],["B","Remiz coronatus","Бургасны ураншувуу","White-crowned Penduline Tit"],["B","Panurus biarmicus","Сахалт хөхбух","Bearded Reedling"],["B","Parus major","Их хөхбух","Great Tit"],["B","Alauda leucoptera","Цагаалиг болжмор","White-winged Lark"],["B","Galerida cristata","Согсоот болжмор","Crested Lark"],["B","Calandrella dukhunensis","Монгол жиргэмэл","Mongolian Short-toed Lark"],["B","Alauda arvensis","Боролзой болжмор","Eurasian Skylark"],["B","Eremophila alpestris","Эвэрт болжмор","Horned Lark"],["B","Calandrella brachydactyla","Талын жиргэмэл","Greater Short-toed Lark"],["B","Melanocorypha yeltoniensis","Харалдай болжмор","Black Lark"],["B","Alaudala cheleensis","Дэрсний жиргэмэл","Asian Short-toed Lark"],["B","Pycnonotus flavescens","Ухаа бөлбөл","Flavescent Bulbul"],["B","Melanocorypha mongolica","Монгол болжмор","Mongolian Lark"],["B","Riparia riparia","Эргийн хараацай","Sand Martin"],["B","Hirundo rustica","Асрын хараацай","Barn Swallow"],["B","Delichon urbicum","Хүрээний хараацай","Common House Martin"],["B","Riparia diluta","Бүгээн хараацай","Pale Martin"],["B","Ptyonoprogne rupestris","Харагчин хараацай","Eurasian Crag Martin"],["B","Delichon dasypus","Цармын хараацай","Asian House Martin"],["B","Cecropis daurica","Монгол хараацай","Red-rumped Swallow"],["B","Abroscopus albogularis","Улбар нүүрт цоровдой","Rufous-faced Warbler"],["B","Aegithalos caudatus","Сүүлт хөхбух","Long-tailed Tit"],["B","Phylloscopus sibilatrix","Тарчигнаа дуучшувуу","Wood Warbler"],["B","Phylloscopus inornatus","Борлог дуучшувуу","Yellow-browed Warbler"],["B","Phylloscopus armandii","Шаргал өехийт дуучшувуу","Yellow-streaked Warbler"],["B","Phylloscopus humei","Хумей дуучшувуу","Hume’s Leaf Warbler"],["B","Phylloscopus proregulus","Жирхэн дуучшувуу","Pallas’s Leaf Warbler"],["B","Phylloscopus schwarzi","Цангинаа дуучшувуу","Radde’s Warbler"],["B","Phylloscopus griseolus","Хасаг дуучшувуу","Sulphur-bellied Warbler"],["B","Phylloscopus trochilus","Ногоон дуучшувуу","Willow Warbler"],["B","Phylloscopus coronatus","Судал зулайт дуучшувуу","Eastern Crowned Warbler"],["B","Phylloscopus fuscatus","Бүхт дуучшувуу","Dusky Warbler"],["B","Phylloscopus tristis","Урианхайн дуучшувуу","Siberian Chiffchaff"],["B","Phylloscopus nitidus","Ногоовор дуучшувуу","Green Warbler"],["B","Phylloscopus plumbeitarsus","Хос судалт дуучшувуу","Two-barred Warbler"],["B","Phylloscopus tenellipes","Цэгээн шилбэт дуучшувуу","Pale-legged Leaf Warbler"],["B","Phylloscopus borealis","Умардын дуучшувуу","Arctic Warbler"],["B","Phylloscopus trochiloides","Шар өехийт дуучшувуу","Greenish Warbler"],["B","Phylloscopus claudiae","Клаудын дуучшувуу","Claudia’s Leaf Warbler"],["B","Acrocephalus arundinaceus","Их охилбялзуухай","Great Reed Warbler"],["B","Acrocephalus stentoreus","Өмнөдийн охилбялзуухай","Clamorous Reed Warbler"],["B","Acrocephalus agricola","Хээрийн охилбялзуухай","Paddyfield Warbler"],["B","Acrocephalus orientalis","Дорнын охилбялзуухай","Oriental Reed Warbler"],["B","Acrocephalus bistrigiceps","Хар хөмсөгт охилбялзуухай","Black-browed Reed Warbler"],["B","Acrocephalus dumetorum","Бутны охилбялзуухай","Blyth’s Reed Warbler"],["B","Arundinax aedon","Банхар охилбялзуухай","Thick-billed Warbler"],["B","Helopsaltes fasciolatus","Тайгын шатансүүлт","Gray’s Grasshopper Warbler"],["B","Helopsaltes certhiola","Гүймхий шатансүүлт","Pallas’s Grasshopper Warbler"],["B","Iduna caligata","Халиун заараг","Booted Warbler"],["B","Helopsaltes pryeri","Наран ажиндар","Marsh Grassbird"],["B","Helopsaltes ochotensis","Меддендорфын шатансүүлт","Middendorff’s Grasshopper Warbler"],["B","Locustella lanceolata","Бидэрт шатансүүлт","Lanceolated Warbler"],["B","Locustella tacsanowskia","Шивэр цоохондой","Chinese Bush Warbler"],["B","Locustella davidi","Цоохор хоолойт шатансүүлт","Baikal Bush Warbler"],["B","Locustella naevia","Эгэл шатансүүлт","Common Grasshopper Warbler"],["B","Locustella luscinioides","Шагшуургын шатансүүлт","Savi’s Warbler"],["B","Sylvia atricapilla","Халимагт зэржигэнэ","Eurasian Blackcap"],["B","Sylvia curruca","Тарчигнаа зэржигэнэ","Lesser Whitetroat"],["B","Sylvia althaea","Уулын зэржигэнэ","Hume‘s Whitethroat"],["B","Sylvia communis","Шөвгөр зэржигэнэ","Common Whitethroat"],["B","Sylvia nisoria","Харсуун зэржигэнэ","Barred Warbler"],["B","Sylvia minula","Хурган зэржигэнэ","Desert Whitethroat"],["B","Sylvia nana","Цөлийн зэржигэнэ","Asian Desert Warbler"],["B","Rhopophilus pekinensis","Бутны сонд","Beijing Warbler"],["B","Sinosuthora webbiana","Бор хурагч","Vinous-throated Parrotbill"],["B","Zosterops erythropleurus","Зээрд сүвээт гархинүдэн","Chestnut-flanked White-eye"],["B","Regulus regulus","Шар мэлзэн задуулай","Goldcrest"],["B","Paradoxornis heudei","Бахим хошуут хурагч","Reed Parrotbill"],["B","Troglodytes troglodytes","Халгайч урагчин","Eurasian Wren"],["B","Sitta europaea","Өрнийн тоншголжин","Eurasian Nuthatch"],["B","Certhia familiaris","Хөвчийн бялзуумар","Eurasian Treecreeper"],["B","Tichodroma muraria","Хэрмийн бялзуухай","Wallcreeper"],["B","Acridotheres cristatellus","Тольт хар тотол","Crested Myna"],["B","Spodiopsar cineraceus","Бор тодол","White-cheeked Starling"],["B","Pastor roseus","Ягаан тодол","Rosy Starling"],["B","Spodiopsar sericeus","Улаан хошуут тодол","Red-billed Starling"],["B","Agropsar sturninus","Хурган тодол","Daurian Starling"],["B","Sturnus vulgaris","Хар тодол","Common Starling"],["B","Geokichla sibirica","Шивэр хөөндэй","Siberian Thrush"],["B","Turdus merula","Хар хөөндэй","Common Blackbird"],["B","Turdus pallidus","Бүгээн хөөндэй","Pale Thrush"],["B","Zoothera aurea","Алаг хөөндэй","White’s Thrush"],["B","Turdus obscurus","Халиун хөөндэй","Eyebrowed Thrush"],["B","Turdus atrogularis","Хар гүеэт хөөндэй","Black- throated Thrush"],["B","Turdus ruficollis","Улаан гүеэт хөөндэй","Red-throated Thrush"],["B","Turdus eunomus","Хүрэн хөөндэй","Dusky Thrush"],["B","Turdus iliacus","Цагаан хөмсөгт хөөндэй","Redwing"],["B","Turdus viscivorus","Бужмаг хөөндэй","Mistle Thrush"],["B","Turdus naumanni","Науманны хөөндэй","Naumann’s Thrush"],["B","Turdus pilaris","Дуулгат хөөндэй","Fieldfare"],["B","Turdus philomelos","Дууч хөөндэй","Song Thrush"],["B","Muscicapa striata","Бөртөт намнаахай","Spotted Flycatcher"],["B","Muscicapa sibirica","Шивэр намнаахай","Dark-sided Flycatcher"],["B","Erithacus rubecula","Зээрд омруут гургалдай","European Robin"],["B","Muscicapa griseisticta","Сэвхэт намнаахай","Grey-streaked Flycatcher"],["B","Muscicapa dauurica","Дагуурын намнаахай","Asian Brown Flycatcher"],["B","Larvivora cyane","Номин гургалдай","Siberian Blue Robin"],["B","Larvivora sibilans","Шийгнээ гургалдай","Rufous-tailed Robin"],["B","Luscinia megarhynchos","Зулбаран гургалдай","Common Nightingale"],["B","Tarsiger cyanurus","Хөх зоот гургалдай","Red-flanked Bluetail"],["B","Cyanecula svecica","Сондорт гургалдай","Bluethroat"],["B","Calliope calliope","Өнгөлүүрт гургалдай","Siberian Rubythroat"],["B","Myophonus caeruleus","Нил исгэрээ хөөндэй","Blue Whistling-thrush"],["B","Ficedula hypoleuca","Алаг намнаа","European Pied Flycatcher"],["B","Ficedula narcissina","Наран намнаа","Narcissus Flycatcher"],["B","Ficedula hodgsoni","Хөхвөр нуруут намнаа","Slaty-backed Flycatcher"],["B","Ficedula zanthopygia","Гуулин намнаа","Yellow-rumped Flycatcher"],["B","Ficedula mugimaki","Тайгын намнаа","Mugimaki Flycatcher"],["B","Ficedula albicilla","Хурган намнаа","Taiga Flycatcher"],["B","Phoenicurus erythronotus","Улбар галсүүлт","Eversmann’s Redstart"],["B","Phoenicurus phoenicurus","Эгэл галсүүлт","Common Redstart"],["B","Phoenicurus erythrogastrus","Цээжмэг галсүүлт","Gϋldenstädt’s Redstart"],["B","Phoenicurus ochruros","Мойлон галсүүлт","Black Redstart"],["B","Phoenicurus auroreus","Дагуур галсүүлт","Daurian Redstart"],["B","Phoenicurus leucocephalus","Халзан галсүүлт","White-capped Redstart"],["B","Monticola saxatilis","Хадны жижир","Common Rock Thrush"],["B","Monticola gularis","Цагаан гүеэт жижир","White-throated Rock Thrush"],["B","Saxicola maurus","Шивэр шулганаа","Siberian Stonechat"],["B","Monticola solitarius","Цэнхэр жижир","Blue Rock Thrush"],["B","Saxicola insignis","Өгөөлэй шулганаа","White-throated Bushchat"],["B","Oenanthe oenanthe","Адууч чогчиго","Northern Wheatear"],["B","Oenanthe isabellina","Бүжимч чогчиго","Isabelline Wheatear"],["B","Oenanthe pleschanka","Мяраан чогчиго","Pied Wheatear"],["B","Cinclus cinclus","Гялаан омруут харзлай","White-throated Dipper"],["B","Oenanthe deserti","Цөлийн чогчиго","Desert Wheatear"],["B","Passer ammodendri","Загийн боршувуу","Saxaul Sparrow"],["B","Passer montanus","Хээрийн боршувуу","Eurasian Tree Sparrow"],["B","Montifringilla nivalis","Цасны богшоодой","White-winged Snowfinch"],["B","Passer domesticus","Оронгийн боршувуу","House Sparrow"],["B","Petronia petronia","Хадны боршувуу","Rock Sparrow"],["B","Pyrgilauda davidiana","Монгол божирог","Pere David’s Snowfinch"],["B","Prunella collaris","Тагийн хайруулдай","Alpine Accentor"],["B","Prunella montanella","Сибирийн хайруулдай","Siberian Accentor"],["B","Prunella atrogularis","Хар омруут хайруулдай","Black-throated Accentor"],["B","Prunella himalayana","Хималайн хайруулдай","Altai Accentor"],["B","Prunella fulvescens","Шарга хайруулдай","Brown Accentor"],["B","Prunella koslowi","Монгол хайруулдай","Mongolian Accentor"],["B","Dendronanthus indicus","Ойн цэгцгий","Forest Wagtail"],["B","Motacilla tschutschensis","Дорнын шар цэгцгий","Eastern Yellow Wagtail"],["B","Motacilla cinerea","Уулын цэгцгий","Grey Wagtail"],["B","Motacilla flava","Өрнийн шар цэгцгий","Western Yellow Wagtail"],["B","Motacilla citreola","Шар түрүүт цэгцгий","Citrine Wagtail"],["B","Motacilla alba","Хөх цэгцгий","White Wagtail"],["B","Anthus richardi","Хээрийн шийхнүүхэй","Richard’s Pipit"],["B","Anthus campestris","Талын шийхнүүхэй","Tawny Pipit"],["B","Anthus hodgsoni","Бөртөт шийхнүүхэй","Olive-backed Pipit"],["B","Anthus roseatus","Ягаавар шийхнүүхэй","Rosy Pipit"],["B","Anthus godlewskii","Годлевскийн шийхнүүхэй","Blyth’s Pipit"],["B","Anthus trivialis","Ойн шийхнүүхэй","Tree Pipit"],["B","Anthus gustavi","Сибирийн шийхнүүхэй","Pechora Pipit"],["B","Anthus cervinus","Зосон гүеэт шийхнүүхэй","Red-throated Pipit"],["B","Anthus rubescens","Америкийн шийхнүүхэй","Buff-bellied Pipit"],["B","Fringilla coelebs","Дуулгат бужирга","Common Chaffinch"],["B","Coccothraustes coccothraustes","Банхар булжуухай","Hawfinch"],["B","Pinicola enucleator","Нарсны шүршүү","Pine Grosbeak"],["B","Anthus spinoletta","Харзны шийхнүүхэй","Water Pipit"],["B","Fringilla montifringilla","Алаг бужирга","Brambling"],["B","Eophona migratoria","Наран шаршуу","Chinese Grosbeak"],["B","Pyrrhula pyrrhula","Эгэл зана","Eurasian Bullfinch"],["B","Leucosticte nemoricola","Хималайн зангалай","Plain Mountain-finch"],["B","Leucosticte arctoa","Занхгар зангалай","Asian Rosy-finch"],["B","Carpodacus rubicilla","Улаан бужмар","Great Rosefinch"],["B","Carpodacus pulcherrimus","Бүлхэрээ бужмар","Beautiful Rosefinch"],["B","Carpodacus roseus","Ягаан бужмар","Pallas’s Rosefinch"],["B","Carpodacus rhodochlamys","Арцны бужмар","Red-mantled Rosefinch"],["B","Carpodacus sibiricus","Үүрэн сүүлт бужмар","Long-tailed Rosefinch"],["B","Chloris chloris","Эгэл ногоолдой","European Greenfinch"],["B","Chloris sinica","Нангиад ногоолдой","Oriental Greenfinch"],["B","Linaria flavirostris","Бор цэгцүүхэй","Twite"],["B","Acanthis flammea","Дөлөн цэгцүүхэй","Redpoll"],["B","Rhodospiza obsoleta","Цөлийн алтанжигүүр","Desert Finch"],["B","Linaria cannabina","Алтан цэгцүүхэй","Common Linnet"],["B","Acanthis hornemanni","Шунхан цэгцүүхэй","Arctic Redpoll"],["B","Loxia curvirostra","Гацуурын солбинхошуут","Red Crossbill"],["B","Carduelis carduelis","Бор бужирга","European Goldfinch"],["B","Spinus spinus","Эгэл ногоолзой","Eurasian Siskin"],["B","Loxia leucoptera","Тольт солбинхошуут","Two-barred Crossbill"],["B","Serinus pusillus","Улаан духт серин","Red-fronted Serin"],["B","Calcarius lapponicus","Буулгат хөмрөг","Lapland Longspur"],["B","Emberiza citrinella","Алтан хөмрөг","Yellowhammer"],["B","Emberiza cia","Цагаан хөмсөгт хөмрөг","Rock Bunting"],["B","Emberiza cioides","Хүрэн чихт хөмрөг","Meadow Bunting"],["B","Emberiza buchanani","Хөхлөрийн хөмрөг","Grey-necked Bunting"],["B","Emberiza tristrami","Самнаа хөмрөг","Tristram’s Bunting"],["B","Emberiza jankowskii","Янковскийн хөмрөг","Jankowski’s Bunting"],["B","Emberiza hortulana","Алаг хөмрөг","Ortolan Bunting"],["B","Emberiza fucata","Шар нүдэн хөмрөг","Chestnut-eared Bunting"],["B","Emberiza pusilla","Борлог хөмрөг","Little Bunting"],["B","Emberiza rustica","Хар шанаат хөмрөг","Rustic Bunting"],["B","Emberiza aureola","Шар элэгт хөмрөг","Yellow-breasted Bunting"],["B","Emberiza chrysophrys","Сондуу хөмрөг","Yellow-browed Bunting"],["B","Emberiza elegans","Тавт хөмрөг","Yellow-throated Bunting"],["B","Emberiza rutila","Орхимжит хөмрөг","Chestnut Bunting"],["B","Emberiza melanocephala","Хар толгойт хөмрөг","Black-headed Bunting"],["B","Emberiza spodocephala","Хөх түрүүт хөмрөг","Black-faced Bunting"],["B","Emberiza yessoensis","Наран хөмрөг","Japanese Reed Bunting"],["B","Emberiza bruniceps","Хүрэн толгойт хөмрөг","Red-headed Bunting"],["B","Emberiza pallasi","Цагаан хэвэлт хөмрөг","Pallas’s Bunting"],["B","Emberiza schoeniclus","Цагаан хүзүүт хөмрөг","Reed Bunting"],["M","Mesechinus dauuricus","Дагуур зараа","Daurian Hedgehog"],["M","Sorex tundrensis","Цармын атаахай","Tundra Shrew"],["M","Sorex daphaenodon","Бэсрэг атаахай","Siberian Large-toothed Shrew"],["M","Hemiechinus auritus","Дэлдэн зараа","Long-eared Hedgehog"],["M","Sorex caecutiens","Дааган атаахай","Laxmann’s Shrew"],["M","Sorex isodon","Тэгш атаахай","Even-toothed Shrew"],["M","Sorex minutissimus","Өөдсөн атаахай","Eurasian Least Shrew"],["M","Sorex araneus","Хэвлүүн атаахай","Common Shrew"],["M","Crocidura shantungensis","Азийн малтаахай","Asian Lesser White-toothed Shrew"],["M","Sorex roboratus","Тавшгар атаахай","Flat-skulled shrew"],["M","Crocidura suaveolens","Нугын малтаахай","Lesser White-toothed Shrew"],["M","Neomys fodiens","Усч гэрэлзгэнэ","Eurasian Water Shrew"],["M","Talpa altaica","Алтайн чацуулин","Siberian Mole"],["M","Vespertilio murinus","Буурал сармаахай","Particoloured Bat"],["M","Hypsugo alaschanicus","Алаша турсаахай","Alashanian Pipistrelle"],["M","Eptesicus gobiensis","Говьсог сарсаахай","Gobi Big Brown Bat"],["M","Nyctalus noctula","Хонгор бүрэнхийч","Noctule"],["M","Myotis gracilis","Ойсог багваахай","Ussur Wiskered Bat"],["M","Eptesicus serotinus","Хожуу сарсаахай","Serotine Bat"],["M","Murina hilgendorfi","Шивэр ацмар","Hilgendorf’s Tube-nosed Bat"],["M","Myotis petax","Уссаг багваахай","Eastern Water Bat"],["M","Myotis aurascens","Хээрийн багваахай","Whiskered Bat"],["M","Plecotus kozlovi","Саарал соотгой","Grey Long-eared Bat"],["M","Myotis bombinus","Амарын багваахай","Far Eastern Myotis"],["M","Plecotus turkmenicus","Говьсог соотгой","Turkmen Long-eared Bat"],["M","Myotis ikonnikovi","Бяцхан багваахай","Ikonnikov’s Bat"],["M","Plecotus ognevi","Бор соотгой","Brown Long-eared Bat"],["M","Plecotus strelkovi","Хиргис соотгой","Strelkov’s Big-eared Bat"],["M","Lepus timidus","Чандага туулай","Arctic Hare"],["M","Ochotona dauurica","Дагуур огдой","Daurian Pika"],["M","Ochotona hyperborea","Асганы огдой","Northern Pika"],["M","Lepus tolai","Бор туулай","Tolai Hare"],["M","Ochotona alpina","Тагийн огдой","Alpine Pika"],["M","Ochotona pallasi","Монгол огдой","Pallas’s Pika"],["M","Ochotona hoffmanni","Хэнтийн огдой","Hoffmann’s Pika"],["M","Marmota sibirica","Монгол тарвага","Siberian Marmot"],["M","Urocitellus undulatus","Сүүлэрхэг зурам","Long-tailed Ground Squirrel"],["M","Marmota baibacina","Алтайн тарвага","Grey Marmot"],["M","Spermophilus pallidicauda","Бозлог зурам","Red-cheeked Ground Squirrel"],["M","Spermophilus dauricus","Дагуур зурам","Daurian Ground Squirrel"],["M","Pteromys volans","Хөхвөр олби","Siberian Flying Squirrel"],["M","Sciurus vulgaris","Бараан хэрэм","Eurasian Red Squirrel"],["M","Spermophilus alaschanicus","Гозоорой зурам","Alashan Ground Squirrel"],["M","Tamias sibiricus","Замба жирх","Siberian Chipmunk"],["M","Dryomys nitedula","Ойн унтаахай","Forest dormouse"],["M","Castor fiber","Азийн минж","Eurasian Beaver"],["M","Myospalax aspalax","Сохор номин","False Zokor"],["M","Myospalax psilurus","Манж номин","Manchurian Zokor"],["M","Microtus gregalis","Хэргэлзий оготно","Narrow-headed Vole"],["M","Microtus fortis","Өргөөнч оготно","Reed Vole"],["M","Microtus mongolicus","Монгол оготно","Mongolian Vole"],["M","Microtus oeconomus","Мэхээрч оготно","Root Vole"],["M","Microtus maximowiczii","Ширгийн оготно","Maximowicz’s Vole"],["M","Microtus arvalis","Бараан оготно","Common Vole"],["M","Microtus limnophilus","Зүлгийн оготно","Lacustrine Vole"],["M","Lasiopodomys mandarinus","Үлийн бор оготно","Mandarin Vole"],["M","Myodes rutilus","Ойн улаан оготно","Nothern Red-backed Vole"],["M","Lasiopodomys brandtii","Үлийн цагаан оготно","Brandt’s Vole"],["M","Myodes rufocanus","Ойн хүрэн оготно","Grey Red-backed Vole"],["M","Myopus schisticolor","Ойн хөвхөлжин","Wood Lemming"],["M","Alticola semicanus","Хадны барагчин","Mongolian Silver Vole"],["M","Alticola strelzovi","Тавшгар барагчин","Flat-headed Vole"],["M","Alticola tuvinicus","Тува барагчин","Tuva Silver Vole"],["M","Alticola macrotis","Соён барагчин","Large-eared Mountain Vole"],["M","Alticola barakshin","Говь-Алтайн барагчин","Gobi-Altai Mountain Vole"],["M","Lagurus lagurus","Хөх ов","Steppe Lemming"],["M","Eolagurus luteus","Шар ов","Yellow Steppe Lemming"],["M","Arvicola amphibius","Усч оготно","Eurasian Water Vole"],["M","Ellobius tancrei","Сохдой оготно","Zaisan Mole Vole"],["M","Eolagurus przewalskii","Түвд ов","Przewalski’s Sttepe Lemming"],["M","Ondatra zibethicus","Заарт ондоотор","Muskrat"],["M","Allocricetulus curtatus","Цомч шишүү","Mongolian Hamster"],["M","Cricetulus longicaudatus","Сүүллэг шишүүхэй","Long-tailed Dwarf Hamster"],["M","Cricetulus sokolovi","Бүрдийн шишүүхэй","Sokolov’s Dwarf Hamster"],["M","Cricetulus barabensis","Хөх шишүүхэй","Striped Dwarf Hamster"],["M","Cricetulus migratorius","Бордуу шишүүхэй","Grey Dwarf Hamster"],["M","Phodopus campbelli","Орог зусаг","Campbell’s Hamster"],["M","Phodopus roborovskii","Элсний зусаг","Desert Hamster"],["M","Meriones unguiculatus","Монгол чичүүл","Mongolian Gerbil"],["M","Meriones tamariscinus","Сухайн чичүүл","Tamarisk Gerbil"],["M","Meriones meridianus","Шар чичүүл","Midday Gerbil"],["M","Rhombomys opimus","Морин чичүүл","Great Gerbil"],["M","Micromys minutus","Чигчий хулгана","Eurasian Harvest Mouse"],["M","Apodemus peninsulae","Азийн хулгана","Korean Field Mouse"],["M","Mus musculus","Гэрийн хулгана","House Mouse"],["M","Apodemus agrarius","Хээрийн хулгана","Striped Field Mouse"],["M","Apodemus uralensis","Уралын хулгана","Ural Field Mouse"],["M","Rattus norvegicus","Бор харх","Brown Rat"],["M","Allactaga balikunica","Цөлийн алагдаага","Balikun Jerboa"],["M","Allactaga elater","Давжаа алагдаага","Small Five-toed Jerboa"],["M","Cardiocranius paradoxus","Тавруу атигдаахай","Five-toed Pygmy Jerboa"],["M","Allactaga bullata","Говийн алагдаага","Gobi Jerboa"],["M","Allactaga sibirica","Шивэр алагдаага","Siberian Jerboa"],["M","Dipus sagitta","Элсч савагдаахай","Nothern Three-toed Jerboa"],["M","Euchoreutes naso","Соотон алагдаахай","Long-eared Jerboa"],["M","Salpingotus crassicauda","Өөхөн сүүлт тажигдаахай","Thick-tailed Pygmy Jerboa"],["M","Stylodipus andrewsi","Монгол даахай","Mongolian Jerboa"],["M","Pygeretmus pumilio","Зэгэл алагдааганцар","Dwarf Fat-tailed Jerboa"],["M","Salpingotus kozlovi","Элсний тажигдаахай","Kozlov’s Pygmy Jerboa"],["M","Stylodipus sungorus","Зүүнгар даахай","Mongolian Three-toed Jerboa"],["M","Nyctereutes procyonoides","Загал элбэнх","Raccoon Dog"],["M","Vulpes vulpes","Шар үнэг","Red Fox"],["M","Cuon alpinus","Шарнад цөөвөр","Red Wolf"],["M","Vulpes corsac","Хярс үнэг","Corsac Fox"],["M","Canis lupus","Саарал чоно","Grey Wolf"],["M","Ursus arctos","Хүрэн баавгай","Brown Bear"],["M","Ursus arctos gobiensis","Мазаалай баавгай","Gobi Bear"],["M","Gulo gulo","Нохой зээх","Wolverine"],["M","Arctonyx collaris","Мангис дорго","Hog Badger"],["M","Meles leucurus","Халздай дорго","Asian Badger"],["M","Lutra lutra","Голын халиу","Eurasian Otter"],["M","Vormela peregusna","Эрээн хүрнэ","Marbled Polecat"],["M","Mustela nivalis","Хотны үен","Least Weasel"],["M","Mustela sibirica","Ойн солонго","Siberian Weasel"],["M","Mustela eversmanni","Өмхий хүрнэ","Steppe Polecat"],["M","Mustela erminea","Цагаан үен","Stoat"],["M","Mustela altaica","Хээрийн солонго","Mountain Weasel"],["M","Martes zibellina","Ойн булга","Sable"],["M","Neovison vison","Усны булга","American Mink"],["M","Lynx lynx","Шилүүс мий","Eurasian Lynx"],["M","Martes foina","Суусар булга","Beech Marten"],["M","Otocolobus manul","Мануул мий","Pallas’s Cat"],["M","Felis silvestris","Цоохондой мий","Wild Cat"],["M","Equus hemionus","Хулан адуу","Asiatic Wild Ass"],["M","Sus scrofa","Зэрлэг гахай","Wild Boar"],["M","Uncia uncia","Цоохор ирвэс","Snow Leopard"],["M","Equus ferus","Тахь адуу","Przewalski’s Horse"],["M","Alces alces","Молцог хандгай","Moose"],["M","Rangifer tarandus","Цаа буга","Reindeer"],["M","Moschus moschiferus","Баданга хүдэр","Siberian Musk Deer"],["M","Capreolus pygargus","Бор гөрөөс","Siberian Roe Deer"],["M","Cervus elaphus","Халиун буга","Red Deer"],["M","Gazella subgutturosa","Хар сүүлт зээр","Black-tailed Gazelle"],["M","Saiga tatarica","Монгол бөхөн","Saiga Antelope"],["M","Ovis ammon","Аргаль хонь","Argali sheep"],["M","Procapra gutturosa","Цагаан зээр","Mongolian Gazelle"],["M","Capra sibirica","Янгир ямаа","Siberian Ibex"],["M","Camelus ferus","Хавтгай тэмээ","Wild Bactrian Camel"]];
+const SPECIES_LIST=SPECIES_DATA.map(([g,L,M,E])=>({g,L,M,E}));
+</script>
+<script>/* ===== BRCC Mongolia — core (i18n, constants, storage, export) ===== */
+const { html, render, useState, useEffect, useRef, useMemo, useCallback } = htmPreact;
+
+const APP_VERSION = "1.0.0";
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const pad2 = n => String(n).padStart(2, "0");
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const nowHM = () => { const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+const fmtDT = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ---------- i18n ---------- */
+const I18N = {
+  mn: {
+    appTitle: "BRCC Mongolia", appSub: "Хээрийн судалгааны бүртгэл",
+    studies: "Судалгаанууд", newStudy: "Шинэ судалгаа", studyName: "Судалгааны нэр", speciesLang: "Зүйлийн нэрний хэл",
+    windFarm: "Салхин цахилгаан станц (wind farm)", windFarmHint: "VP формд турбины хоёр талбар нэмэгдэнэ",
+    create: "Үүсгэх", save: "Хадгалах", cancel: "Болих", delete: "Устгах", edit: "Засах", back: "Буцах", close: "Хаах", ok: "За",
+    visits: "Явалтууд", newVisit: "Шинэ явалт", visitDate: "Явалтын огноо", notes: "Тэмдэглэл", newNote: "Шинэ тэмдэглэл", nextNote: "Дараагийн тэмдэглэл",
+    noteHint: "Хээрийн тэмдэглэл — судалгааны бус цагт ажигласан шувуу, нөлөөлж буй зүйлс, авах арга хэмжээ, санал, дараагийн явалтад анхаарах зүйл, орон нутгийн хүмүүсээс сонссон мэдээлэл, цаг агаар, замын байдал…",
+    addPhoto: "Зураг нэмэх", photos: "Зураг",
+    sessions: "Ажиглалтууд", newObservation: "Шинэ ажиглалт", vpTitle: "Цэгэн ажиглалт (VP)", ltTitle: "Шугаман замнал (LT)",
+    vpNo: "VP №", ltNo: "Замналын №", observer: "Ажиглагч", date: "Огноо", startTime: "Эхэлсэн цаг", endTime: "Дууссан цаг", now: "Одоо",
+    plannedDur: "Үргэлжлэх хугацаа (цаг)", startSession: "Ажиглалт эхлэх", finishSession: "Ажиглалт дуусгах", reopen: "Засахаар нээх",
+    alarmHint: "Утасныхаа сэрүүлгийг мөн тавьж хамгаалаарай.", timeUp: "Төлөвлөсөн хугацаа дууслаа", remaining: "Үлдсэн", elapsed: "Өнгөрсөн",
+    locked: "Дууссан — түгжээтэй", closedSummary: "Тойм",
+    records: "Ажиглалт", addRecord: "Ажиглалт нэмэх", quickCapture: "Хурдан бүртгэх", running: "Гүйж буй", drafts: "Дутуу", saveNext: "Хадгалаад дараагийнх", duplicate: "Өмнөхтэй адил",
+    species: "Зүйл", speciesSearch: "Нэр бичиж хайх…", addSpecies: "Шинэ зүйл нэмэх", group: "Бүлэг", latin: "Латин нэр", mnName: "Монгол нэр", enName: "Англи нэр",
+    bird: "Шувуу", mammal: "Хөхтөн", reptile: "Мөлхөгч", amphibian: "Хоёр нутагтан",
+    timeObserved: "Ажигласан цаг", duration: "Нисэлтийн хугацаа (сек)", timerStart: "Секундомер", timerStop: "Зогсоох", count: "Тоо толгой", more: "9+",
+    age: "Нас", sex: "Хүйс", add: "+ нэмэх", turbine: "Хамгийн ойрын турбин", turbineDist: "Турбин хүртэлх зай (м)",
+    direction: "Чиглэл (°)", from: "хаанаас", to: "хаашаа", height: "Өндөр (м)", min: "min", max: "max", distance: "Зай (м)", distFirst: "анх", distLast: "алга болоход",
+    activity: "Үйл хөдлөл", behaviour: "Зан төрх", activitySearch: "Код эсвэл нэрээр хайх…", weather: "Цаг агаар", cloud: "Үүл", precip: "Тунадас", wind: "Салхи (м/с)", weatherNote: "Нэмэлт",
+    habitat: "Амьдрах орчин", noteField: "Тэмдэглэл",
+    distBird: "Шувуу хүртэлх зай (м)", azimuth: "Азимут (°)", observerPos: "Ажиглагчийн солбицол", birdPos: "Тооцоолсон солбицол", getGps: "Байршил авах", gpsSearching: "GPS хайж байна…", gpsFail: "GPS авч чадсангүй",
+    aimag: "Аймаг", soum: "Сум", place: "Газрын нэр", width: "Замналын өргөн (м)", length: "Замналын урт (м)", startPt: "Эхэлсэн цэг", endPt: "Дууссан цэг", lat: "N", lng: "E",
+    startTrack: "Замнал эхлэх", tracking: "Замнал бичиж байна", stopTrack: "Замнал дуусгах", trackPts: "цэг", distWalked: "Явсан зай", gpsAcc: "Нарийвчлал", resumeTrack: "Бичилтийг үргэлжлүүлэх", trackPaused: "Бичилт зогссон",
+    exportXlsx: "Excel татах", exportKmz: "KMZ татах", share: "Хуваалцах", exportAll: "Бүх өгөгдөл (Excel)", exportVisit: "Энэ явалт (Excel)", exportStudy: "Энэ судалгаа (Excel)",
+    settings: "Тохиргоо", language: "Интерфейсийн хэл", night: "Шөнийн горим", sheetsUrl: "Google Sheets холбоос (Apps Script)", sheetsHint: "Заавар: README файлд. Хоосон бол илгээхгүй.",
+    syncNow: "Одоо илгээх", pending: "Илгээгээгүй", synced: "Илгээсэн", backup: "Нөөцлөх (файл татах)", restore: "Нөөцөөс сэргээх", trash: "Хогийн сав", about: "Тухай",
+    restoreConfirm: "Нөөц файлын өгөгдлийг одоогийнхтой нэгтгэх үү?", restored: "Сэргээлээ",
+    trashEmpty: "Хогийн сав хоосон", restoreItem: "Сэргээх", deleteForever: "Бүрмөсөн устгах", trashHint: "Устгасан зүйл 30 хоног хадгалагдаж, дараа нь автоматаар арилна.",
+    confirmDelete: "Устгах уу? (Хогийн саванд орно)", confirmFinish: "Ажиглалтыг дуусгах уу? Дараа нь засах бол дахин нээх хэрэгтэй.", confirmReopen: "Дууссан ажиглалтыг засахаар нээх үү?", incompleteWarn: "дутуу бичлэг байна. Дуусгахын өмнө бөглөж хадгалаарай.",
+    empty: "Хоосон", emptyStudies: "Судалгаа байхгүй байна. Эхний судалгаагаа үүсгээрэй.", emptyVisits: "Явалт байхгүй. «Шинэ явалт» дарна уу.", emptySessions: "Ажиглалт байхгүй.", emptyRecords: "Шувуу харагдмагц «Ажиглалт нэмэх» эсвэл «Хурдан бүртгэх» дарна уу.",
+    saved: "Хадгаллаа", deleted: "Хогийн саванд орлоо", undo: "Буцаах",
+    ownership: "BRCC Mongolia апп нь Биологийн Нөөцийг Хамгаалах Төвийн өмч бөгөөд төвийн судлаачдын хээрийн судалгааны өгөгдөл цуглуулах ажилд зориулагдсан. Зөвшөөрөлгүй хувилах, тараах, бусад зорилгоор ашиглахыг хориглоно. © Биологийн Нөөцийг Хамгаалах Төв, 2026.",
+    summaryRecords: "Нийт ажиглалт", summarySpecies: "Зүйлийн тоо", summaryDrafts: "Дутуу карт", noRecords: "Ажиглалт бүртгэгдээгүй (0)",
+    installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
+    session: "Сесс", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
+    sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух",
+  },
+  en: {
+    appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
+    studies: "Studies", newStudy: "New study", studyName: "Study name", speciesLang: "Species name language",
+    windFarm: "Wind farm survey", windFarmHint: "Adds two turbine fields to the VP form",
+    create: "Create", save: "Save", cancel: "Cancel", delete: "Delete", edit: "Edit", back: "Back", close: "Close", ok: "OK",
+    visits: "Visits", newVisit: "New visit", visitDate: "Visit date", notes: "Notes", newNote: "New note", nextNote: "Next note",
+    noteHint: "Field notes — birds seen outside survey hours, threats and pressures, recommended actions, points to check on the next visit, information from local people, weather, road conditions…",
+    addPhoto: "Add photo", photos: "Photos",
+    sessions: "Surveys", newObservation: "New survey", vpTitle: "Vantage point (VP)", ltTitle: "Line transect (LT)",
+    vpNo: "VP No.", ltNo: "Transect No.", observer: "Observer", date: "Date", startTime: "Start time", endTime: "End time", now: "Now",
+    plannedDur: "Planned duration (hours)", startSession: "Start survey", finishSession: "Finish survey", reopen: "Reopen to edit",
+    alarmHint: "Also set your phone alarm as a backup.", timeUp: "Planned time is over", remaining: "Remaining", elapsed: "Elapsed",
+    locked: "Finished — locked", closedSummary: "Summary",
+    records: "Observations", addRecord: "Add observation", quickCapture: "Quick capture", running: "Running", drafts: "Incomplete", saveNext: "Save & next", duplicate: "Same as previous",
+    species: "Species", speciesSearch: "Type a name to search…", addSpecies: "Add new species", group: "Group", latin: "Latin name", mnName: "Mongolian name", enName: "English name",
+    bird: "Bird", mammal: "Mammal", reptile: "Reptile", amphibian: "Amphibian",
+    timeObserved: "Time observed", duration: "Duration of over-fly (sec)", timerStart: "Stopwatch", timerStop: "Stop", count: "No. of individuals", more: "9+",
+    age: "Age", sex: "Sex", add: "+ add", turbine: "Closest turbine", turbineDist: "Distance to closest turbine (m)",
+    direction: "Flight direction (°)", from: "from", to: "to", height: "Flight height (m)", min: "min", max: "max", distance: "Distance from observer (m)", distFirst: "first", distLast: "disappeared",
+    activity: "Activity", behaviour: "Behaviour", activitySearch: "Search by code or name…", weather: "Weather", cloud: "Cloud", precip: "Precipitation", wind: "Wind (m/s)", weatherNote: "Note",
+    habitat: "Habitat", noteField: "Notes",
+    distBird: "Distance to animal (m)", azimuth: "Azimuth (°)", observerPos: "Observer position", birdPos: "Calculated position", getGps: "Get position", gpsSearching: "Searching GPS…", gpsFail: "Could not get GPS",
+    aimag: "Aimag", soum: "Soum", place: "Place name", width: "Transect width (m)", length: "Transect length (m)", startPt: "Start point", endPt: "End point", lat: "N", lng: "E",
+    startTrack: "Start transect", tracking: "Recording track", stopTrack: "Finish transect", trackPts: "pts", distWalked: "Distance walked", gpsAcc: "Accuracy", resumeTrack: "Resume recording", trackPaused: "Recording paused",
+    exportXlsx: "Download Excel", exportKmz: "Download KMZ", share: "Share", exportAll: "All data (Excel)", exportVisit: "This visit (Excel)", exportStudy: "This study (Excel)",
+    settings: "Settings", language: "Interface language", night: "Night mode", sheetsUrl: "Google Sheets link (Apps Script)", sheetsHint: "See README for setup. Leave empty to disable.",
+    syncNow: "Send now", pending: "Pending", synced: "Sent", backup: "Backup (download file)", restore: "Restore from backup", trash: "Trash", about: "About",
+    restoreConfirm: "Merge the backup file into current data?", restored: "Restored",
+    trashEmpty: "Trash is empty", restoreItem: "Restore", deleteForever: "Delete forever", trashHint: "Deleted items are kept for 30 days, then removed automatically.",
+    confirmDelete: "Delete? (Goes to trash)", confirmFinish: "Finish this survey? You will need to reopen it to edit.", confirmReopen: "Reopen the finished survey for editing?", incompleteWarn: "incomplete record(s). Complete and save them before finishing.",
+    empty: "Empty", emptyStudies: "No studies yet. Create your first study.", emptyVisits: "No visits. Tap “New visit”.", emptySessions: "No surveys yet.", emptyRecords: "When you see an animal, tap “Add observation” or “Quick capture”.",
+    saved: "Saved", deleted: "Moved to trash", undo: "Undo",
+    ownership: "BRCC Mongolia is the property of the Biological Resource Conservation Center and is intended for field data collection by the Center's researchers. Copying, distribution or use for other purposes without permission is prohibited. © Biological Resource Conservation Center, 2026.",
+    summaryRecords: "Total observations", summarySpecies: "Species", summaryDrafts: "Incomplete", noRecords: "No observations recorded (0)",
+    installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
+    session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
+    sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list",
+  }
+};
+let LANG = "mn";
+const t = k => (I18N[LANG] && I18N[LANG][k]) || I18N.en[k] || k;
+
+/* ---------- constants ---------- */
+const GROUPS = { B: { mn: "Шувуу", en: "Bird" }, M: { mn: "Хөхтөн", en: "Mammal" }, R: { mn: "Мөлхөгч", en: "Reptile" }, A: { mn: "Хоёр нутагтан", en: "Amphibian" } };
+const gLabel = g => (GROUPS[g] ? GROUPS[g][LANG] : g);
+
+const AGE = {
+  B: ["Adult (Бие гүйцсэн)", "Subadult (Залуу)", "Juvenile (Дөнгөж нисэж эхэлсэн залуу)", "Chick (Дэгдээхэй)", "Unknown (Тодорхойгүй)"],
+  M: ["Adult (Бие гүйцсэн)", "Subadult (Залуу)", "Young (Төл)", "Unknown (Тодорхойгүй)"],
+};
+const SEX = ["Male (Эр)", "Female (Эм)", "Unknown (Тодорхойгүй)"];
+const ACT = {
+  B: [["FL", "Flying (Нисэх)"], ["PE", "Perching (Суух)"], ["FE", "Feeding (Хооллох)"], ["CA", "Calling (Дуугарах)"], ["WA", "Walking (Алхах)"], ["SO", "Soaring (Халин нисэх)"],
+    ["HU", "Hunting (Ан хийх)"], ["SI", "Singing (Жиргэх)"], ["MG", "Migrating (Нүүдэллэх)"], ["SW", "Swimming (Сэлэх)"], ["DI", "Diving (Шумбах)"], ["RU", "Running (Гүйх)"],
+    ["GL", "Gliding (Гулсаж нисэх)"], ["HO", "Hopping (Үсрэх)"], ["FO", "Foraging (Идэш тэжээл хайх)"], ["MA", "Mating/copulation (Эвцэлдэх)"], ["RE", "Resting (Амрах)"],
+    ["CO", "Courtship display (Үржлийн бүжиг)"], ["PR", "Preening (Өд янзлах)"], ["SB", "Sunbathing (Наранд шарах)"], ["AT", "Attacking (Дайрах, довтлох)"],
+    ["TE", "Territorial defense (Нутаг дэвсгэр хамгаалах)"], ["NB", "Nest building (Үүр барих)"], ["IN", "Incubating (Өндөг дарах)"], ["PC", "Parental care (Дэгдээхэй асрах)"]],
+  M: [["GR", "Grazing (Бэлчих)"], ["BR", "Browsing (Навч, мөчир идэх)"], ["FO", "Foraging (Идэш хайх)"], ["RE", "Resting (Амрах)"], ["ST", "Standing / Alert (Зогсох, сэрэмжлэх)"],
+    ["WA", "Walking (Алхах)"], ["RU", "Running (Гүйх)"], ["FL", "Fleeing (Зугтах)"], ["DG", "Digging (Ухах)"], ["DR", "Drinking (Ус уух)"], ["HU", "Hunting (Ан хийх)"],
+    ["FY", "Feeding young (Төл хооллох)"], ["MA", "Mating (Эвцэлдэх)"], ["MK", "Territorial / Marking (Нутаг тэмдэглэх)"], ["FG", "Fighting (Тэмцэлдэх)"], ["VO", "Vocalizing (Дуугарах)"],
+    ["BU", "Burrow / Den (Нүх, үүрэндээ)"], ["DE", "Dead / Carcass (Сэг зэм)"], ["TR", "Tracks / Signs (Мөр, ул мөр)"]],
+};
+const CLOUD = ["Clear (Цэлмэг)", "Partly cloudy (Хагас үүлтэй)", "Overcast (Бүрхэг)"];
+const PRECIP = ["None (Байхгүй)", "Rain (Бороо)", "Snow (Цас)", "Fog (Манан)"];
+
+/* ---------- storage (IndexedDB key-value, localStorage fallback) ---------- */
+const DB = (() => {
+  let dbp = null, mem = {};
+  const open = () => dbp || (dbp = new Promise((res, rej) => {
+    if (!window.indexedDB) return res(null);
+    const rq = indexedDB.open("brcc-mongolia", 1);
+    rq.onupgradeneeded = () => rq.result.createObjectStore("kv");
+    rq.onsuccess = () => res(rq.result);
+    rq.onerror = () => res(null);
+  }));
+  const tx = async (mode, fn) => {
+    const db = await open();
+    if (!db) return fn(null);
+    return new Promise((res, rej) => {
+      const st = db.transaction("kv", mode).objectStore("kv");
+      const r = fn(st);
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+  };
+  return {
+    async get(k) { try { const v = await tx("readonly", st => st ? st.get(k) : null); if (v !== undefined && v !== null) return v; } catch (e) { }
+      try { const s = localStorage.getItem("brcc:" + k); return s ? JSON.parse(s) : undefined; } catch (e) { return mem[k]; } },
+    async set(k, v) { try { await tx("readwrite", st => st.put(v, k)); return; } catch (e) { }
+      try { localStorage.setItem("brcc:" + k, JSON.stringify(v)); } catch (e) { mem[k] = v; } },
+    async del(k) { try { await tx("readwrite", st => st.delete(k)); } catch (e) { } try { localStorage.removeItem("brcc:" + k); } catch (e) { } delete mem[k]; },
+    async keys() { try { const ks = await tx("readonly", st => st.getAllKeys()); if (ks) return ks; } catch (e) { }
+      const out = []; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("brcc:")) out.push(k.slice(5)); } } catch (e) { } return out.concat(Object.keys(mem)); },
+  };
+})();
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { });
+
+/* ---------- species ---------- */
+const norm = s => (s || "").toLowerCase().replace(/ё/g, "е").replace(/[’'`]/g, "").trim();
+const speciesName = (sp, lang) => lang === "la" ? sp.L : lang === "en" ? (sp.E || sp.L) : (sp.M || sp.E || sp.L);
+function searchSpecies(list, q, limit = 40) {
+  q = norm(q); if (!q) return [];
+  const starts = [], inside = [];
+  for (const sp of list) {
+    const fields = [sp.M, sp.E, sp.L].map(norm);
+    if (fields.some(f => f.startsWith(q) || f.split(/[\s-]+/).some(w => w.startsWith(q)))) starts.push(sp);
+    else if (fields.some(f => f.includes(q))) inside.push(sp);
+    if (starts.length >= limit) break;
+  }
+  return starts.concat(inside).slice(0, limit);
+}
+
+/* ---------- geo ---------- */
+const R_EARTH = 6371000;
+function haversine(a, b) {
+  const toR = x => x * Math.PI / 180, dLat = toR(b.lat - a.lat), dLng = toR(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R_EARTH * Math.asin(Math.sqrt(h));
+}
+function destPoint(lat, lng, bearingDeg, distM) {
+  const toR = x => x * Math.PI / 180, toD = x => x * 180 / Math.PI;
+  const φ1 = toR(lat), λ1 = toR(lng), θ = toR(bearingDeg), δ = distM / R_EARTH;
+  const φ2 = Math.asin(Math.sin(φ1) * Math.cos(δ) + Math.cos(φ1) * Math.sin(δ) * Math.cos(θ));
+  const λ2 = λ1 + Math.atan2(Math.sin(θ) * Math.sin(δ) * Math.cos(φ1), Math.cos(δ) - Math.sin(φ1) * Math.sin(φ2));
+  return { lat: +toD(φ2).toFixed(5), lng: +toD(λ2).toFixed(5) };
+}
+const trackLength = pts => { let d = 0; for (let i = 1; i < pts.length; i++) d += haversine(pts[i - 1], pts[i]); return Math.round(d); };
+function getPosition(opts = {}) {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error("no geolocation"));
+    navigator.geolocation.getCurrentPosition(p => res({ lat: +p.coords.latitude.toFixed(5), lng: +p.coords.longitude.toFixed(5), acc: Math.round(p.coords.accuracy) }),
+      rej, { enableHighAccuracy: true, timeout: 20000, maximumAge: 5000, ...opts });
+  });
+}
+
+/* ---------- tiny ZIP (store) ---------- */
+const CRC_TABLE = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = u8 => { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function makeZip(files) { // files: [{name, data: string|Uint8Array}]
+  const enc = new TextEncoder(), parts = [], central = []; let offset = 0;
+  const u16 = n => [n & 255, (n >> 8) & 255], u32 = n => [n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255];
+  const now = new Date(), dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1), dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  for (const f of files) {
+    const name = enc.encode(f.name), data = typeof f.data === "string" ? enc.encode(f.data) : f.data, crc = crc32(data);
+    const head = new Uint8Array([0x50, 0x4b, 3, 4, ...u16(20), ...u16(0x800), ...u16(0), ...u16(dosTime), ...u16(dosDate), ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0)]);
+    parts.push(head, name, data);
+    central.push(new Uint8Array([0x50, 0x4b, 1, 2, ...u16(20), ...u16(20), ...u16(0x800), ...u16(0), ...u16(dosTime), ...u16(dosDate), ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(offset)]), name);
+    offset += head.length + name.length + data.length;
+  }
+  const cdStart = offset; let cdLen = 0; for (const c of central) cdLen += c.length;
+  const end = new Uint8Array([0x50, 0x4b, 5, 6, ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length), ...u32(cdLen), ...u32(cdStart), ...u16(0)]);
+  const all = [...parts, ...central, end]; const total = all.reduce((a, b) => a + b.length, 0);
+  const out = new Uint8Array(total); let p = 0; for (const a of all) { out.set(a, p); p += a.length; }
+  return out;
+}
+
+/* ---------- minimal XLSX ---------- */
+const xmlEsc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+function colName(n) { let s = ""; n++; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+function sheetXml(rows) { // rows: array of arrays
+  let x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetData>';
+  rows.forEach((row, ri) => {
+    x += `<row r="${ri + 1}">`;
+    row.forEach((v, ci) => {
+      if (v === null || v === undefined || v === "") return;
+      const ref = colName(ci) + (ri + 1);
+      if (typeof v === "number" && isFinite(v)) x += `<c r="${ref}"${ri === 0 ? ' s="1"' : ""}><v>${v}</v></c>`;
+      else x += `<c r="${ref}" t="inlineStr"${ri === 0 ? ' s="1"' : ""}><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+    });
+    x += "</row>";
+  });
+  return x + "</sheetData></worksheet>";
+}
+function makeXlsx(sheets) { // sheets: [{name, rows}]
+  const files = [];
+  files.push({ name: "[Content_Types].xml", data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' + sheets.map((s, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("") + "</Types>" });
+  files.push({ name: "_rels/.rels", data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' });
+  files.push({ name: "xl/workbook.xml", data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets.map((s, i) => `<sheet name="${xmlEsc(s.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join("") + "</sheets></workbook>" });
+  files.push({ name: "xl/_rels/workbook.xml.rels", data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + sheets.map((s, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("") + `<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` });
+  files.push({ name: "xl/styles.xml", data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border/></borders><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" applyFont="1"/></cellXfs></styleSheet>' });
+  sheets.forEach((s, i) => files.push({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheetXml(s.rows) }));
+  return makeZip(files);
+}
+
+/* ---------- KML/KMZ ---------- */
+function makeKml(name, track, placemarks, lines) {
+  const coords = pts => pts.map(p => `${p.lng},${p.lat},0`).join(" ");
+  let k = `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${xmlEsc(name)}</name>
+<Style id="track"><LineStyle><color>ff1e7d2e</color><width>4</width></LineStyle></Style>
+<Style id="obs"><IconStyle><color>ff2e7d1e</color><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle></Style>
+<Style id="animal"><IconStyle><color>ff0a73b8</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon></IconStyle></Style>
+<Style id="ray"><LineStyle><color>990a73b8</color><width>2</width></LineStyle></Style>`;
+  if (track && track.length > 1) k += `<Placemark><name>${xmlEsc(name)} — track</name><styleUrl>#track</styleUrl><LineString><tessellate>1</tessellate><coordinates>${coords(track)}</coordinates></LineString></Placemark>`;
+  for (const p of placemarks) {
+    k += `<Placemark><name>${xmlEsc(p.name)}</name><styleUrl>#${p.style || "obs"}</styleUrl><ExtendedData>` + Object.entries(p.data || {}).map(([a, b]) => `<Data name="${xmlEsc(a)}"><value>${xmlEsc(b)}</value></Data>`).join("") + `</ExtendedData><Point><coordinates>${p.lng},${p.lat},0</coordinates></Point></Placemark>`;
+  }
+  for (const l of lines || []) k += `<Placemark><name>${xmlEsc(l.name)}</name><styleUrl>#ray</styleUrl><LineString><coordinates>${coords(l.pts)}</coordinates></LineString></Placemark>`;
+  return k + "</Document></kml>";
+}
+
+/* ---------- download / share ---------- */
+async function saveFile(name, data, mime) {
+  const blob = data instanceof Blob ? data : new Blob([data], { type: mime });
+  const file = new File([blob], name, { type: mime });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: name }); return "shared"; } catch (e) { if (e && e.name === "AbortError") return "cancel"; }
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  return "downloaded";
+}
+
+/* ---------- beep ---------- */
+let audioCtx = null;
+const primeAudio = () => { try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === "suspended") audioCtx.resume(); } catch (e) { } };
+function beep(times = 3) {
+  try {
+    if (!audioCtx) primeAudio(); if (!audioCtx) return;
+    for (let i = 0; i < times; i++) {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination);
+      o.frequency.value = 880; g.gain.value = 0.3; const t0 = audioCtx.currentTime + i * 0.5; o.start(t0); o.stop(t0 + 0.3);
+    }
+  } catch (e) { }
+  if (navigator.vibrate) navigator.vibrate([400, 200, 400, 200, 400]);
+}
+</script>
+<script>/* ===== BRCC Mongolia — store, persistence, sync, tracking, export ===== */
+const Store = {
+  s: null, subs: new Set(), pending: new Map(), timer: null,
+  emit() { for (const cb of this.subs) cb(); },
+  queueWrite(key, val) { this.pending.set(key, val); clearTimeout(this.timer); this.timer = setTimeout(() => this.flush(), 250); },
+  async flush() { const p = [...this.pending.entries()]; this.pending.clear(); for (const [k, v] of p) { try { await (v === null ? DB.del(k) : DB.set(k, v)); } catch (e) { console.error("save failed", k, e); } } },
+};
+window.addEventListener("pagehide", () => Store.flush());
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") Store.flush(); });
+function useStore() {
+  const [, f] = useState(0);
+  useEffect(() => { const cb = () => f(x => x + 1); Store.subs.add(cb); return () => Store.subs.delete(cb); }, []);
+  return Store.s;
+}
+
+const defaultMeta = () => ({ studies: [], visits: [], settings: { lang: "mn", night: false, sheetsUrl: "", observer: "" }, customSpecies: [], customActivities: { B: [], M: [] }, noteSeq: {} });
+
+async function loadAll() {
+  const keys = await DB.keys();
+  const s = { meta: (await DB.get("meta")) || defaultMeta(), sessions: {}, notes: {}, trash: (await DB.get("trash")) || [], queue: (await DB.get("queue")) || [] };
+  s.meta.settings = { ...defaultMeta().settings, ...(s.meta.settings || {}) };
+  s.meta.customSpecies = s.meta.customSpecies || []; s.meta.customActivities = s.meta.customActivities || { B: [], M: [] }; s.meta.noteSeq = s.meta.noteSeq || {};
+  for (const k of keys) {
+    if (typeof k !== "string") continue;
+    if (k.startsWith("session:")) { const v = await DB.get(k); if (v) s.sessions[v.id] = v; }
+    else if (k.startsWith("note:")) { const v = await DB.get(k); if (v) s.notes[v.id] = v; }
+  }
+  // purge trash > 30 days
+  const cutoff = Date.now() - 30 * 864e5; const before = s.trash.length;
+  s.trash = s.trash.filter(x => x.deletedAt > cutoff);
+  Store.s = s; if (before !== s.trash.length) saveTrash();
+  LANG = s.meta.settings.lang || "mn";
+  return s;
+}
+const saveMeta = () => { Store.queueWrite("meta", Store.s.meta); Store.emit(); };
+const saveSession = sess => { Store.s.sessions[sess.id] = sess; Store.queueWrite("session:" + sess.id, sess); Store.emit(); };
+const saveNote = n => { Store.s.notes[n.id] = n; Store.queueWrite("note:" + n.id, n); Store.emit(); };
+const saveTrash = () => { Store.queueWrite("trash", Store.s.trash); Store.emit(); };
+const saveQueue = () => { Store.queueWrite("queue", Store.s.queue); Store.emit(); };
+
+/* ----- accessors ----- */
+const getStudy = id => Store.s.meta.studies.find(x => x.id === id);
+const getVisit = id => Store.s.meta.visits.find(x => x.id === id);
+const visitsOf = studyId => Store.s.meta.visits.filter(v => v.studyId === studyId).sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
+const sessionsOf = visitId => Object.values(Store.s.sessions).filter(s => s.visitId === visitId).sort((a, b) => b.createdAt - a.createdAt);
+const notesOf = studyId => Object.values(Store.s.notes).filter(n => n.studyId === studyId).sort((a, b) => b.n - a.n);
+const allSpecies = () => SPECIES_LIST.concat(Store.s.meta.customSpecies);
+
+/* ----- mutations ----- */
+function updSession(id, fn) { const s = Store.s.sessions[id]; if (!s) return; const n = { ...s }; fn(n); n.updatedAt = Date.now(); saveSession(n); return n; }
+function updRecord(sessionId, recId, fn) {
+  return updSession(sessionId, s => { s.records = s.records.map(r => { if (r.id !== recId) return r; const n = { ...r }; fn(n); n.updatedAt = Date.now(); return n; }); });
+}
+function newRecord(sess, extra = {}) {
+  const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: nowHM(), count: "", age: "", sex: "", activities: [], habitat: "", notes: "",
+    weather: { cloud: "", precip: "", wind: "", note: "" } };
+  if (sess.type === "VP") Object.assign(base, { duration: "", timerStart: null, dirFrom: "", dirTo: "", hMin: "", hMax: "", distFirst: "", distLast: "", turbine: "", turbineDist: "" });
+  else Object.assign(base, { dist: "", azimuth: "", lat: "", lng: "", acc: "", aLat: "", aLng: "" });
+  // prefill from previous record
+  const prev = [...sess.records].reverse().find(r => r.status === "saved");
+  if (prev) { base.weather = { ...prev.weather }; base.habitat = prev.habitat || ""; }
+  return Object.assign(base, extra);
+}
+function toTrash(item) { Store.s.trash = [{ ...item, trashId: uid(), deletedAt: Date.now() }, ...Store.s.trash]; saveTrash(); }
+function deleteRecord(sessionId, recId) {
+  const s = Store.s.sessions[sessionId]; const r = s.records.find(x => x.id === recId); if (!r) return;
+  updSession(sessionId, n => { n.records = n.records.filter(x => x.id !== recId); });
+  toTrash({ kind: "record", sessionId, record: r, label: recordLabel(r, s) });
+}
+function deleteSession(id) { const s = Store.s.sessions[id]; if (!s) return; delete Store.s.sessions[id]; Store.queueWrite("session:" + id, null); toTrash({ kind: "session", session: s, label: sessionLabel(s) }); Store.emit(); }
+function deleteNote(id) { const n = Store.s.notes[id]; if (!n) return; delete Store.s.notes[id]; Store.queueWrite("note:" + id, null); toTrash({ kind: "note", note: n, label: `${t("notes")} ${n.n}` }); Store.emit(); }
+function deleteVisit(id) {
+  const v = getVisit(id); if (!v) return;
+  const sess = Object.values(Store.s.sessions).filter(s => s.visitId === id);
+  Store.s.meta.visits = Store.s.meta.visits.filter(x => x.id !== id); for (const s of sess) { delete Store.s.sessions[s.id]; Store.queueWrite("session:" + s.id, null); }
+  saveMeta(); toTrash({ kind: "visit", visit: v, sessions: sess, label: `${t("visits")}: ${v.date}` });
+}
+function deleteStudy(id) {
+  const st = getStudy(id); if (!st) return;
+  const visits = Store.s.meta.visits.filter(v => v.studyId === id); const sess = Object.values(Store.s.sessions).filter(s => s.studyId === id); const notes = Object.values(Store.s.notes).filter(n => n.studyId === id);
+  Store.s.meta.studies = Store.s.meta.studies.filter(x => x.id !== id); Store.s.meta.visits = Store.s.meta.visits.filter(v => v.studyId !== id);
+  for (const s of sess) { delete Store.s.sessions[s.id]; Store.queueWrite("session:" + s.id, null); } for (const n of notes) { delete Store.s.notes[n.id]; Store.queueWrite("note:" + n.id, null); }
+  saveMeta(); toTrash({ kind: "study", study: st, visits, sessions: sess, notes, label: st.name });
+}
+function restoreTrash(trashId) {
+  const it = Store.s.trash.find(x => x.trashId === trashId); if (!it) return;
+  Store.s.trash = Store.s.trash.filter(x => x.trashId !== trashId); saveTrash();
+  if (it.kind === "record") { if (Store.s.sessions[it.sessionId]) updSession(it.sessionId, s => { s.records = [...s.records, it.record].sort((a, b) => a.createdAt - b.createdAt); }); }
+  if (it.kind === "session") saveSession(it.session);
+  if (it.kind === "note") saveNote(it.note);
+  if (it.kind === "visit") { Store.s.meta.visits.push(it.visit); saveMeta(); for (const s of it.sessions) saveSession(s); }
+  if (it.kind === "study") { Store.s.meta.studies.push(it.study); Store.s.meta.visits.push(...it.visits); saveMeta(); for (const s of it.sessions) saveSession(s); for (const n of it.notes) saveNote(n); }
+}
+const sessionLabel = s => `${s.type} ${s.number || ""} · ${s.date}`;
+const recordLabel = (r, s) => `${r.species ? speciesName(r.species, "en") : "?"} ${r.time || ""}`;
+
+/* ----- Google Sheets sync ----- */
+function enqueueRow(kind, row) {
+  Store.s.queue = Store.s.queue.filter(q => q.row.id !== row.id).concat([{ kind, row, at: Date.now() }]); saveQueue();
+  setTimeout(flushQueue, 500);
+}
+let flushing = false;
+async function flushQueue() {
+  const url = (Store.s.meta.settings.sheetsUrl || "").trim();
+  if (!url || flushing || !navigator.onLine || !Store.s.queue.length) return;
+  flushing = true;
+  try {
+    const batch = Store.s.queue.slice(0, 50);
+    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ items: batch.map(b => ({ kind: b.kind, row: b.row })) }) });
+    const sent = new Set(batch.map(b => b.row.id + "|" + b.at));
+    Store.s.queue = Store.s.queue.filter(q => !sent.has(q.row.id + "|" + q.at)); saveQueue();
+    if (Store.s.queue.length) setTimeout(flushQueue, 1000);
+  } catch (e) { console.warn("sync failed", e); }
+  finally { flushing = false; }
+}
+window.addEventListener("online", () => setTimeout(flushQueue, 1000));
+setInterval(flushQueue, 60000);
+
+/* ----- LT tracker ----- */
+const Tracker = {
+  sessionId: null, watchId: null, lock: null, last: null, lastSave: 0, status: "idle", error: "",
+  async start(sessionId) {
+    if (!navigator.geolocation) { this.error = "no geolocation"; Store.emit(); return; }
+    this.stop(true); this.sessionId = sessionId; this.status = "starting"; this.error = ""; Store.emit();
+    this.watchId = navigator.geolocation.watchPosition(p => this.onPos(p), e => { this.error = e.message || "GPS error"; this.status = "error"; Store.emit(); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 30000 });
+    this.wake();
+  },
+  async wake() { try { if (navigator.wakeLock) { this.lock = await navigator.wakeLock.request("screen"); this.lock.addEventListener("release", () => { this.lock = null; }); } } catch (e) { } },
+  onPos(p) {
+    const pt = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6), acc: Math.round(p.coords.accuracy), t: Date.now() };
+    this.status = "tracking"; this.error = "";
+    const s = Store.s.sessions[this.sessionId]; if (!s || s.status === "closed") { this.stop(); return; }
+    if (pt.acc > 60) { this.last = { ...pt, skipped: true }; Store.emit(); return; }
+    const lastPt = s.track[s.track.length - 1];
+    if (!lastPt || pt.t - lastPt.t >= 5000 && haversine(lastPt, pt) >= 3) {
+      s.track = [...s.track, pt]; s.length = trackLength(s.track); if (!s.startLat) { s.startLat = pt.lat; s.startLng = pt.lng; }
+      s.updatedAt = Date.now(); Store.s.sessions[s.id] = s;
+      if (Date.now() - this.lastSave > 15000) { this.lastSave = Date.now(); Store.queueWrite("session:" + s.id, s); }
+    }
+    this.last = pt; Store.emit();
+  },
+  stop(silent) {
+    if (this.watchId != null) navigator.geolocation.clearWatch(this.watchId); this.watchId = null;
+    if (this.sessionId && Store.s && Store.s.sessions[this.sessionId]) Store.queueWrite("session:" + this.sessionId, Store.s.sessions[this.sessionId]);
+    if (this.lock) { try { this.lock.release(); } catch (e) { } this.lock = null; }
+    this.status = "idle"; this.sessionId = null; if (!silent) Store.emit();
+  },
+};
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Tracker.sessionId) Tracker.wake(); });
+
+/* ----- flat export rows ----- */
+const H = [ // key, header
+  ["study", "Study"], ["windFarm", "Wind farm"], ["visitDate", "Visit date"], ["type", "Survey type"], ["number", "VP / Transect No."], ["observer", "Observer"],
+  ["start", "Start time"], ["end", "Finished at"], ["plannedH", "Planned duration (h)"],
+  ["aimag", "Aimag"], ["soum", "Soum"], ["place", "Place name"], ["tHabitat", "Transect habitat"], ["width", "Transect width (m)"], ["length", "Transect length (m)"], ["startLat", "Transect start N"], ["startLng", "Transect start E"], ["endLat", "Transect end N"], ["endLng", "Transect end E"],
+  ["recNo", "No."], ["group", "Group"], ["spM", "Species (MN)"], ["spE", "Species (EN)"], ["spL", "Species (Latin)"], ["time", "Time observed"], ["count", "No. of ind."], ["age", "Age"], ["sex", "Sex"],
+  ["turbine", "Closest turbine"], ["turbineDist", "Distance from the closest turbine (m)"], ["duration", "Duration of over-fly (sec)"],
+  ["dirFrom", "Flight direction from (°)"], ["dirTo", "Flight direction to (°)"], ["hMin", "Flight height min (m)"], ["hMax", "Flight height max (m)"], ["distFirst", "Distance from observer first time (m)"], ["distLast", "Distance from observer by the time disappeared (m)"],
+  ["dist", "Distance to animal (m)"], ["azimuth", "Azimuth (°)"], ["lat", "Observer N"], ["lng", "Observer E"], ["acc", "GPS accuracy (m)"], ["aLat", "Animal N"], ["aLng", "Animal E"],
+  ["activity", "Activity / Behaviour"], ["cloud", "Cloud"], ["precip", "Precipitation"], ["wind", "Wind (m/s)"], ["wNote", "Weather note"], ["habitat", "Habitat"], ["notes", "Notes"],
+  ["status", "Record status"], ["id", "Record ID"], ["sessionId", "Survey ID"],
+];
+const num = v => (v === "" || v === null || v === undefined || isNaN(+v)) ? (v || "") : +v;
+function sessionHeader(s) {
+  const st = getStudy(s.studyId) || {}, v = getVisit(s.visitId) || {};
+  return { study: st.name || "", windFarm: st.windFarm ? "yes" : "", visitDate: v.date || s.date || "", type: s.type, number: s.number || "", observer: s.observer || "", start: s.start || "", end: s.end || "", plannedH: s.type === "VP" ? num(s.plannedH) : "",
+    aimag: s.aimag || "", soum: s.soum || "", place: s.place || "", tHabitat: s.habitat || "", width: num(s.width), length: num(s.length), startLat: num(s.startLat), startLng: num(s.startLng), endLat: num(s.endLat), endLng: num(s.endLng), sessionId: s.id };
+}
+function recordRow(s, r, idx) {
+  const sp = r.species || {};
+  return { ...sessionHeader(s), recNo: idx + 1, group: sp.g ? GROUPS[sp.g].en : "", spM: sp.M || "", spE: sp.E || "", spL: sp.L || "", time: r.time || "", count: num(r.count), age: r.age || "", sex: r.sex || "",
+    turbine: r.turbine || "", turbineDist: num(r.turbineDist), duration: num(r.duration), dirFrom: num(r.dirFrom), dirTo: num(r.dirTo), hMin: num(r.hMin), hMax: num(r.hMax), distFirst: num(r.distFirst), distLast: num(r.distLast),
+    dist: num(r.dist), azimuth: num(r.azimuth), lat: num(r.lat), lng: num(r.lng), acc: num(r.acc), aLat: num(r.aLat), aLng: num(r.aLng),
+    activity: (r.activities || []).join("; "), cloud: r.weather?.cloud || "", precip: r.weather?.precip || "", wind: num(r.weather?.wind), wNote: r.weather?.note || "", habitat: r.habitat || "", notes: r.notes || "",
+    status: r.status, id: r.id };
+}
+function buildWorkbook(sessions, notes) {
+  sessions = [...sessions].sort((a, b) => (a.date || "").localeCompare(b.date || "") || a.createdAt - b.createdAt);
+  const data = [H.map(h => h[1])];
+  const sess = [["Study", "Wind farm", "Visit date", "Survey type", "VP / Transect No.", "Observer", "Start time", "Finished at", "Planned duration (h)", "Aimag", "Soum", "Place name", "Transect habitat", "Transect width (m)", "Transect length (m)", "Start N", "Start E", "End N", "End E", "Observations", "Status", "Survey ID"]];
+  for (const s of sessions) {
+    const hd = sessionHeader(s);
+    sess.push([hd.study, hd.windFarm, hd.visitDate, hd.type, hd.number, hd.observer, hd.start, hd.end, hd.plannedH, hd.aimag, hd.soum, hd.place, hd.tHabitat, hd.width, hd.length, hd.startLat, hd.startLng, hd.endLat, hd.endLng, s.records.length, s.status, s.id]);
+    s.records.forEach((r, i) => { const row = recordRow(s, r, i); data.push(H.map(h => row[h[0]] === undefined ? "" : row[h[0]])); });
+  }
+  const sheets = [{ name: "Data", rows: data }, { name: "Surveys", rows: sess }];
+  if (notes && notes.length) sheets.push({ name: "Notes", rows: [["Study", "Note No.", "Date", "Text", "Photos"], ...notes.map(n => [(getStudy(n.studyId) || {}).name || "", n.n, n.date, n.text || "", (n.photos || []).length])] });
+  return makeXlsx(sheets);
+}
+function kmzForSession(s) {
+  const st = getStudy(s.studyId) || {}; const name = `${st.name || "BRCC"} LT${s.number || ""} ${s.date || ""}`;
+  const pms = [], lines = [];
+  s.records.forEach((r, i) => {
+    const sp = r.species || {}; const nm = `${i + 1}. ${sp.E || sp.M || sp.L || "?"}${r.count ? " ×" + r.count : ""}`;
+    const data = { Time: r.time || "", "Species (MN)": sp.M || "", "Species (EN)": sp.E || "", "Species (Latin)": sp.L || "", Count: r.count || "", Age: r.age || "", Sex: r.sex || "", "Distance (m)": r.dist || "", "Azimuth": r.azimuth || "", Behaviour: (r.activities || []).join("; "), Habitat: r.habitat || "", Notes: r.notes || "" };
+    if (r.lat && r.lng) pms.push({ name: nm + " (observer)", lat: r.lat, lng: r.lng, style: "obs", data });
+    if (r.aLat && r.aLng) { pms.push({ name: nm, lat: r.aLat, lng: r.aLng, style: "animal", data }); if (r.lat && r.lng) lines.push({ name: nm, pts: [{ lat: r.lat, lng: r.lng }, { lat: r.aLat, lng: r.aLng }] }); }
+  });
+  if (s.startLat && s.startLng) pms.push({ name: "Start", lat: s.startLat, lng: s.startLng, data: { Time: s.start || "" } });
+  if (s.endLat && s.endLng) pms.push({ name: "End", lat: s.endLat, lng: s.endLng, data: { Time: s.end || "" } });
+  return makeZip([{ name: "doc.kml", data: makeKml(name, s.track || [], pms, lines) }]);
+}
+const safeName = s => (s || "").replace(/[^\w\u0400-\u04FF\- ]+/g, "").trim().replace(/\s+/g, "_") || "BRCC";
+
+/* ----- backup ----- */
+async function exportBackup() {
+  const dump = { app: "BRCC Mongolia", version: APP_VERSION, at: new Date().toISOString(), meta: Store.s.meta, sessions: Object.values(Store.s.sessions), notes: Object.values(Store.s.notes), trash: Store.s.trash, photos: {} };
+  for (const n of dump.notes) for (const pid of (n.photos || [])) { const p = await DB.get("photo:" + pid); if (p) dump.photos[pid] = p; }
+  return saveFile(`BRCC_backup_${todayISO()}.json`, JSON.stringify(dump), "application/json");
+}
+async function importBackup(text) {
+  const d = JSON.parse(text); if (!d || d.app !== "BRCC Mongolia") throw new Error("bad file");
+  const m = Store.s.meta;
+  for (const st of d.meta.studies || []) if (!m.studies.find(x => x.id === st.id)) m.studies.push(st);
+  for (const v of d.meta.visits || []) if (!m.visits.find(x => x.id === v.id)) m.visits.push(v);
+  for (const sp of d.meta.customSpecies || []) if (!m.customSpecies.find(x => x.L === sp.L)) m.customSpecies.push(sp);
+  for (const g of ["B", "M"]) for (const a of ((d.meta.customActivities || {})[g] || [])) if (!m.customActivities[g].includes(a)) m.customActivities[g].push(a);
+  saveMeta();
+  for (const s of d.sessions || []) { const cur = Store.s.sessions[s.id]; if (!cur || (s.updatedAt || 0) > (cur.updatedAt || 0)) saveSession(s); }
+  for (const n of d.notes || []) { const cur = Store.s.notes[n.id]; if (!cur || (n.updatedAt || 0) > (cur.updatedAt || 0)) saveNote(n); }
+  for (const [pid, p] of Object.entries(d.photos || {})) await DB.set("photo:" + pid, p);
+  await Store.flush();
+}
+
+/* ----- global VP alarm watcher (works on any screen while the app is open) ----- */
+setInterval(() => {
+  if (!Store.s) return;
+  for (const sess of Object.values(Store.s.sessions)) {
+    if (sess.type !== "VP" || sess.status !== "open" || !sess.startedAt || sess.alarmed) continue;
+    const planned = (+sess.plannedH || 0) * 3600000; if (!planned) continue;
+    if (Date.now() - sess.startedAt >= planned) { beep(4); updSession(sess.id, n => { n.alarmed = true; n.end = n.end || nowHM(); }); showToast(t("timeUp") + " — " + sess.type + " " + (sess.number || "")); }
+  }
+}, 5000);
+</script>
+<script>/* ===== BRCC Mongolia — shared UI widgets ===== */
+const nav = h => { location.hash = h; };
+const goBack = () => { if (history.length > 1) history.back(); else nav("#/"); };
+
+let toastTimer = null;
+function showToast(msg, action) { Store.toast = { msg, action, id: uid() }; Store.emit(); clearTimeout(toastTimer); toastTimer = setTimeout(() => { Store.toast = null; Store.emit(); }, action ? 7000 : 2500); }
+
+function TopBar({ title, sub, back = true, right }) {
+  return html`<header class="topbar">
+    ${back ? html`<button class="iconbtn" onClick=${goBack} aria-label=${t("back")}>‹</button>` : html`<img src="logo-small.png" alt="BRCC" class="logo-sm"/>`}
+    <div class="topbar-title"><div class="tt">${title}</div>${sub ? html`<div class="ts">${sub}</div>` : null}</div>
+    <div class="topbar-right">${right}</div>
+  </header>`;
+}
+const Btn = ({ children, onClick, kind = "primary", small, disabled, cls = "", type = "button" }) => html`<button type=${type} class=${`btn ${kind} ${small ? "small" : ""} ${cls}`} onClick=${onClick} disabled=${disabled}>${children}</button>`;
+const Field = ({ label, children, span, hint }) => html`<div class=${`field ${span ? "span" : ""}`}><label class="lbl">${label}</label>${children}${hint ? html`<div class="hint">${hint}</div>` : null}</div>`;
+const Input = ({ onChange, value, class: cls, ...p }) => html`<input ...${p} class=${`inp ${cls || ""}`} value=${value ?? ""} onInput=${e => onChange(e.target.value)} />`;
+const NumInput = p => html`<input type="number" inputmode=${p.decimal ? "decimal" : "numeric"} step=${p.decimal ? "0.1" : "1"} min=${p.min} max=${p.max} placeholder=${p.placeholder || ""} class=${`inp ${p.class || ""}`} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled} />`;
+const TextArea = p => html`<textarea class="inp ta" rows=${p.rows || 2} placeholder=${p.placeholder || ""} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled}></textarea>`;
+function TimeInput({ value, onChange, disabled }) {
+  return html`<div class="row"><input type="time" class="inp" value=${value || ""} onInput=${e => onChange(e.target.value)} disabled=${disabled}/><${Btn} kind="ghost" small onClick=${() => onChange(nowHM())} disabled=${disabled}>${t("now")}<//></div>`;
+}
+function Chips({ options, value, onChange, multi, disabled }) {
+  const sel = multi ? (value || []) : value;
+  const isOn = o => multi ? sel.includes(o) : sel === o;
+  const toggle = o => { if (disabled) return; if (multi) onChange(isOn(o) ? sel.filter(x => x !== o) : [...sel, o]); else onChange(isOn(o) ? "" : o); };
+  return html`<div class="chips">${options.map(o => html`<button type="button" key=${o} class=${`chip ${isOn(o) ? "on" : ""}`} onClick=${() => toggle(o)}>${o}</button>`)}</div>`;
+}
+function Modal({ title, children, onClose }) {
+  useEffect(() => { const k = e => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
+  return html`<div class="modal-bg" onClick=${e => { if (e.target === e.currentTarget) onClose(); }}><div class="modal" role="dialog"><div class="modal-h"><div class="tt">${title}</div><button class="iconbtn" onClick=${onClose}>×</button></div><div class="modal-b">${children}</div></div></div>`;
+}
+const Empty = ({ children }) => html`<div class="empty">${children}</div>`;
+const confirmDlg = msg => window.confirm(msg);
+
+/* ---------- Count picker ---------- */
+function CountPicker({ value, onChange, disabled }) {
+  const [manual, setManual] = useState(value !== "" && (+value > 9 || isNaN(+value)));
+  return html`<div>
+    <div class="countgrid">
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => html`<button type="button" key=${n} class=${`chip big ${String(value) === String(n) && !manual ? "on" : ""}`} disabled=${disabled} onClick=${() => { setManual(false); onChange(String(value) === String(n) ? "" : String(n)); }}>${n}</button>`)}
+      <button type="button" class=${`chip big ${manual ? "on" : ""}`} disabled=${disabled} onClick=${() => { setManual(true); if (+value <= 9) onChange(""); }}>${t("more")}</button>
+    </div>
+    ${manual ? html`<${NumInput} value=${value} onChange=${onChange} min="1" placeholder="10, 25, 120…" disabled=${disabled} class="mt"/>` : null}
+  </div>`;
+}
+
+/* ---------- Species picker ---------- */
+function SpeciesPicker({ value, onChange, lang, disabled, autoFocus }) {
+  const [q, setQ] = useState(""); const [open, setOpen] = useState(false); const [adding, setAdding] = useState(false);
+  const list = allSpecies();
+  const results = useMemo(() => searchSpecies(list, q), [q, list.length]);
+  const pick = sp => { onChange(sp); setQ(""); setOpen(false); };
+  if (value) {
+    const other = ["mn", "en", "la"].filter(l => l !== lang).map(l => speciesName(value, l)).filter(Boolean);
+    return html`<div class="sp-sel">
+      <div><div class="sp-main">${speciesName(value, lang)}</div><div class="sp-sub">${gLabel(value.g)} · ${other.join(" · ")}</div></div>
+      ${!disabled ? html`<button type="button" class="iconbtn" onClick=${() => onChange(null)} aria-label="clear">×</button>` : null}
+    </div>`;
+  }
+  return html`<div class="sp-wrap">
+    <input class="inp" placeholder=${t("speciesSearch")} value=${q} autofocus=${autoFocus} disabled=${disabled} onInput=${e => { setQ(e.target.value); setOpen(true); }} onFocus=${() => setOpen(true)} autocomplete="off"/>
+    ${open && q ? html`<div class="sp-list">
+      ${results.map(sp => html`<button type="button" key=${sp.L} class="sp-item" onClick=${() => pick(sp)}>
+        <span class="sp-main">${speciesName(sp, lang)}</span><span class="sp-sub">${gLabel(sp.g)} · ${["mn", "en", "la"].filter(l => l !== lang).map(l => speciesName(sp, l)).join(" · ")}</span>
+      </button>`)}
+      <button type="button" class="sp-item add" onClick=${() => setAdding(true)}>+ ${t("addSpecies")}${q ? ` — “${q}”` : ""}</button>
+    </div>` : null}
+    ${adding ? html`<${AddSpeciesModal} initial=${q} onClose=${() => setAdding(false)} onAdd=${sp => { setAdding(false); pick(sp); }}/>` : null}
+  </div>`;
+}
+function AddSpeciesModal({ initial, onClose, onAdd }) {
+  const isCyr = /[\u0400-\u04FF]/.test(initial);
+  const [f, setF] = useState({ g: "B", L: !isCyr && /^[A-Z][a-z]+ [a-z]/.test(initial) ? initial : "", M: isCyr ? initial : "", E: !isCyr && !/^[A-Z][a-z]+ [a-z]/.test(initial) ? initial : "" });
+  const set = k => v => setF({ ...f, [k]: v });
+  const ok = () => {
+    const sp = { g: f.g, L: f.L.trim(), M: f.M.trim(), E: f.E.trim(), custom: true };
+    if (!(sp.L || sp.M || sp.E)) return;
+    sp.L = sp.L || sp.E || sp.M; Store.s.meta.customSpecies.push(sp); saveMeta(); showToast(t("customSpeciesSaved")); onAdd(sp);
+  };
+  return html`<${Modal} title=${t("addSpecies")} onClose=${onClose}>
+    <${Field} label=${t("chooseGroup")}><${Chips} options=${["B", "M", "R", "A"].map(gLabel)} value=${gLabel(f.g)} onChange=${v => set("g")(["B", "M", "R", "A"].find(g => gLabel(g) === v) || f.g)}/><//>
+    <${Field} label=${t("mnName")}><${Input} value=${f.M} onChange=${set("M")}/><//>
+    <${Field} label=${t("enName")}><${Input} value=${f.E} onChange=${set("E")}/><//>
+    <${Field} label=${t("latin")}><${Input} value=${f.L} onChange=${set("L")} placeholder="Genus species"/><//>
+    <div class="row end"><${Btn} kind="ghost" onClick=${onClose}>${t("cancel")}<//><${Btn} onClick=${ok}>${t("save")}<//></div>
+  <//>`;
+}
+
+/* ---------- Activity picker (multi, searchable, custom) ---------- */
+function ActivityPicker({ group, value, onChange, disabled }) {
+  const [q, setQ] = useState(""); const [expanded, setExpanded] = useState(false);
+  const base = ACT[group] || []; const custom = (Store.s.meta.customActivities[group] || []).map(x => ["", x]);
+  const all = base.concat(custom);
+  const sel = value || [];
+  const nq = norm(q);
+  const shown = nq ? all.filter(([c, n]) => norm(c).startsWith(nq) || norm(n).includes(nq)) : all;
+  const toggle = n => { if (disabled) return; onChange(sel.includes(n) ? sel.filter(x => x !== n) : [...sel, n]); };
+  const addCustom = () => { const v = q.trim(); if (!v) return; if (!all.find(([, n]) => n === v)) { Store.s.meta.customActivities[group] = [...(Store.s.meta.customActivities[group] || []), v]; saveMeta(); } toggle(v); setQ(""); };
+  return html`<div>
+    ${sel.length ? html`<div class="chips mb">${sel.map(n => html`<button type="button" key=${n} class="chip on" disabled=${disabled} onClick=${() => toggle(n)}>${n} ×</button>`)}</div>` : null}
+    ${!disabled ? html`<input class="inp" placeholder=${t("activitySearch")} value=${q} onInput=${e => setQ(e.target.value)} onKeyDown=${e => { if (e.key === "Enter") { e.preventDefault(); if (shown.length === 1) { toggle(shown[0][1]); setQ(""); } else addCustom(); } }}/>` : null}
+    ${!disabled && (nq || expanded) ? html`<div class="chips mt">
+      ${shown.filter(([, n]) => !sel.includes(n)).map(([c, n]) => html`<button type="button" key=${n} class="chip" onClick=${() => { toggle(n); setQ(""); }}>${c ? html`<b>${c}</b> ` : null}${n}</button>`)}
+      ${nq && !all.find(([, n]) => norm(n) === nq) ? html`<button type="button" class="chip add" onClick=${addCustom}>${t("add")} “${q}”</button>` : null}
+    </div>` : null}
+    ${!disabled && !nq ? html`<button type="button" class="linkbtn" onClick=${() => setExpanded(!expanded)}>${expanded ? "▴ " + t("hideList") : "▾ " + t("showList")}</button>` : null}
+  </div>`;
+}
+
+/* ---------- Weather ---------- */
+function WeatherFields({ value, onChange, disabled }) {
+  const w = value || {}; const set = k => v => onChange({ ...w, [k]: v });
+  return html`<div class="weather">
+    <${Field} label=${t("cloud")}><${Chips} options=${CLOUD} value=${w.cloud} onChange=${set("cloud")} disabled=${disabled}/><//>
+    <${Field} label=${t("precip")}><${Chips} options=${PRECIP} value=${w.precip} onChange=${set("precip")} disabled=${disabled}/><//>
+    <div class="grid2">
+      <${Field} label=${t("wind")}><${NumInput} decimal value=${w.wind} onChange=${set("wind")} min="0" disabled=${disabled}/><//>
+      <${Field} label=${t("weatherNote")}><${Input} value=${w.note} onChange=${set("note")} disabled=${disabled}/><//>
+    </div>
+  </div>`;
+}
+
+/* ---------- Age picker ---------- */
+function AgePicker({ group, value, onChange, disabled }) {
+  const opts = AGE[group];
+  const [custom, setCustom] = useState(false);
+  if (!opts) return html`<${Input} value=${value} onChange=${onChange} placeholder=${t("freeText")} disabled=${disabled}/>`;
+  const isStd = !value || opts.includes(value);
+  return html`<div>
+    <${Chips} options=${opts} value=${isStd && !custom ? value : ""} onChange=${v => { setCustom(false); onChange(v); }} disabled=${disabled}/>
+    ${!disabled ? html`<button type="button" class=${`chip mt ${(!isStd || custom) ? "on" : ""}`} onClick=${() => { setCustom(true); if (isStd) onChange(""); }}>${t("add")}</button>` : null}
+    ${(custom || !isStd) ? html`<${Input} value=${!isStd ? value : ""} onChange=${onChange} placeholder=${t("freeText")} disabled=${disabled} class="mt"/>` : null}
+  </div>`;
+}
+</script>
+<script>/* ===== BRCC Mongolia — views ===== */
+
+/* ---------- Home ---------- */
+function Home() {
+  const s = useStore(); const [creating, setCreating] = useState(false);
+  const studies = [...s.meta.studies].sort((a, b) => b.createdAt - a.createdAt);
+  return html`<div class="page">
+    <${TopBar} back=${false} title=${t("appTitle")} sub=${t("appSub")} right=${html`<button class="iconbtn" onClick=${() => nav("#/settings")} aria-label=${t("settings")}>⚙</button>`}/>
+    <section class="section">
+      <div class="sec-h"><h2>${t("studies")}</h2><${Btn} onClick=${() => setCreating(true)}>+ ${t("newStudy")}<//></div>
+      ${studies.length ? studies.map(st => {
+        const nv = visitsOf(st.id).length, ns = Object.values(s.sessions).filter(x => x.studyId === st.id).length;
+        return html`<button key=${st.id} class="card link" onClick=${() => nav("#/study/" + st.id)}>
+          <div class="card-t">${st.name}${st.windFarm ? html`<span class="tag">WF</span>` : null}</div>
+          <div class="card-s">${t("visits")}: ${nv} · ${t("sessions")}: ${ns} · ${t("notes")}: ${notesOf(st.id).length}</div>
+        </button>`;
+      }) : html`<${Empty}>${t("emptyStudies")}<//>`}
+    </section>
+    ${s.queue.length && s.meta.settings.sheetsUrl ? html`<div class="notice">${t("pending")}: ${s.queue.length} <${Btn} small kind="ghost" onClick=${flushQueue}>${t("syncNow")}<//></div>` : null}
+    <footer class="foot"><div class="foot-links"><a href="#/trash">${t("trash")}${s.trash.length ? ` (${s.trash.length})` : ""}</a> · <a href="#/about">${t("about")}</a></div><p class="own">${t("ownership")}</p></footer>
+    ${creating ? html`<${StudyModal} onClose=${() => setCreating(false)}/>` : null}
+  </div>`;
+}
+function StudyModal({ study, onClose }) {
+  const [f, setF] = useState(study ? { ...study } : { name: "", speciesLang: "mn", windFarm: false });
+  const ok = () => {
+    if (!f.name.trim()) return;
+    if (study) { Store.s.meta.studies = Store.s.meta.studies.map(x => x.id === study.id ? { ...x, ...f, name: f.name.trim() } : x); saveMeta(); }
+    else { const st = { id: uid(), createdAt: Date.now(), ...f, name: f.name.trim() }; Store.s.meta.studies.push(st); saveMeta(); nav("#/study/" + st.id); }
+    onClose();
+  };
+  const langs = [["mn", "Монгол"], ["en", "English"], ["la", "Latin"]];
+  return html`<${Modal} title=${study ? t("edit") : t("newStudy")} onClose=${onClose}>
+    <${Field} label=${t("studyName")}><${Input} value=${f.name} onChange=${v => setF({ ...f, name: v })} placeholder="Uvs airport" autofocus/><//>
+    <${Field} label=${t("speciesLang")}><${Chips} options=${langs.map(l => l[1])} value=${(langs.find(l => l[0] === f.speciesLang) || langs[0])[1]} onChange=${v => { const l = langs.find(x => x[1] === v); if (l) setF({ ...f, speciesLang: l[0] }); }}/><//>
+    <label class="check"><input type="checkbox" checked=${!!f.windFarm} onChange=${e => setF({ ...f, windFarm: e.target.checked })}/> ${t("windFarm")}<div class="hint">${t("windFarmHint")}</div></label>
+    <div class="row end mt"><${Btn} kind="ghost" onClick=${onClose}>${t("cancel")}<//><${Btn} onClick=${ok}>${study ? t("save") : t("create")}<//></div>
+  <//>`;
+}
+
+/* ---------- Study ---------- */
+function StudyView({ id }) {
+  const s = useStore(); const st = getStudy(id); const [edit, setEdit] = useState(false); const [busy, setBusy] = useState(false);
+  if (!st) return html`<div class="page"><${TopBar} title="?"/><${Empty}>${t("empty")}<//></div>`;
+  const visits = visitsOf(id), notes = notesOf(id);
+  const newVisit = () => { const v = { id: uid(), studyId: id, date: todayISO(), createdAt: Date.now() }; Store.s.meta.visits.push(v); saveMeta(); nav("#/visit/" + v.id); };
+  const newNote = () => { const n = (Store.s.meta.noteSeq[id] || 0) + 1; Store.s.meta.noteSeq[id] = n; saveMeta(); const note = { id: uid(), studyId: id, n, date: todayISO(), text: "", photos: [], createdAt: Date.now(), updatedAt: Date.now() }; saveNote(note); nav("#/note/" + note.id); };
+  const exportStudy = async () => { setBusy(true); try { const sess = Object.values(Store.s.sessions).filter(x => x.studyId === id); await saveFile(`BRCC_${safeName(st.name)}_${todayISO()}.xlsx`, buildWorkbook(sess, notes), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteStudy(id); showToast(t("deleted")); nav("#/"); } };
+  return html`<div class="page">
+    <${TopBar} title=${st.name} sub=${`${t("speciesLang")}: ${{ mn: "Монгол", en: "English", la: "Latin" }[st.speciesLang]}${st.windFarm ? " · Wind farm" : ""}`} right=${html`<button class="iconbtn" onClick=${() => setEdit(true)}>✎</button>`}/>
+    <section class="section">
+      <div class="sec-h"><h2>${t("visits")}</h2><${Btn} onClick=${newVisit}>+ ${t("newVisit")}<//></div>
+      ${visits.length ? visits.map(v => { const ss = sessionsOf(v.id); const open = ss.filter(x => x.status === "open").length;
+        return html`<button key=${v.id} class="card link" onClick=${() => nav("#/visit/" + v.id)}><div class="card-t">${v.date}</div><div class="card-s">${t("sessions")}: ${ss.length}${open ? html` · <span class="warn">${t("open")}: ${open}</span>` : null} · ${t("records")}: ${ss.reduce((a, x) => a + x.records.length, 0)}</div></button>`; })
+        : html`<${Empty}>${t("emptyVisits")}<//>`}
+    </section>
+    <section class="section">
+      <div class="sec-h"><h2>${t("notes")}</h2><${Btn} kind="secondary" onClick=${newNote}>+ ${t("newNote")}<//></div>
+      ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
+    </section>
+    <section class="section">
+      <div class="row wrap"><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
+    </section>
+    ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
+  </div>`;
+}
+
+/* ---------- Visit ---------- */
+function VisitView({ id }) {
+  const s = useStore(); const v = getVisit(id); const [pick, setPick] = useState(false); const [busy, setBusy] = useState(false);
+  if (!v) return html`<div class="page"><${TopBar} title="?"/></div>`;
+  const st = getStudy(v.studyId) || {}; const sess = sessionsOf(id);
+  const setDate = d => { Store.s.meta.visits = Store.s.meta.visits.map(x => x.id === id ? { ...x, date: d } : x); for (const ss of sess) updSession(ss.id, n => { n.date = d; }); saveMeta(); };
+  const create = type => {
+    const base = { id: uid(), studyId: v.studyId, visitId: id, type, date: v.date, number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
+    if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
+    else Object.assign(base, { aimag: "", soum: "", place: "", habitat: "", width: "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false });
+    saveSession(base); setPick(false); nav("#/session/" + base.id);
+  };
+  const exportVisit = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${v.date}.xlsx`, buildWorkbook(sess, []), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteVisit(id); showToast(t("deleted")); nav("#/study/" + v.studyId); } };
+  return html`<div class="page">
+    <${TopBar} title=${`${st.name} — ${v.date}`} sub=${t("visits")}/>
+    <section class="section"><${Field} label=${t("visitDate")}><input type="date" class="inp" value=${v.date} onInput=${e => setDate(e.target.value)}/><//></section>
+    <section class="section">
+      <div class="sec-h"><h2>${t("sessions")}</h2><${Btn} onClick=${() => setPick(true)}>+ ${t("newObservation")}<//></div>
+      ${pick ? html`<div class="pick2">
+        <button class="pickbtn" onClick=${() => create("VP")}><div class="pk">VP</div><div>${t("vpTitle")}</div></button>
+        <button class="pickbtn" onClick=${() => create("LT")}><div class="pk">LT</div><div>${t("ltTitle")}</div></button>
+      </div>` : null}
+      ${sess.length ? sess.map(x => html`<button key=${x.id} class=${`card link ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
+        <div class="card-t"><span class="tag big">${x.type}</span> ${x.number ? `№ ${x.number}` : ""} <span class="muted">${x.observer}</span></div>
+        <div class="card-s">${x.start || "—"} – ${x.end || "…"} · ${t("records")}: ${x.records.length}${x.records.some(r => r.status === "draft") ? html` · <span class="warn">${t("drafts")}: ${x.records.filter(r => r.status === "draft").length}</span>` : null} · ${x.status === "open" ? html`<span class="warn">${t("open")}</span>` : t("closed")}</div>
+      </button>`) : (!pick ? html`<${Empty}>${t("emptySessions")}<//>` : null)}
+    </section>
+    <section class="section"><div class="row wrap"><${Btn} kind="secondary" onClick=${exportVisit} disabled=${busy}>${t("exportVisit")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div></section>
+  </div>`;
+}
+
+/* ---------- Session (VP / LT) ---------- */
+function useTick(ms) { const [, f] = useState(0); useEffect(() => { const i = setInterval(() => f(x => x + 1), ms); return () => clearInterval(i); }, [ms]); }
+function SessionView({ id, recId }) {
+  const s = useStore(); const sess = s.sessions[id]; useTick(1000);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { if (sess && sess.type === "LT" && sess.tracking && sess.status === "open" && Tracker.sessionId !== id) Tracker.start(id); }, [id]);
+  const st = sess ? (getStudy(sess.studyId) || {}) : {}; const lang = st.speciesLang || "mn"; const locked = !!sess && sess.status === "closed"; const isVP = !!sess && sess.type === "VP";
+  const plannedMs = sess ? (+sess.plannedH || 0) * 3600000 : 0; const elapsed = sess && sess.startedAt ? Date.now() - sess.startedAt : 0; const remaining = plannedMs - elapsed;
+  const timeOver = !!sess && isVP && !!sess.startedAt && plannedMs > 0 && remaining <= 0;
+  useEffect(() => { if (timeOver && !sess.alarmed && !locked) { beep(4); updSession(id, n => { n.alarmed = true; n.end = n.end || nowHM(); }); } }, [timeOver, sess && sess.alarmed]);
+  if (!sess) return html`<div class="page"><${TopBar} title="?"/><${Empty}>${t("empty")}<//></div>`;
+  const set = k => v => updSession(id, n => { n[k] = v; });
+  if (recId) { const r = sess.records.find(x => x.id === recId); if (r) return html`<${RecordForm} key=${r.id} sess=${sess} rec=${r} lang=${lang} windFarm=${!!st.windFarm} locked=${locked}/>`; }
+  const fmtDur = ms => { ms = Math.max(0, ms); const h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), sec = Math.floor(ms % 60000 / 1000); return `${h}:${pad2(m)}:${pad2(sec)}`; };
+
+  const startSession = async () => {
+    primeAudio();
+    if (isVP) { updSession(id, n => { n.started = true; n.startedAt = Date.now(); n.start = n.start || nowHM(); n.alarmed = false; }); showToast(t("alarmHint")); }
+    else { updSession(id, n => { n.started = true; n.tracking = true; n.start = n.start || nowHM(); }); Tracker.start(id); try { const p = await getPosition(); updSession(id, n => { if (!n.startLat) { n.startLat = p.lat; n.startLng = p.lng; } }); } catch (e) { } }
+  };
+  const finish = async () => {
+    const drafts = sess.records.filter(r => r.status === "draft").length;
+    if (drafts && !confirmDlg(`${drafts} ${t("incompleteWarn")}\n\n${t("confirmFinish")}`)) return;
+    if (!drafts && !confirmDlg(t("confirmFinish"))) return;
+    if (!isVP) { Tracker.stop(); let end = null; try { end = await getPosition({ timeout: 8000 }); } catch (e) { } updSession(id, n => { n.tracking = false; const lp = n.track[n.track.length - 1]; if (end) { n.endLat = end.lat; n.endLng = end.lng; } else if (lp && !n.endLat) { n.endLat = lp.lat; n.endLng = lp.lng; } if (!n.length && n.track.length > 1) n.length = trackLength(n.track); }); }
+    updSession(id, n => { n.status = "closed"; n.end = n.end || nowHM(); });
+    enqueueRow("session", { ...sessionHeader(Store.s.sessions[id]), id, observations: Store.s.sessions[id].records.length, status: "closed" });
+  };
+  const reopen = () => { if (confirmDlg(t("confirmReopen"))) updSession(id, n => { n.status = "open"; }); };
+  const addRecord = (extra) => { const r = newRecord(sess, extra); updSession(id, n => { n.records = [...n.records, r]; }); nav(`#/session/${id}/rec/${r.id}`); };
+  const quick = async () => {
+    primeAudio(); const extra = { time: nowHM(), quick: true };
+    if (isVP) extra.timerStart = Date.now();
+    const r = newRecord(sess, extra); updSession(id, n => { n.records = [...n.records, r]; }); showToast(`${t("quickCapture")} · ${t("detailsLater")}`);
+    if (!isVP) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) updRecord(id, r.id, x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else try { const p = await getPosition(); updRecord(id, r.id, x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); } catch (e) { } }
+  };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { Tracker.stop(); deleteSession(id); showToast(t("deleted")); nav("#/visit/" + sess.visitId); } };
+  const exportKmz = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_LT${sess.number || ""}_${sess.date}.kmz`, kmzForSession(sess), "application/vnd.google-earth.kmz"); } finally { setBusy(false); } };
+  const exportX = async () => { setBusy(true); try { await saveFile(`BRCC_${safeName(st.name)}_${sess.type}${sess.number || ""}_${sess.date}.xlsx`, buildWorkbook([sess], []), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const drafts = sess.records.filter(r => r.status === "draft"); const running = sess.records.filter(r => r.timerStart && !r.duration && r.status === "draft");
+  const trackOn = Tracker.sessionId === id && Tracker.status === "tracking";
+
+  return html`<div class="page">
+    <${TopBar} title=${`${sess.type} ${sess.number ? "№ " + sess.number : ""}`} sub=${`${st.name} · ${sess.date}`} right=${locked ? html`<span class="lock">🔒</span>` : null}/>
+    ${locked ? html`<div class="banner lock"><span>${t("locked")}</span><${Btn} small kind="ghost" onClick=${reopen}>${t("reopen")}<//></div>` : null}
+
+    <section class="section card hdr">
+      <div class="grid2">
+        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} inputmode="numeric"/><//>
+        <${Field} label=${t("observer")}><${Input} value=${sess.observer} onChange=${v => { set("observer")(v); Store.s.meta.settings.observer = v; saveMeta(); }} disabled=${locked}/><//>
+        <${Field} label=${t("date")}><input type="date" class="inp" value=${sess.date} onInput=${e => set("date")(e.target.value)} disabled=${locked}/><//>
+        ${isVP ? html`<${Field} label=${t("plannedDur")}><${NumInput} decimal value=${sess.plannedH} onChange=${set("plannedH")} min="0" disabled=${locked}/><//>` : null}
+        <${Field} label=${t("startTime")}><${TimeInput} value=${sess.start} onChange=${set("start")} disabled=${locked}/><//>
+        <${Field} label=${t("endTime")}><${TimeInput} value=${sess.end} onChange=${set("end")} disabled=${locked}/><//>
+      </div>
+      ${!isVP ? html`<div class="grid2">
+        <${Field} label=${t("aimag")}><${Input} value=${sess.aimag} onChange=${set("aimag")} disabled=${locked}/><//>
+        <${Field} label=${t("soum")}><${Input} value=${sess.soum} onChange=${set("soum")} disabled=${locked}/><//>
+        <${Field} label=${t("place")}><${Input} value=${sess.place} onChange=${set("place")} disabled=${locked}/><//>
+        <${Field} label=${t("habitat")}><${Input} value=${sess.habitat} onChange=${set("habitat")} disabled=${locked}/><//>
+        <${Field} label=${t("width")}><${NumInput} value=${sess.width} onChange=${set("width")} disabled=${locked}/><//>
+        <${Field} label=${t("length")}><${NumInput} value=${sess.length} onChange=${set("length")} disabled=${locked}/><//>
+        <${Field} label=${`${t("startPt")} N / E`}><div class="row"><${NumInput} decimal value=${sess.startLat} onChange=${set("startLat")} disabled=${locked}/><${NumInput} decimal value=${sess.startLng} onChange=${set("startLng")} disabled=${locked}/></div><//>
+        <${Field} label=${`${t("endPt")} N / E`}><div class="row"><${NumInput} decimal value=${sess.endLat} onChange=${set("endLat")} disabled=${locked}/><${NumInput} decimal value=${sess.endLng} onChange=${set("endLng")} disabled=${locked}/></div><//>
+      </div>` : null}
+
+      ${!locked ? (!sess.started ? html`<div class="row end mt"><${Btn} onClick=${startSession}>${isVP ? t("startSession") : t("startTrack")}<//></div>` :
+        isVP ? html`<div class=${`timer ${plannedMs && remaining <= 0 ? "over" : ""}`}>
+            ${plannedMs ? html`<div><span class="tl">${remaining > 0 ? t("remaining") : t("timeUp")}</span><span class="tv">${fmtDur(Math.abs(remaining))}</span></div>` : null}
+            <div><span class="tl">${t("elapsed")}</span><span class="tv">${fmtDur(elapsed)}</span></div>
+          </div>` :
+        html`<div class=${`timer ${trackOn ? "" : "over"}`}>
+            <div><span class="tl">${trackOn ? t("tracking") : t("trackPaused")}</span><span class="tv">${(sess.length || trackLength(sess.track)).toLocaleString()} m</span></div>
+            <div><span class="tl">${t("trackPts")} · ${t("gpsAcc")}</span><span class="tv">${sess.track.length} · ${Tracker.last ? "±" + Tracker.last.acc + " m" : "…"}</span></div>
+            ${!trackOn ? html`<${Btn} small onClick=${() => { updSession(id, n => { n.tracking = true; }); Tracker.start(id); }}>${t("resumeTrack")}<//>` : null}
+            ${Tracker.error && Tracker.sessionId === id ? html`<div class="warn">${Tracker.error}</div>` : null}
+          </div>`) : null}
+    </section>
+
+    <section class="section">
+      <div class="sec-h"><h2>${t("records")} <span class="muted">(${sess.records.length})</span></h2>
+        ${!locked ? html`<div class="row"><${Btn} kind="secondary" onClick=${quick}>⚡ ${t("quickCapture")}<//><${Btn} onClick=${() => addRecord({})}>+ ${t("addRecord")}<//></div>` : null}
+      </div>
+      ${running.length ? html`<div class="notice">${t("running")}: ${running.length}</div>` : null}
+      ${sess.records.length ? [...sess.records].reverse().map((r, i) => html`<${RecordCard} key=${r.id} r=${r} idx=${sess.records.length - i} lang=${lang} isVP=${isVP} onOpen=${() => nav(`#/session/${id}/rec/${r.id}`)}
+        onStop=${() => updRecord(id, r.id, x => { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); x.timerStart = null; })}/>`)
+        : html`<${Empty}>${locked ? t("noRecords") : t("emptyRecords")}<//>`}
+    </section>
+
+    ${locked ? html`<section class="section card"><h3>${t("closedSummary")}</h3>
+      <div class="sum"><div><b>${sess.records.length}</b><span>${t("summaryRecords")}</span></div><div><b>${new Set(sess.records.filter(r => r.species).map(r => r.species.L)).size}</b><span>${t("summarySpecies")}</span></div><div><b>${drafts.length}</b><span>${t("summaryDrafts")}</span></div></div>
+    </section>` : html`<section class="section"><div class="row end"><${Btn} kind="secondary" onClick=${finish}>${isVP ? t("finishSession") : t("stopTrack")}<//></div></section>`}
+
+    <section class="section"><div class="row wrap">
+      <${Btn} kind="secondary" onClick=${exportX} disabled=${busy}>${t("exportXlsx")}<//>
+      ${!isVP ? html`<${Btn} kind="secondary" onClick=${exportKmz} disabled=${busy}>${t("exportKmz")}<//>` : null}
+      ${!locked ? html`<${Btn} kind="danger" small onClick=${del}>${t("delete")}<//>` : null}
+    </div></section>
+  </div>`;
+}
+function RecordCard({ r, idx, lang, isVP, onOpen, onStop }) {
+  const running = r.timerStart && !r.duration && r.status === "draft";
+  const secs = running ? Math.round((Date.now() - r.timerStart) / 1000) : null;
+  const w = r.weather || {};
+  return html`<div class=${`card rec ${r.status === "draft" ? "draft" : ""}`}>
+    <button class="rec-main" onClick=${onOpen}>
+      <div class="rec-n">${idx}</div>
+      <div class="rec-b">
+        <div class="card-t">${r.species ? speciesName(r.species, lang) : html`<span class="warn">${t("species")}?</span>`}${r.count ? html` <span class="muted">× ${r.count}</span>` : null}</div>
+        <div class="card-s">${r.time}${isVP ? html`${r.duration ? ` · ${r.duration} s` : ""}${r.dirFrom || r.dirTo ? ` · ${r.dirFrom || "?"}°→${r.dirTo || "?"}°` : ""}${r.hMin || r.hMax ? ` · ${r.hMin || "?"}–${r.hMax || "?"} m` : ""}` : html`${r.dist ? ` · ${r.dist} m` : ""}${r.azimuth ? ` · ${r.azimuth}°` : ""}${r.lat ? ` · ${r.lat}, ${r.lng}` : ""}`}${r.age ? ` · ${r.age.split(" (")[0]}` : ""}</div>
+        ${r.activities && r.activities.length ? html`<div class="card-s">${r.activities.map(a => a.split(" (")[0]).join(", ")}</div>` : null}
+        ${r.status === "draft" ? html`<div class="card-s warn">${t("drafts")}</div>` : null}
+      </div>
+    </button>
+    ${running ? html`<button class="btn danger small stopbtn" onClick=${onStop}>■ ${secs}s</button>` : null}
+  </div>`;
+}
+
+/* ---------- Record form ---------- */
+function RecordForm({ sess, rec, lang, windFarm, locked }) {
+  useTick(1000);
+  const isVP = sess.type === "VP"; const r = rec; const dis = locked;
+  const upd = fn => updRecord(sess.id, r.id, fn); const set = k => v => upd(x => { x[k] = v; });
+  const g = r.species ? r.species.g : null; const showFlight = isVP && (!g || g === "B");
+  const running = r.timerStart && !r.duration;
+  const [gpsMsg, setGpsMsg] = useState("");
+  const getGps = async () => { setGpsMsg(t("gpsSearching")); try { const p = await getPosition(); upd(x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); setGpsMsg(`±${p.acc} m`); } catch (e) { setGpsMsg(t("gpsFail")); } };
+  useEffect(() => { if (!isVP && !r.lat && !locked) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) upd(x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else getGps(); } }, []);
+  // computed animal position
+  useEffect(() => { if (!isVP && r.lat && r.lng && r.dist !== "" && r.azimuth !== "" && !isNaN(+r.dist) && !isNaN(+r.azimuth)) { const p = destPoint(+r.lat, +r.lng, +r.azimuth, +r.dist); if (p.lat !== r.aLat || p.lng !== r.aLng) upd(x => { x.aLat = p.lat; x.aLng = p.lng; }); } }, [r.lat, r.lng, r.dist, r.azimuth]);
+  const valid = !!r.species;
+  const save = (next) => {
+    if (!valid) { showToast(t("species") + "?"); return; }
+    upd(x => { x.status = "saved"; if (x.timerStart && !x.duration) { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); } x.timerStart = null; });
+    const s2 = Store.s.sessions[sess.id]; const r2 = s2.records.find(x => x.id === r.id); enqueueRow("record", recordRow(s2, r2, s2.records.indexOf(r2)));
+    showToast(t("saved"));
+    if (next) { const nr = newRecord(Store.s.sessions[sess.id], { species: r.species }); updSession(sess.id, n => { n.records = [...n.records, nr]; }); location.replace(`#/session/${sess.id}/rec/${nr.id}`); }
+    else goBack();
+  };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteRecord(sess.id, r.id); showToast(t("deleted")); goBack(); } };
+  const idx = sess.records.indexOf(r) + 1;
+  return html`<div class="page">
+    <${TopBar} title=${`${t("records")} № ${idx}`} sub=${`${sess.type} ${sess.number ? "№ " + sess.number : ""} · ${sess.date}`} right=${r.status === "draft" ? html`<span class="tag warn">${t("drafts")}</span>` : null}/>
+    <form class="form" onSubmit=${e => e.preventDefault()}>
+      <${Field} label=${t("species")}><${SpeciesPicker} value=${r.species} onChange=${v => upd(x => { x.species = v; if (v && x.age && AGE[x.species?.g] && !AGE[x.species.g].includes(x.age)) x.age = ""; })} lang=${lang} disabled=${dis} autoFocus=${!r.species}/><//>
+      <div class="grid2">
+        <${Field} label=${t("timeObserved")}><${TimeInput} value=${r.time} onChange=${set("time")} disabled=${dis}/><//>
+        ${isVP ? html`<${Field} label=${t("duration")}>
+          <div class="row"><${NumInput} value=${r.duration} onChange=${set("duration")} min="0" disabled=${dis || running}/>
+          ${!dis ? (running ? html`<${Btn} kind="danger" small onClick=${() => upd(x => { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); x.timerStart = null; })}>■ ${Math.round((Date.now() - r.timerStart) / 1000)}s<//>` : html`<${Btn} kind="ghost" small onClick=${() => upd(x => { x.timerStart = Date.now(); x.duration = ""; })}>▶ ${t("timerStart")}<//>`) : null}</div>
+        <//>` : null}
+      </div>
+      <${Field} label=${t("count")}><${CountPicker} value=${r.count} onChange=${set("count")} disabled=${dis}/><//>
+      <${Field} label=${t("age")}><${AgePicker} group=${g} value=${r.age} onChange=${set("age")} disabled=${dis}/><//>
+      <${Field} label=${t("sex")}><${Chips} options=${SEX} value=${r.sex} onChange=${set("sex")} disabled=${dis}/><//>
+      ${isVP && windFarm ? html`<div class="grid2">
+        <${Field} label=${t("turbine")}><${Input} value=${r.turbine} onChange=${set("turbine")} disabled=${dis}/><//>
+        <${Field} label=${t("turbineDist")}><${NumInput} value=${r.turbineDist} onChange=${set("turbineDist")} min="0" disabled=${dis}/><//>
+      </div>` : null}
+      ${showFlight ? html`
+        <${Field} label=${t("direction")}><div class="row"><${NumInput} value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/></div><//>
+        <${Field} label=${t("height")}><div class="row"><${NumInput} value=${r.hMin} onChange=${set("hMin")} min="0" placeholder=${t("min")} disabled=${dis}/><span class="arrow">–</span><${NumInput} value=${r.hMax} onChange=${set("hMax")} min="0" placeholder=${t("max")} disabled=${dis}/></div><//>` : null}
+      ${isVP ? html`<${Field} label=${t("distance")}><div class="row"><${NumInput} value=${r.distFirst} onChange=${set("distFirst")} min="0" placeholder=${t("distFirst")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.distLast} onChange=${set("distLast")} min="0" placeholder=${t("distLast")} disabled=${dis}/></div><//>` : html`
+        <div class="grid2">
+          <${Field} label=${t("distBird")}><${NumInput} value=${r.dist} onChange=${set("dist")} min="0" disabled=${dis}/><//>
+          <${Field} label=${t("azimuth")}><${NumInput} value=${r.azimuth} onChange=${set("azimuth")} min="0" max="360" disabled=${dis}/><//>
+        </div>
+        <${Field} label=${`${t("observerPos")} N / E`} hint=${gpsMsg}><div class="row"><${NumInput} decimal value=${r.lat} onChange=${set("lat")} disabled=${dis}/><${NumInput} decimal value=${r.lng} onChange=${set("lng")} disabled=${dis}/>${!dis ? html`<${Btn} kind="ghost" small onClick=${getGps}>GPS<//>` : null}</div><//>
+        ${r.aLat ? html`<div class="hint mb">${t("birdPos")}: ${r.aLat}, ${r.aLng}</div>` : null}`}
+      <${Field} label=${isVP ? t("activity") : t("behaviour")}>
+        ${g === "B" || g === "M" ? html`<${ActivityPicker} group=${g} value=${r.activities} onChange=${set("activities")} disabled=${dis}/>` : html`<${Input} value=${(r.activities || []).join("; ")} onChange=${v => set("activities")(v ? [v] : [])} placeholder=${t("freeText")} disabled=${dis}/>`}
+      <//>
+      <${Field} label=${t("weather")}><${WeatherFields} value=${r.weather} onChange=${set("weather")} disabled=${dis}/><//>
+      <${Field} label=${t("habitat")}><${Input} value=${r.habitat} onChange=${set("habitat")} disabled=${dis}/><//>
+      <${Field} label=${t("noteField")}><${TextArea} value=${r.notes} onChange=${set("notes")} disabled=${dis}/><//>
+      ${!dis ? html`<div class="sticky-actions">
+        <${Btn} kind="danger" small onClick=${del}>${t("delete")}<//>
+        <div class="row"><${Btn} kind="secondary" onClick=${() => save("new")} disabled=${!valid}>${t("saveNext")}<//><${Btn} onClick=${() => save()} disabled=${!valid}>${t("save")}<//></div>
+      </div>` : html`<div class="sticky-actions"><span/><${Btn} kind="ghost" onClick=${goBack}>${t("close")}<//></div>`}
+    </form>
+  </div>`;
+}
+
+/* ---------- Note ---------- */
+function NoteView({ id }) {
+  const s = useStore(); const n = s.notes[id]; const [photos, setPhotos] = useState({}); const fileRef = useRef();
+  useEffect(() => { (async () => { if (!n) return; const out = {}; for (const pid of n.photos || []) out[pid] = await DB.get("photo:" + pid); setPhotos(out); })(); }, [id, n && (n.photos || []).length]);
+  if (!n) return html`<div class="page"><${TopBar} title="?"/></div>`;
+  const st = getStudy(n.studyId) || {};
+  const upd = fn => { const x = { ...n }; fn(x); x.updatedAt = Date.now(); saveNote(x); };
+  const addPhoto = async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return; e.target.value = "";
+    const url = await new Promise(res => { const img = new Image(); img.onload = () => { const max = 1400, sc = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL("image/jpeg", 0.75)); }; img.src = URL.createObjectURL(f); });
+    const pid = uid(); await DB.set("photo:" + pid, url); upd(x => { x.photos = [...(x.photos || []), pid]; });
+  };
+  const rmPhoto = async pid => { if (!confirmDlg(t("confirmDelete"))) return; upd(x => { x.photos = x.photos.filter(p => p !== pid); }); await DB.del("photo:" + pid); };
+  const next = () => { const num = (Store.s.meta.noteSeq[n.studyId] || 0) + 1; Store.s.meta.noteSeq[n.studyId] = num; saveMeta(); const nn = { id: uid(), studyId: n.studyId, n: num, date: todayISO(), text: "", photos: [], createdAt: Date.now(), updatedAt: Date.now() }; saveNote(nn); location.replace("#/note/" + nn.id); };
+  const del = () => { if (confirmDlg(t("confirmDelete"))) { deleteNote(id); showToast(t("deleted")); nav("#/study/" + n.studyId); } };
+  return html`<div class="page">
+    <${TopBar} title=${`${t("notes")} ${n.n}`} sub=${st.name}/>
+    <div class="form">
+      <${Field} label=${t("date")}><input type="date" class="inp" value=${n.date} onInput=${e => upd(x => { x.date = e.target.value; })}/><//>
+      <textarea class="inp ta note" rows="10" placeholder=${t("noteHint")} value=${n.text} onInput=${e => upd(x => { x.text = e.target.value; })}></textarea>
+      <div class="photos">${(n.photos || []).map(pid => html`<div key=${pid} class="ph">${photos[pid] ? html`<img src=${photos[pid]} alt=""/>` : null}<button class="iconbtn del" onClick=${() => rmPhoto(pid)}>×</button></div>`)}</div>
+      <input type="file" accept="image/*" ref=${fileRef} style="display:none" onChange=${addPhoto}/>
+      <div class="row wrap"><${Btn} kind="ghost" onClick=${() => fileRef.current.click()}>📷 ${t("addPhoto")}<//><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
+      <div class="sticky-actions"><span/><div class="row"><${Btn} kind="secondary" onClick=${next}>${t("nextNote")} →<//><${Btn} onClick=${goBack}>${t("save")}<//></div></div>
+    </div>
+  </div>`;
+}
+
+/* ---------- Settings ---------- */
+function SettingsView() {
+  const s = useStore(); const st = s.meta.settings; const fileRef = useRef(); const [busy, setBusy] = useState(false);
+  const set = k => v => { Store.s.meta.settings = { ...Store.s.meta.settings, [k]: v }; if (k === "lang") LANG = v; if (k === "night") document.body.classList.toggle("night", !!v); saveMeta(); };
+  const exportAll = async () => { setBusy(true); try { await saveFile(`BRCC_all_${todayISO()}.xlsx`, buildWorkbook(Object.values(s.sessions), Object.values(s.notes)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); } finally { setBusy(false); } };
+  const restore = async e => { const f = e.target.files && e.target.files[0]; if (!f) return; e.target.value = ""; if (!confirmDlg(t("restoreConfirm"))) return; try { await importBackup(await f.text()); showToast(t("restored")); } catch (err) { alert("Error: " + err.message); } };
+  return html`<div class="page">
+    <${TopBar} title=${t("settings")}/>
+    <div class="form">
+      <${Field} label=${t("language")}><${Chips} options=${["Монгол", "English"]} value=${st.lang === "en" ? "English" : "Монгол"} onChange=${v => set("lang")(v === "English" ? "en" : "mn")}/><//>
+      <label class="check"><input type="checkbox" checked=${!!st.night} onChange=${e => set("night")(e.target.checked)}/> ${t("night")}</label>
+      <${Field} label=${t("observer")}><${Input} value=${st.observer} onChange=${set("observer")}/><//>
+      <${Field} label=${t("sheetsUrl")} hint=${t("sheetsHint")}><${Input} value=${st.sheetsUrl} onChange=${set("sheetsUrl")} placeholder="https://script.google.com/macros/s/…/exec"/><//>
+      ${st.sheetsUrl ? html`<div class="row"><span class="muted">${t("pending")}: ${s.queue.length}</span><${Btn} small kind="ghost" onClick=${flushQueue}>${t("syncNow")}<//></div>` : null}
+      <hr/>
+      <div class="row wrap">
+        <${Btn} kind="secondary" onClick=${exportAll} disabled=${busy}>${t("exportAll")}<//>
+        <${Btn} kind="secondary" onClick=${exportBackup}>${t("backup")}<//>
+        <${Btn} kind="ghost" onClick=${() => fileRef.current.click()}>${t("restore")}<//>
+        <input type="file" accept="application/json,.json" ref=${fileRef} style="display:none" onChange=${restore}/>
+      </div>
+      <p class="hint">${t("storageWarn")}</p>
+      <p class="hint">${t("installHint")}</p>
+      <div class="row wrap"><a class="btn ghost" href="#/trash">${t("trash")} (${s.trash.length})</a><a class="btn ghost" href="#/about">${t("about")}</a></div>
+    </div>
+  </div>`;
+}
+
+/* ---------- Trash ---------- */
+function TrashView() {
+  const s = useStore();
+  const forever = tid => { if (!confirmDlg(t("deleteForever") + "?")) return; Store.s.trash = Store.s.trash.filter(x => x.trashId !== tid); saveTrash(); };
+  return html`<div class="page">
+    <${TopBar} title=${t("trash")}/>
+    <p class="hint pad">${t("trashHint")}</p>
+    ${s.trash.length ? s.trash.map(it => html`<div key=${it.trashId} class="card row between">
+      <div><div class="card-t">${it.label}</div><div class="card-s">${it.kind} · ${fmtDT(it.deletedAt)}</div></div>
+      <div class="row"><${Btn} small kind="secondary" onClick=${() => { restoreTrash(it.trashId); showToast(t("restored")); }}>${t("restoreItem")}<//><${Btn} small kind="danger" onClick=${() => forever(it.trashId)}>✕<//></div>
+    </div>`) : html`<${Empty}>${t("trashEmpty")}<//>`}
+  </div>`;
+}
+
+/* ---------- About ---------- */
+function AboutView() {
+  return html`<div class="page">
+    <${TopBar} title=${t("about")}/>
+    <div class="form about">
+      <img src="logo-small.png" alt="BRCC" class="logo-lg"/>
+      <h2>BRCC Mongolia</h2>
+      <p class="muted">${t("appSub")} · v${APP_VERSION}</p>
+      <p>${t("ownership")}</p>
+      <p class="hint">${t("installHint")}</p>
+      <p class="hint">${t("storageWarn")}</p>
+    </div>
+  </div>`;
+}
+
+/* ---------- Root / router ---------- */
+function useRoute() {
+  const parse = () => { const h = location.hash.replace(/^#\/?/, ""); const p = h.split("/"); return { view: p[0] || "home", id: p[1], sub: p[2], subId: p[3] }; };
+  const [r, setR] = useState(parse);
+  useEffect(() => { const f = () => { setR(parse()); window.scrollTo(0, 0); }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
+  return r;
+}
+function App() {
+  const s = useStore(); const r = useRoute(); const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => { const f = () => setOnline(navigator.onLine); window.addEventListener("online", f); window.addEventListener("offline", f); return () => { window.removeEventListener("online", f); window.removeEventListener("offline", f); }; }, []);
+  useEffect(() => { document.body.classList.toggle("night", !!s.meta.settings.night); }, [s.meta.settings.night]);
+  let view;
+  switch (r.view) {
+    case "study": view = html`<${StudyView} id=${r.id}/>`; break;
+    case "visit": view = html`<${VisitView} id=${r.id}/>`; break;
+    case "session": view = html`<${SessionView} id=${r.id} recId=${r.sub === "rec" ? r.subId : null}/>`; break;
+    case "note": view = html`<${NoteView} id=${r.id}/>`; break;
+    case "settings": view = html`<${SettingsView}/>`; break;
+    case "trash": view = html`<${TrashView}/>`; break;
+    case "about": view = html`<${AboutView}/>`; break;
+    default: view = html`<${Home}/>`;
+  }
+  return html`<div class="app">
+    ${!online ? html`<div class="offline">${t("offline")}</div>` : null}
+    ${view}
+    ${Store.toast ? html`<div class="toast" key=${Store.toast.id}>${Store.toast.msg}${Store.toast.action ? html`<button onClick=${Store.toast.action.fn}>${Store.toast.action.label}</button>` : null}</div>` : null}
+  </div>`;
+}
+(async () => {
+  await loadAll();
+  render(html`<${App}/>`, document.getElementById("root"));
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => { });
+})();
+</script>
+</body>
+</html>
