@@ -121,6 +121,11 @@ input[type=time],input[type=date]{min-width:0}
 .datehd{font-weight:700;color:var(--muted);font-size:.9rem;margin:10px 0 6px;padding-left:2px}
 .dategroup .card{margin-bottom:6px}
 .btn.lt{background:var(--blue)} body.night .btn.lt{background:#3F76AD}
+.addrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 10px}
+.addbtn{min-height:64px;border-radius:var(--r);border:0;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px}
+.addbtn b{font-size:1.15rem;white-space:nowrap} .addbtn.note b{font-size:.98rem} .addbtn span{font-size:.72rem;opacity:.92;line-height:1.1;text-align:center}
+.addbtn.vp{background:var(--green)} .addbtn.lt{background:var(--blue)} .addbtn.note{background:var(--amber)}
+.addbtn:active{filter:brightness(.9)}
 </style>
 </head>
 <body>
@@ -152,7 +157,7 @@ const I18N = {
     visits: "Явалтууд", newVisit: "Шинэ явалт", visitDate: "Явалтын огноо", notes: "Тэмдэглэл", newNote: "Шинэ тэмдэглэл", nextNote: "Дараагийн тэмдэглэл",
     noteHint: "Хээрийн тэмдэглэл — судалгааны бус цагт ажигласан шувуу, нөлөөлж буй зүйлс, авах арга хэмжээ, санал, дараагийн явалтад анхаарах зүйл, орон нутгийн хүмүүсээс сонссон мэдээлэл, цаг агаар, замын байдал…",
     addPhoto: "Зураг нэмэх", photos: "Зураг",
-    sessions: "Ажиглалтууд", newObservation: "Шинэ ажиглалт", vpTitle: "Цэгэн ажиглалт (VP)", ltTitle: "Шугаман замнал (LT)",
+    sessions: "Ажиглалтууд", newObservation: "Шинэ ажиглалт", vpTitle: "Цэгэн ажиглалт", ltTitle: "Шугаман замнал", fieldDiary: "Хээрийн дэвтэр",
     vpNo: "VP №", ltNo: "Замналын №", observer: "Ажиглагч", date: "Огноо", startTime: "Эхэлсэн цаг", endTime: "Дууссан цаг", now: "Одоо",
     plannedDur: "Үргэлжлэх хугацаа (цаг)", startSession: "Ажиглалт эхлэх", finishSession: "Ажиглалт дуусгах", reopen: "Засахаар нээх",
     alarmHint: "Утасныхаа сэрүүлгийг мөн тавьж хамгаалаарай.", timeUp: "Төлөвлөсөн хугацаа дууслаа", remaining: "Үлдсэн", elapsed: "Өнгөрсөн",
@@ -191,7 +196,7 @@ const I18N = {
     visits: "Visits", newVisit: "New visit", visitDate: "Visit date", notes: "Notes", newNote: "New note", nextNote: "Next note",
     noteHint: "Field notes — birds seen outside survey hours, threats and pressures, recommended actions, points to check on the next visit, information from local people, weather, road conditions…",
     addPhoto: "Add photo", photos: "Photos",
-    sessions: "Surveys", newObservation: "New survey", vpTitle: "Vantage point (VP)", ltTitle: "Line transect (LT)",
+    sessions: "Surveys", newObservation: "New survey", vpTitle: "Vantage point", ltTitle: "Line transect", fieldDiary: "Field diary",
     vpNo: "VP No.", ltNo: "Transect No.", observer: "Observer", date: "Date", startTime: "Start time", endTime: "End time", now: "Now",
     plannedDur: "Planned duration (hours)", startSession: "Start survey", finishSession: "Finish survey", reopen: "Reopen to edit",
     alarmHint: "Also set your phone alarm as a backup.", timeUp: "Planned time is over", remaining: "Remaining", elapsed: "Elapsed",
@@ -878,11 +883,16 @@ function StudyView({ id }) {
   return html`<div class="page">
     <${TopBar} title=${st.name} sub=${`${t("speciesLang")}: ${{ mn: "Монгол", en: "English", la: "Latin" }[st.speciesLang]}${st.windFarm ? " · Wind farm" : ""}`} right=${html`<button class="iconbtn" onClick=${() => setEdit(true)}>✎</button>`}/>
     <section class="section">
-      <div class="sec-h"><h2>${t("sessions")}</h2><div class="row"><${Btn} onClick=${() => create("VP")}>+ VP<//><${Btn} onClick=${() => create("LT")} cls="lt">+ LT<//></div></div>
+      <div class="addrow">
+        <button class="addbtn vp" onClick=${() => create("VP")}><b>+ VP</b><span>${t("vpTitle")}</span></button>
+        <button class="addbtn lt" onClick=${() => create("LT")}><b>+ LT</b><span>${t("ltTitle")}</span></button>
+        <button class="addbtn note" onClick=${newNote}><b>+ ${t("notes")}</b><span>${t("fieldDiary")}</span></button>
+      </div>
+      <h2 class="mt">${t("sessions")}</h2>
       ${groups.length ? groups.map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}
     </section>
     <section class="section">
-      <div class="sec-h"><h2>${t("notes")}</h2><${Btn} kind="secondary" onClick=${newNote}>+ ${t("newNote")}<//></div>
+      <h2>${t("notes")}</h2>
       ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
     </section>
     <section class="section">
@@ -1058,7 +1068,7 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
       <${Field} label=${t("age")}><${AgePicker} group=${g} value=${r.ageC} other=${r.ageOther} onChange=${set("ageC")} onOther=${set("ageOther")} disabled=${dis}/><//>
       <${Field} label=${t("sex")} hint=${sexWarn ? html`<span class="warn">${t("sexMismatch")}</span>` : null}><${CountedChips} options=${SEX} value=${r.sexC} onChange=${set("sexC")} disabled=${dis}/><//>
       ${isVP && windFarm ? html`<div class="grid2">
-        <${Field} label=${t("turbine")}><${Input} value=${r.turbine} onChange=${set("turbine")} disabled=${dis}/><//>
+        <${Field} label=${t("turbine")}><${NumInput} value=${r.turbine} onChange=${set("turbine")} min="0" disabled=${dis}/><//>
         <${Field} label=${t("turbineDist")}><${NumInput} value=${r.turbineDist} onChange=${set("turbineDist")} min="0" disabled=${dis}/><//>
       </div>` : null}
       <${Field} label=${t("direction")}><div class="row"><${NumInput} value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/></div><//>
