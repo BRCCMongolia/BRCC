@@ -127,6 +127,17 @@ input[type=time],input[type=date]{min-width:0}
 .addbtn.vp{background:var(--green)} .addbtn.lt{background:var(--blue)} .addbtn.note{background:var(--amber)}
 .addbtn:active{filter:brightness(.9)}
 .sticky-actions .row{flex:1;justify-content:flex-end} .sticky-actions .btn{padding-left:12px;padding-right:12px}
+.covwrap{margin:6px 0 14px}
+.cov{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cov table{border-collapse:collapse;width:100%;font-size:.78rem;table-layout:fixed}.cov th,.cov td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line);vertical-align:top}
+.cov th{font-weight:600;font-size:.76rem;line-height:1.15}.cov th:first-child,.cov td:first-child{width:40px;text-align:left;font-weight:700;font-size:.95rem}.cov th:last-child,.cov td:last-child{width:46px;font-weight:700}
+.cov th.m,.cov td.m{background:var(--amber-l)}.cov th.d,.cov td.d{background:var(--green-l)}.cov th.e,.cov td.e{background:#E3ECF5}body.night .cov th.e,body.night .cov td.e{background:#1F2C3A}
+.cov td.m{color:#7A5106}.cov td.d{color:var(--green-d)}.cov td.e{color:#24486E}body.night .cov td.m{color:#E9C46A}body.night .cov td.e{color:#9CC3E8}
+.cov td.miss{background:var(--red-l);color:var(--red)}
+.cov .cs{display:block;width:100%;background:transparent;border:0;border-bottom:1px dashed rgba(0,0,0,.14);padding:3px 0;line-height:1.2;color:inherit;font-size:.76rem;cursor:pointer;text-align:center}.cov .cs:last-child{border:0}.cov .cs b{font-weight:700}
+.cov tr.tot td{font-weight:700;background:var(--bg);border-top:2px solid var(--line);font-size:.92rem}
+.bandlbl{min-width:52px;font-weight:600;font-size:.9rem}.bandlbl.m{color:#9A6608}.bandlbl.d{color:var(--green-d)}.bandlbl.e{color:#2F5D8A}
+@media(min-width:700px){.cov table{font-size:.9rem}.cov .cs{font-size:.86rem}}
 </style>
 </head>
 <body>
@@ -150,6 +161,10 @@ const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${pad2
 const nowHM = () => { const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
 const fmtDT = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
 const addHours = (hm, h) => { if (!hm || !h || isNaN(+h)) return ""; const [H, M] = hm.split(":").map(Number); const tot = (H * 60 + M + Math.round(+h * 60)) % 1440; return `${pad2(Math.floor(tot / 60))}:${pad2(tot % 60)}`; };
+const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDateMon = iso => { if (!iso) return ""; const [y, m, d] = iso.split("-"); return `${d}.${MONS[+m - 1] || m}.${y}`; };
+const DEFAULT_BANDS = [{ k: "m", start: "05:00", end: "11:00" }, { k: "d", start: "11:00", end: "16:00" }, { k: "e", start: "16:00", end: "21:00" }];
+const hmToMin = hm => { if (!hm) return null; const [h, m] = hm.split(":").map(Number); return h * 60 + (m || 0); };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 /* ---------- i18n ---------- */
@@ -191,7 +206,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Ажиглалт", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
   en: {
     appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
@@ -230,7 +245,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
 };
 let LANG = "mn";
@@ -675,6 +690,7 @@ async function studyZip(st, sessions, notes) {
   const base = safeName(st.name); const files = [];
   files.push({ name: `${base}_data.xlsx`, data: buildWorkbook(sessions, notes) });
   files.push({ name: `${base}_data.csv`, data: buildCsv(sessions) });
+  if (sessions.some(x => x.type === "VP")) files.push({ name: `${base}_observation_effort.xlsx`, data: coverageWorkbook(st, sessions) });
   const lts = sessions.filter(x => x.type === "LT" && ((x.track || []).length || x.records.length));
   for (const x of lts) files.push({ name: `KMZ/LT_${safeName(x.number || x.id.slice(-4))}_${x.date || ""}.kmz`, data: kmzForSession(x) });
   if (lts.length > 1) files.push({ name: `KMZ/ALL_transects_${base}.kmz`, data: makeZip([{ name: "doc.kml", data: kmlAllTransects(st, lts) }]) });
@@ -689,6 +705,35 @@ async function studyZip(st, sessions, notes) {
     files.push({ name: `${base}_notes.txt`, data: txt });
   }
   return makeZip(files);
+}
+/* ----- observation effort (coverage) ----- */
+function sessionHours(s) { const a = hmToMin(s.start), b = hmToMin(s.end); if (a === null || b === null) return null; let d = b - a; if (d < 0) d += 1440; return d / 60; }
+function sessionBand(s, bands) {
+  const a = hmToMin(s.start), b0 = hmToMin(s.end); if (a === null) return null; let b = b0 === null ? a : b0; if (b < a) b += 1440;
+  let best = null, bestOv = -1;
+  for (const bd of bands) { const bs = hmToMin(bd.start), be = hmToMin(bd.end); const ov = Math.max(0, Math.min(b, be) - Math.max(a, bs)); if (ov > bestOv || (ov === bestOv && ov > 0 && best && a >= bs && a < be)) { bestOv = ov; best = bd.k; } }
+  if (bestOv <= 0) { const hit = bands.find(bd => a >= hmToMin(bd.start) && a < hmToMin(bd.end)); return hit ? hit.k : bands[0].k; }
+  return best;
+}
+function coverageOf(study, sessions) {
+  const bands = study.bands || DEFAULT_BANDS; const rows = new Map();
+  for (const s of sessions.filter(x => x.type === "VP" && x.start && x.end)) {
+    const key = (s.number || "?").trim() || "?"; if (!rows.has(key)) rows.set(key, { vp: key, m: [], d: [], e: [], total: 0 });
+    const h = sessionHours(s); if (h === null) continue; const k = sessionBand(s, bands); const r = rows.get(key);
+    r[k].push({ date: s.date, start: s.start, end: s.end, h, id: s.id }); r.total += h;
+  }
+  const list = [...rows.values()].sort((a, b) => a.vp.localeCompare(b.vp, undefined, { numeric: true }));
+  for (const r of list) for (const k of ["m", "d", "e"]) r[k].sort((x, y) => (x.date + x.start).localeCompare(y.date + y.start));
+  const tot = { m: 0, d: 0, e: 0, total: 0 }; for (const r of list) { for (const k of ["m", "d", "e"]) tot[k] += r[k].reduce((a, x) => a + x.h, 0); tot.total += r.total; }
+  return { bands, rows: list, tot };
+}
+const h1 = v => (Math.round(v * 10) / 10).toFixed(1);
+function coverageWorkbook(study, sessions) {
+  const cv = coverageOf(study, sessions); const bl = k => ({ m: t("bandM"), d: t("bandD"), e: t("bandE") })[k]; const bd = k => cv.bands.find(b => b.k === k);
+  const rows = [["VP", ...["m", "d", "e"].map(k => `${bl(k)} ${bd(k).start.slice(0, 2)}–${bd(k).end.slice(0, 2)}`), t("total") + " (h)"]];
+  for (const r of cv.rows) rows.push([r.vp, ...["m", "d", "e"].map(k => r[k].map(x => `${fmtDateMon(x.date)} ${x.start}–${x.end} ${h1(x.h)}`).join("\n")), h1(r.total)]);
+  rows.push([t("allTotal"), h1(cv.tot.m), h1(cv.tot.d), h1(cv.tot.e), h1(cv.tot.total)]);
+  return makeXlsx([{ name: "Effort", rows }]);
 }
 const safeName = s => (s || "").replace(/[^\w\u0400-\u04FF\- ]+/g, "").trim().replace(/\s+/g, "_") || "BRCC";
 
@@ -938,6 +983,11 @@ function StudyModal({ study, onClose }) {
     <${Field} label=${t("studyName")}><${Input} value=${f.name} onChange=${v => setF({ ...f, name: v })} placeholder="Uvs airport" autofocus/><//>
     <${Field} label=${t("speciesLang")}><${Chips} options=${langs.map(l => l[1])} value=${(langs.find(l => l[0] === f.speciesLang) || langs[0])[1]} onChange=${v => { const l = langs.find(x => x[1] === v); if (l) setF({ ...f, speciesLang: l[0] }); }}/><//>
     <label class="check"><input type="checkbox" checked=${!!f.windFarm} onChange=${e => setF({ ...f, windFarm: e.target.checked })}/> ${t("windFarm")}<div class="hint">${t("windFarmHint")}</div></label>
+    <${Field} label=${t("bands")} hint=${t("bandsHint")}>
+      ${(f.bands || DEFAULT_BANDS).map((b, i) => html`<div class="row mb" key=${b.k}><span class="bandlbl ${b.k}">${({ m: t("bandM"), d: t("bandD"), e: t("bandE") })[b.k]}</span>
+        <input type="time" class="inp" value=${b.start} onInput=${e => { const bs = (f.bands || DEFAULT_BANDS).map(x => ({ ...x })); bs[i].start = e.target.value; setF({ ...f, bands: bs }); }}/><span class="arrow">–</span>
+        <input type="time" class="inp" value=${b.end} onInput=${e => { const bs = (f.bands || DEFAULT_BANDS).map(x => ({ ...x })); bs[i].end = e.target.value; setF({ ...f, bands: bs }); }}/></div>`)}
+    <//>
     <div class="row end mt"><${Btn} kind="ghost" onClick=${onClose}>${t("cancel")}<//><${Btn} onClick=${ok}>${study ? t("save") : t("create")}<//></div>
   <//>`;
 }
@@ -967,6 +1017,7 @@ function StudyView({ id }) {
         <button class="addbtn lt" onClick=${() => create("LT")}><b>+ LT</b><span>${t("ltTitle")}</span></button>
         <button class="addbtn note" onClick=${newNote}><b>+ ${t("notes")}</b><span>${t("fieldDiary")}</span></button>
       </div>
+      ${sess.some(x => x.type === "VP" && x.start && x.end) ? html`<${CoverageTable} study=${st} sessions=${sess}/>` : null}
       <h2 class="mt">${t("sessions")}</h2>
       ${groups.length ? groups.map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}
     </section>
@@ -981,6 +1032,17 @@ function StudyView({ id }) {
     </section>
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
   </div>`;
+}
+function CoverageTable({ study, sessions }) {
+  const cv = coverageOf(study, sessions); const bl = { m: t("bandM"), d: t("bandD"), e: t("bandE") }; const bd = k => cv.bands.find(b => b.k === k);
+  return html`<div class="covwrap"><h2>${t("coverage")}</h2><div class="hint mb">${t("coverageHint")}</div>
+    <div class="cov"><table>
+      <tr><th>VP</th>${["m", "d", "e"].map(k => html`<th class=${k} key=${k}>${bl[k]}<br/>${bd(k).start.slice(0, 2)}–${bd(k).end.slice(0, 2)}</th>`)}<th>${t("total")}</th></tr>
+      ${cv.rows.map(r => html`<tr key=${r.vp}><td>${r.vp}</td>
+        ${["m", "d", "e"].map(k => r[k].length ? html`<td class=${k} key=${k}>${r[k].map(x => html`<button type="button" class="cs" key=${x.id} onClick=${() => nav("#/session/" + x.id)}>${fmtDateMon(x.date)}<br/>${x.start}–${x.end}<br/><b>${h1(x.h)}</b></button>`)}</td>` : html`<td class="miss" key=${k}>—</td>`)}
+        <td>${h1(r.total)}</td></tr>`)}
+      <tr class="tot"><td>${t("allTotal")}</td><td class="m">${h1(cv.tot.m)}</td><td class="d">${h1(cv.tot.d)}</td><td class="e">${h1(cv.tot.e)}</td><td>${h1(cv.tot.total)}</td></tr>
+    </table></div></div>`;
 }
 function SessionCard({ x }) {
   return html`<button class=${`card link sess ${x.status === "open" ? "open" : ""}`} onClick=${() => nav("#/session/" + x.id)}>
