@@ -138,6 +138,25 @@ input[type=time],input[type=date]{min-width:0}
 .cov tr.tot td{font-weight:700;background:var(--bg);border-top:2px solid var(--line);font-size:.92rem}
 .bandlbl{min-width:52px;font-weight:600;font-size:.9rem}.bandlbl.m{color:#9A6608}.bandlbl.d{color:var(--green-d)}.bandlbl.e{color:#2F5D8A}
 @media(min-width:700px){.cov table{font-size:.9rem}.cov .cs{font-size:.86rem}}
+.inp.bad{border-color:var(--red);background:var(--red-l)} .warn.red{color:var(--red)}
+.cbtn{min-width:44px;padding:6px 8px;font-size:1.2rem;flex:0 0 auto}
+.compass{position:relative;width:240px;height:240px;margin:8px auto;border-radius:50%;background:var(--bg);border:2px solid var(--line)}
+.cdial{position:absolute;inset:0;transition:transform .15s} .cl{position:absolute;left:50%;top:50%;margin:-12px 0 0 -12px;width:24px;height:24px;text-align:center;font-weight:700;color:var(--muted)} .cl.n{color:var(--red)}
+.tick{position:absolute;left:50%;top:50%;width:2px;height:8px;margin-left:-1px;background:var(--line);transform-origin:center} .tick.big{height:14px;background:var(--muted)}
+.cneedle{position:absolute;left:50%;top:14px;width:4px;height:96px;margin-left:-2px;background:linear-gradient(var(--red),transparent);border-radius:2px}
+.cval{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums}
+.gpsgate{margin-top:8px;padding:12px;border-radius:var(--r);background:var(--amber-l);border:1px solid #E9C46A} .gg1{font-weight:700;color:var(--amber);font-size:1.05rem} .gg2{font-size:.9rem;margin-top:4px;color:var(--ink)}
+.reportbar{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:var(--r);padding:10px 14px;cursor:pointer;color:var(--ink)} .reportbar .chev{font-size:1.6rem;color:var(--muted)}
+.report .rhead{padding:6px 2px 10px} .rname{font-size:1.4rem;font-weight:800;color:var(--green-d)} .rmeta{font-size:.92rem;color:var(--muted);margin-top:2px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px} @media(min-width:600px){.tiles{grid-template-columns:repeat(5,1fr)}}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 12px 10px;text-align:center} .tile b{display:block;font-size:1.8rem;font-weight:800;color:var(--green-d);line-height:1.1} .tile span{display:block;font-size:.85rem;font-weight:600;margin-top:2px} .tile small{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
+.rh{margin:16px 0 8px;font-size:1.05rem}
+.gtable table{width:100%;border-collapse:collapse;font-size:.9rem} .gtable th{font-size:.75rem;color:var(--muted);font-weight:600;text-align:center;padding:4px 2px;border-bottom:1px solid var(--line)} .gtable td{text-align:center;padding:8px 2px;border-bottom:1px solid var(--line)} .gtable tr:last-child td{border:0} .gtable .gname{text-align:left;font-weight:600} .gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.gdot.B{background:var(--green)} .gdot.M{background:var(--amber)} .gdot.R{background:var(--blue)} .gdot.A{background:#7B5EA7}
+.splist{padding:4px 12px} .sprow{display:grid;grid-template-columns:1fr auto auto auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)} .sprow:last-child{border:0}
+.spn{min-width:0} .spn b{display:block;font-size:.98rem} .spn small{display:block;color:var(--muted);font-size:.78rem;font-style:italic} .rank{display:inline-block;min-width:20px;font-weight:800;color:var(--green);margin-right:4px}
+.spst{text-align:center;min-width:40px} .spst b{display:block;font-size:1rem} .spst span{display:block;font-size:.68rem;color:var(--muted)}
+@media(max-width:420px){.sprow{grid-template-columns:1fr auto auto;} .sprow .spst:nth-child(4),.sprow .spst:nth-child(5){display:none}}
 </style>
 </head>
 <body>
@@ -206,7 +225,9 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Ажиглалт", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
+    rangeErr: "0–360 хооронд байх ёстой", compass: "Луужин", compassTake: "Авах", compassHint: "Утсаа амьтан руу чиглүүлээд «Авах» дарна. Төмөр, машинаас хол байлгана.", compassErr: "Луужин ашиглах боломжгүй — гараар бичнэ үү", compassPerm: "Луужингийн зөвшөөрөл өгөгдөөгүй",
+    gpsWait: "GPS хайж байна…", gpsHintCar: "Машинд бол утсаа цонх руу ойртуул, боломжтой бол гадаа гар.", gpsHintLong: "Удаж байна: утасны Байршил (Location) асаалттай эсэхээ шалга · утсаа цонхонд ойртуул эсвэл гадаа гар · тэнгэр харагдах ил газар зогс.", gpsForce: "Ямар ч байсан эхлэх", trackStarted: "Замнал эхэллээ", gpsPoor: "GPS нарийвчлал муу — цэгүүд хаягдаж байна", nextNo: "Дараагийн дугаар", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
   en: {
     appTitle: "BRCC Mongolia", appSub: "Field survey recorder",
@@ -245,7 +266,9 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
+    rangeErr: "Must be between 0 and 360", compass: "Compass", compassTake: "Take", compassHint: "Point the phone at the animal and tap “Take”. Keep away from metal and vehicles.", compassErr: "Compass not available — enter manually", compassPerm: "Compass permission not granted",
+    gpsWait: "Searching GPS…", gpsHintCar: "In a car, hold the phone near the window or step outside.", gpsHintLong: "Taking long: check that Location is on · hold the phone near a window or step outside · stand in the open with clear sky.", gpsForce: "Start anyway", trackStarted: "Transect started", gpsPoor: "Poor GPS accuracy — points are being skipped", nextNo: "Next number", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
 };
 let LANG = "mn";
@@ -500,7 +523,9 @@ function updRecord(sessionId, recId, fn) {
   return updSession(sessionId, s => { s.records = s.records.map(r => { if (r.id !== recId) return r; const n = { ...r }; fn(n); n.updatedAt = Date.now(); return n; }); });
 }
 function newRecord(sess, extra = {}) {
-  const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: nowHM(), count: "", ageC: {}, ageOther: "", sexC: {}, activities: [], habitat: "", notes: "",
+  const manual = !!sess.start && !sess.startedAt;
+  const lastT = manual ? ([...sess.records].reverse().find(r => r.time) || {}).time || sess.start : nowHM();
+  const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: lastT, count: "", ageC: {}, ageOther: "", sexC: {}, activities: [], habitat: "", notes: "",
     weather: { cloud: "", precip: "", wind: "", note: "" } };
   if (sess.type === "VP") Object.assign(base, { duration: "", timerStart: null, dirFrom: "", dirTo: "", hMin: "", hMax: "", distFirst: "", distLast: "", turbine: "", turbineDist: "" });
   else Object.assign(base, { dist: "", azimuth: "", lat: "", lng: "", acc: "", aLat: "", aLng: "", dirFrom: "", dirTo: "" });
@@ -574,19 +599,22 @@ setInterval(flushQueue, 60000);
 
 /* ----- LT tracker ----- */
 const Tracker = {
-  sessionId: null, watchId: null, lock: null, last: null, lastSave: 0, status: "idle", error: "",
-  async start(sessionId) {
+  sessionId: null, watchId: null, lock: null, last: null, lastSave: 0, status: "idle", error: "", gate: false, gateStart: 0, forceTimer: null,
+  async start(sessionId, opts = {}) {
     if (!navigator.geolocation) { this.error = "no geolocation"; Store.emit(); return; }
-    this.stop(true); this.sessionId = sessionId; this.status = "starting"; this.error = ""; Store.emit();
+    this.stop(true); this.sessionId = sessionId; this.status = "starting"; this.error = ""; this.gate = !!opts.gate; this.gateStart = Date.now(); this.last = null; Store.emit();
     this.watchId = navigator.geolocation.watchPosition(p => this.onPos(p), e => { this.error = e.message || "GPS error"; this.status = "error"; Store.emit(); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 30000 });
     this.wake();
   },
   async wake() { try { if (navigator.wakeLock) { this.lock = await navigator.wakeLock.request("screen"); this.lock.addEventListener("release", () => { this.lock = null; }); } } catch (e) { } },
   onPos(p) {
     const pt = { lat: +p.coords.latitude.toFixed(6), lng: +p.coords.longitude.toFixed(6), acc: Math.round(p.coords.accuracy), t: Date.now() };
-    this.status = "tracking"; this.error = "";
-    const s = Store.s.sessions[this.sessionId]; if (!s || s.status === "closed") { this.stop(); return; }
-    if (pt.acc > 60) { this.last = { ...pt, skipped: true }; Store.emit(); return; }
+    this.error = "";
+    const s0 = Store.s.sessions[this.sessionId]; if (!s0 || s0.status === "closed") { this.stop(); return; }
+    if (this.gate) { this.last = { ...pt, skipped: true }; if (pt.acc <= 25) this.openGate(); else { this.status = "searching"; Store.emit(); return; } }
+    const s = { ...Store.s.sessions[this.sessionId] };
+    this.status = "tracking";
+    if (pt.acc > 50) { this.last = { ...pt, skipped: true }; Store.emit(); return; }
     const lastPt = s.track[s.track.length - 1];
     if (!lastPt || pt.t - lastPt.t >= 5000 && haversine(lastPt, pt) >= 3) {
       s.track = [...s.track, pt]; s.length = trackLength(s.track); if (!s.startLat) { s.startLat = pt.lat; s.startLng = pt.lng; }
@@ -595,11 +623,13 @@ const Tracker = {
     }
     this.last = pt; Store.emit();
   },
+  openGate() { if (!this.gate) return; this.gate = false; this.status = "tracking"; const s = Store.s.sessions[this.sessionId]; if (s) updSession(s.id, n => { n.tracking = true; n.started = true; n.startedAt = n.startedAt || Date.now(); n.start = n.start || nowHM(); }); beep(1); showToast(t("trackStarted")); Store.emit(); },
+  force() { this.openGate(); },
   stop(silent) {
     if (this.watchId != null) navigator.geolocation.clearWatch(this.watchId); this.watchId = null;
     if (this.sessionId && Store.s && Store.s.sessions[this.sessionId]) Store.queueWrite("session:" + this.sessionId, Store.s.sessions[this.sessionId]);
     if (this.lock) { try { this.lock.release(); } catch (e) { } this.lock = null; }
-    this.status = "idle"; this.sessionId = null; if (!silent) Store.emit();
+    this.status = "idle"; this.sessionId = null; this.gate = false; if (!silent) Store.emit();
   },
 };
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Tracker.sessionId) Tracker.wake(); });
@@ -691,6 +721,7 @@ async function studyZip(st, sessions, notes) {
   files.push({ name: `${base}_data.xlsx`, data: buildWorkbook(sessions, notes) });
   files.push({ name: `${base}_data.csv`, data: buildCsv(sessions) });
   if (sessions.some(x => x.type === "VP")) files.push({ name: `${base}_observation_effort.xlsx`, data: coverageWorkbook(st, sessions) });
+  const rep = reportOf(st, sessions, notes); files.push({ name: `${base}_summary_report.txt`, data: reportText(rep, st.speciesLang === "la" ? "en" : (st.speciesLang || "mn")) }); files.push({ name: `${base}_summary_report.xlsx`, data: makeXlsx([{ name: "Summary", rows: reportRows(rep, st.speciesLang === "la" ? "en" : (st.speciesLang || "mn")) }]) });
   const lts = sessions.filter(x => x.type === "LT" && ((x.track || []).length || x.records.length));
   for (const x of lts) files.push({ name: `KMZ/LT_${safeName(x.number || x.id.slice(-4))}_${x.date || ""}.kmz`, data: kmzForSession(x) });
   if (lts.length > 1) files.push({ name: `KMZ/ALL_transects_${base}.kmz`, data: makeZip([{ name: "doc.kml", data: kmlAllTransects(st, lts) }]) });
@@ -706,6 +737,46 @@ async function studyZip(st, sessions, notes) {
   }
   return makeZip(files);
 }
+/* ----- LT numbering ----- */
+const splitNo = n => { const m = String(n || "").trim().match(/^(.*?)(\d+)$/); return m ? { pre: m[1], num: +m[2], w: m[2].length } : null; };
+function nextTransectNumbers(studyId) {
+  const groups = new Map();
+  for (const x of Object.values(Store.s.sessions).filter(x => x.studyId === studyId && x.type === "LT")) { const p = splitNo(x.number); if (!p) continue; const g = groups.get(p.pre); if (!g || p.num > g.num || (p.num === g.num && x.createdAt > g.at)) groups.set(p.pre, { ...p, at: x.createdAt }); }
+  return [...groups.values()].sort((a, b) => b.at - a.at).map(g => g.pre + String(g.num + 1).padStart(g.w, "0"));
+}
+function lastTransect(studyId) { return Object.values(Store.s.sessions).filter(x => x.studyId === studyId && x.type === "LT").sort((a, b) => b.createdAt - a.createdAt)[0]; }
+
+/* ----- summary report ----- */
+function reportOf(study, sessions, notes) {
+  const recs = []; for (const s of sessions) for (const r of s.records) if (r.status === "saved" && r.species) recs.push(r);
+  const dates = sessions.map(s => s.date).filter(Boolean).sort(); const observers = [...new Set(sessions.map(s => (s.observer || "").trim()).filter(Boolean))];
+  const vps = sessions.filter(s => s.type === "VP"), lts = sessions.filter(s => s.type === "LT");
+  const vpHours = vps.reduce((a, s) => a + (sessionHours(s) || 0), 0); const ltKm = lts.reduce((a, s) => a + (+s.length || 0), 0) / 1000;
+  const stat = list => { const cnts = list.map(r => +r.count).filter(v => !isNaN(v) && v > 0); const tot = cnts.reduce((a, b) => a + b, 0); return { n: list.length, total: tot, mean: cnts.length ? tot / cnts.length : 0, min: cnts.length ? Math.min(...cnts) : 0, max: cnts.length ? Math.max(...cnts) : 0, species: new Set(list.map(r => r.species.L)).size }; };
+  const groups = ["B", "M", "R", "A"].map(g => ({ g, ...stat(recs.filter(r => r.species.g === g)) })).filter(x => x.n > 0);
+  const bySp = new Map(); for (const r of recs) { const k = r.species.L; if (!bySp.has(k)) bySp.set(k, { sp: r.species, list: [] }); bySp.get(k).list.push(r); }
+  const species = [...bySp.values()].map(x => ({ sp: x.sp, ...stat(x.list) })).sort((a, b) => b.total - a.total || b.n - a.n);
+  const photos = notes.reduce((a, n) => a + (n.photos || []).length, 0);
+  return { study, from: dates[0] || "", to: dates[dates.length - 1] || "", observers, vpPoints: new Set(vps.map(s => (s.number || "?").trim())).size, vpN: vps.length, vpHours, ltN: lts.length, ltKm, all: stat(recs), groups, species, notesN: notes.length, photos };
+}
+const n1 = v => (Math.round(v * 10) / 10).toFixed(1);
+function reportText(rep, lang) {
+  const L = lang || "mn"; const gl = g => GROUPS[g][L]; const out = [];
+  out.push(`${rep.study.name} — ${t("report")}`, "=".repeat(40));
+  out.push(`${t("period")}: ${fmtDateMon(rep.from)} – ${fmtDateMon(rep.to)}`); out.push(`${t("observers")}: ${rep.observers.join(", ") || "—"}`);
+  out.push(`VP: ${rep.vpPoints} ${t("points")}, ${rep.vpN} ${t("surveysN")}, ${n1(rep.vpHours)} ${t("hours")}`); out.push(`LT: ${rep.ltN} ${t("transectsN")}, ${n1(rep.ltKm)} ${t("kmTotal")}`);
+  out.push(`${t("notesN")}: ${rep.notesN}, ${t("photosN")}: ${rep.photos}`, "");
+  out.push(`${t("byGroup")}:`); for (const g of rep.groups) out.push(`  ${gl(g.g)}: ${g.species} ${t("speciesN")}, ${g.total} ${t("individuals")}, n=${g.n}, ${t("meanGroup")} ${n1(g.mean)}, min ${g.min}, max ${g.max}`);
+  out.push("", `${t("allSpecies")} (${rep.species.length}):`); for (const x of rep.species) out.push(`  ${speciesName(x.sp, L)} (${x.sp.L}): ${x.total} ${t("individuals")}, n=${x.n}, ${t("meanGroup")} ${n1(x.mean)}, min ${x.min}, max ${x.max}`);
+  return "\uFEFF" + out.join("\n");
+}
+function reportRows(rep, lang) {
+  const L = lang || "mn"; const rows = [[t("report"), rep.study.name], [t("period"), `${fmtDateMon(rep.from)} – ${fmtDateMon(rep.to)}`], [t("observers"), rep.observers.join(", ")], ["VP " + t("points"), rep.vpPoints], ["VP " + t("surveysN"), rep.vpN], ["VP " + t("hours"), +n1(rep.vpHours)], ["LT " + t("transectsN"), rep.ltN], ["LT " + t("kmTotal"), +n1(rep.ltKm)], [t("notesN"), rep.notesN], [t("photosN"), rep.photos], []];
+  rows.push([t("byGroup"), t("speciesN"), t("individuals"), "n", t("meanGroup"), "min", "max"]); for (const g of rep.groups) rows.push([GROUPS[g.g][L], g.species, g.total, g.n, +n1(g.mean), g.min, g.max]);
+  rows.push([], [t("allSpecies"), "Latin", t("individuals"), "n", t("meanGroup"), "min", "max"]); for (const x of rep.species) rows.push([speciesName(x.sp, L), x.sp.L, x.total, x.n, +n1(x.mean), x.min, x.max]);
+  return rows;
+}
+
 /* ----- observation effort (coverage) ----- */
 function sessionHours(s) { const a = hmToMin(s.start), b = hmToMin(s.end); if (a === null || b === null) return null; let d = b - a; if (d < 0) d += 1440; return d / 60; }
 function sessionBand(s, bands) {
@@ -784,7 +855,8 @@ function TopBar({ title, sub, back = true, right }) {
 const Btn = ({ children, onClick, kind = "primary", small, disabled, cls = "", type = "button" }) => html`<button type=${type} class=${`btn ${kind} ${small ? "small" : ""} ${cls}`} onClick=${onClick} disabled=${disabled}>${children}</button>`;
 const Field = ({ label, children, span, hint }) => html`<div class=${`field ${span ? "span" : ""}`}><label class="lbl">${label}</label>${children}${hint ? html`<div class="hint">${hint}</div>` : null}</div>`;
 const Input = ({ onChange, value, class: cls, ...p }) => html`<input ...${p} class=${`inp ${cls || ""}`} value=${value ?? ""} onInput=${e => onChange(e.target.value)} />`;
-const NumInput = p => html`<input type="number" inputmode=${p.decimal ? "decimal" : "numeric"} step=${p.decimal ? "0.1" : "1"} min=${p.min} max=${p.max} placeholder=${p.placeholder || ""} class=${`inp ${p.class || ""}`} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled} />`;
+const outOfRange = (v, min, max) => v !== "" && v !== null && v !== undefined && !isNaN(+v) && ((min !== undefined && +v < +min) || (max !== undefined && +v > +max));
+const NumInput = p => html`<input type="number" inputmode=${p.decimal ? "decimal" : "numeric"} step=${p.decimal ? "0.1" : "1"} min=${p.min} max=${p.max} placeholder=${p.placeholder || ""} class=${`inp ${p.class || ""} ${p.range && outOfRange(p.value, p.min, p.max) ? "bad" : ""}`} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled} />`;
 const TextArea = p => html`<textarea class="inp ta" rows=${p.rows || 2} placeholder=${p.placeholder || ""} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled}></textarea>`;
 function TimeInput({ value, onChange, disabled }) {
   return html`<div class="row"><input type="time" class="inp" value=${value || ""} onInput=${e => onChange(e.target.value)} disabled=${disabled}/><${Btn} kind="ghost" small onClick=${() => onChange(nowHM())} disabled=${disabled}>${t("now")}<//></div>`;
@@ -946,6 +1018,39 @@ function AdminPicker({ aimag, soum, onAimag, onSoum, disabled }) {
     </div><//>
   </div>`;
 }
+
+/* ---------- Compass ---------- */
+async function compassPermission() {
+  try { if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") { const r = await DeviceOrientationEvent.requestPermission(); return r === "granted"; } } catch (e) { return false; }
+  return true;
+}
+function CompassModal({ onPick, onClose }) {
+  const [hd, setHd] = useState(null); const [err, setErr] = useState("");
+  useEffect(() => {
+    const h = e => { let v = null; if (e.webkitCompassHeading != null) v = e.webkitCompassHeading; else if (e.alpha != null) v = (360 - e.alpha) % 360; if (v != null && !isNaN(v)) setHd(Math.round(v) % 360); };
+    window.addEventListener("deviceorientationabsolute", h, true); window.addEventListener("deviceorientation", h, true);
+    const to = setTimeout(() => { setHd(x => { if (x === null) setErr(t("compassErr")); return x; }); }, 4000);
+    return () => { window.removeEventListener("deviceorientationabsolute", h, true); window.removeEventListener("deviceorientation", h, true); clearTimeout(to); };
+  }, []);
+  const rot = hd === null ? 0 : -hd;
+  return html`<${Modal} title=${t("compass")} onClose=${onClose}>
+    <div class="compass">
+      <div class="cdial" style=${`transform:rotate(${rot}deg)`}>
+        ${["N", "E", "S", "W"].map((l, i) => html`<span key=${l} class=${`cl ${l === "N" ? "n" : ""}`} style=${`transform:rotate(${i * 90}deg) translateY(-88px) rotate(${-i * 90}deg)`}>${l}</span>`)}
+        ${[...Array(36)].map((_, i) => html`<i key=${i} class=${`tick ${i % 9 === 0 ? "big" : ""}`} style=${`transform:rotate(${i * 10}deg) translateY(-104px)`}/>`)}
+      </div>
+      <div class="cneedle"/>
+      <div class="cval">${hd === null ? "…" : hd + "°"}</div>
+    </div>
+    <div class="hint" style="text-align:center">${err || t("compassHint")}</div>
+    <div class="row end mt"><${Btn} kind="ghost" onClick=${onClose}>${t("cancel")}<//><${Btn} onClick=${() => { if (hd !== null) onPick(hd); }} disabled=${hd === null}>${t("compassTake")}<//></div>
+  <//>`;
+}
+function CompassBtn({ onPick, disabled }) {
+  const [open, setOpen] = useState(false);
+  return html`<button type="button" class="btn ghost small cbtn" disabled=${disabled} onClick=${async () => { if (await compassPermission()) setOpen(true); else showToast(t("compassPerm")); }} title=${t("compass")}>🧭</button>
+    ${open ? html`<${CompassModal} onClose=${() => setOpen(false)} onPick=${v => { setOpen(false); onPick(String(v)); }}/>` : null}`;
+}
 </script>
 <script>/* ===== BRCC Mongolia — views ===== */
 
@@ -993,16 +1098,17 @@ function StudyModal({ study, onClose }) {
 }
 
 /* ---------- Study ---------- */
-function StudyView({ id }) {
+function StudyView({ id, sub }) {
   const s = useStore(); const st = getStudy(id); const [edit, setEdit] = useState(false); const [busy, setBusy] = useState(false);
   if (!st) return html`<div class="page"><${TopBar} title="?"/><${Empty}>${t("empty")}<//></div>`;
   const notes = notesOf(id);
   const sess = Object.values(s.sessions).filter(x => x.studyId === id).sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.createdAt - a.createdAt);
+  if (sub === "report") return html`<${ReportView} st=${st} sessions=${sess} notes=${notes}/>`;
   const groups = []; for (const x of sess) { const g = groups[groups.length - 1]; if (g && g.date === x.date) g.items.push(x); else groups.push({ date: x.date, items: [x] }); }
   const create = type => {
     const base = { id: uid(), studyId: id, visitId: null, type, date: todayISO(), number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
     if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
-    else Object.assign(base, { aimag: "", soum: "", place: "", habitat: "", width: "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false });
+    else { const prev = lastTransect(id) || {}; const nums = nextTransectNumbers(id); Object.assign(base, { aimag: prev.aimag || "", soum: prev.soum || "", place: prev.place || "", habitat: prev.habitat || "", width: prev.width || "", number: nums.length === 1 ? nums[0] : "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false }); }
     saveSession(base); nav("#/session/" + base.id);
   };
   const newNote = () => { const n = (Store.s.meta.noteSeq[id] || 0) + 1; Store.s.meta.noteSeq[id] = n; saveMeta(); const note = { id: uid(), studyId: id, n, date: todayISO(), text: "", photos: [], createdAt: Date.now(), updatedAt: Date.now() }; saveNote(note); nav("#/note/" + note.id); };
@@ -1026,11 +1132,40 @@ function StudyView({ id }) {
       ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
     </section>
     <section class="section">
+      <button class="reportbar" onClick=${() => nav("#/study/" + id + "/report")}><div><b>📊 ${t("report")}</b><div class="hint">${t("reportHint")}</div></div><span class="chev">›</span></button>
+    </section>
+    <section class="section">
       <div class="row wrap"><${Btn} onClick=${exportZip} disabled=${busy}>${t("exportZip")}<//><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_${safeName(st.name)}_${todayISO()}.csv`, sess)} disabled=${busy}>${t("csvShare")}<//></div>
       <div class="hint">${t("exportZipHint")}</div>
       <div class="row wrap mt"><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
     </section>
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
+  </div>`;
+}
+function ReportView({ st, sessions, notes }) {
+  const rep = reportOf(st, sessions, notes); const L = st.speciesLang === "la" ? "en" : (st.speciesLang || "mn"); const [all, setAll] = useState(false);
+  const spn = sp => speciesName(sp, st.speciesLang || "mn");
+  const Tile = ({ big, label, sub }) => html`<div class="tile"><b>${big}</b><span>${label}</span>${sub ? html`<small>${sub}</small>` : null}</div>`;
+  const SpRow = (x, i) => html`<div class="sprow" key=${x.sp.L}><div class="spn"><span class="rank">${i + 1}</span><b>${spn(x.sp)}</b><small>${x.sp.L}</small></div>
+    <div class="spst"><b>${x.total}</b><span>${t("individuals")}</span></div><div class="spst"><b>${x.n}</b><span>n</span></div><div class="spst"><b>${n1(x.mean)}</b><span>${t("meanGroup")}</span></div><div class="spst"><b>${x.min}–${x.max}</b><span>min–max</span></div></div>`;
+  return html`<div class="page report">
+    <${TopBar} title=${t("report")} sub=${st.name}/>
+    <div class="rhead"><div class="rname">${st.name}</div><div class="rmeta">${t("period")}: <b>${fmtDateMon(rep.from) || "—"}${rep.to && rep.to !== rep.from ? " – " + fmtDateMon(rep.to) : ""}</b></div><div class="rmeta">${t("observers")}: <b>${rep.observers.join(", ") || "—"}</b></div></div>
+    ${!rep.all.n && !rep.vpN && !rep.ltN ? html`<${Empty}>${t("noData")}<//>` : null}
+    <div class="tiles">
+      <${Tile} big=${rep.all.species} label=${t("speciesN")}/>
+      <${Tile} big=${rep.all.total} label=${t("individuals")} sub=${`n = ${rep.all.n}`}/>
+      <${Tile} big=${rep.vpPoints} label=${`VP ${t("points")}`} sub=${`${rep.vpN} ${t("surveysN")} · ${n1(rep.vpHours)} ${t("hours")}`}/>
+      <${Tile} big=${rep.ltN} label=${`LT ${t("transectsN")}`} sub=${`${n1(rep.ltKm)} ${t("kmTotal")}`}/>
+      <${Tile} big=${rep.notesN} label=${t("notesN")} sub=${`${t("photosN")}: ${rep.photos}`}/>
+    </div>
+    ${rep.groups.length ? html`<h3 class="rh">${t("byGroup")}</h3><div class="card gtable"><table>
+      <tr><th></th><th>${t("speciesN")}</th><th>${t("individuals")}</th><th>n</th><th>${t("meanGroup")}</th><th>min</th><th>max</th></tr>
+      ${rep.groups.map(g => html`<tr key=${g.g}><td class="gname"><span class=${`gdot ${g.g}`}/>${GROUPS[g.g][LANG]}</td><td>${g.species}</td><td><b>${g.total}</b></td><td>${g.n}</td><td>${n1(g.mean)}</td><td>${g.min}</td><td>${g.max}</td></tr>`)}
+    </table></div>` : null}
+    ${rep.species.length ? html`<h3 class="rh">${t("topSpecies")}</h3><div class="card splist">${rep.species.slice(0, 5).map(SpRow)}</div>
+      ${rep.species.length > 5 ? html`<button class="linkbtn" onClick=${() => setAll(!all)}>${all ? "▴ " + t("hideAll") : `▾ ${t("allSpecies")} (${rep.species.length})`}</button>` : null}
+      ${all ? html`<div class="card splist">${rep.species.slice(5).map((x, i) => SpRow(x, i + 5))}</div>` : null}` : null}
   </div>`;
 }
 function CoverageTable({ study, sessions }) {
@@ -1069,7 +1204,7 @@ function SessionView({ id, recId }) {
   const startSession = async () => {
     primeAudio();
     if (isVP) { updSession(id, n => { n.started = true; n.startedAt = Date.now(); n.start = n.start || nowHM(); n.end = addHours(n.start, n.plannedH) || n.end; n.alarmed = false; }); showToast(t("alarmHint")); }
-    else { updSession(id, n => { n.started = true; n.tracking = true; n.start = n.start || nowHM(); }); Tracker.start(id); try { const p = await getPosition(); updSession(id, n => { if (!n.startLat) { n.startLat = p.lat; n.startLng = p.lng; } }); } catch (e) { } }
+    else { Tracker.start(id, { gate: true }); }
   };
   const finish = async () => {
     const drafts = sess.records.filter(r => r.status === "draft").length;
@@ -1082,7 +1217,7 @@ function SessionView({ id, recId }) {
   const reopen = () => { if (confirmDlg(t("confirmReopen"))) updSession(id, n => { n.status = "open"; }); };
   const addRecord = (extra) => { const r = newRecord(sess, extra); updSession(id, n => { n.records = [...n.records, r]; }); nav(`#/session/${id}/rec/${r.id}`); };
   const quick = async () => {
-    primeAudio(); const extra = { time: nowHM(), quick: true };
+    primeAudio(); const extra = { quick: true }; if (sess.startedAt || !sess.start) extra.time = nowHM();
     if (isVP) extra.timerStart = Date.now();
     const r = newRecord(sess, extra); updSession(id, n => { n.records = [...n.records, r]; }); showToast(`${t("quickCapture")} · ${t("detailsLater")}`);
     if (!isVP) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) updRecord(id, r.id, x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else try { const p = await getPosition(); updRecord(id, r.id, x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); } catch (e) { } }
@@ -1099,7 +1234,9 @@ function SessionView({ id, recId }) {
 
     <section class="section card hdr">
       <div class="grid2">
-        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} placeholder="U1"/><//>
+        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} placeholder="U1"/>
+          ${!isVP && !locked && !sess.started ? (() => { const nums = nextTransectNumbers(sess.studyId).filter(n => n !== sess.number); return nums.length ? html`<div class="chips mt">${nums.map(n => html`<button type="button" key=${n} class="chip sm" onClick=${() => set("number")(n)}>${n}</button>`)}</div>` : null; })() : null}
+        <//>
         <${Field} label=${t("observer")}><${Input} value=${sess.observer} onChange=${v => { set("observer")(v); Store.s.meta.settings.observer = v; saveMeta(); }} disabled=${locked}/><//>
         <${Field} label=${t("date")}><input type="date" class="inp" value=${sess.date} onInput=${e => set("date")(e.target.value)} disabled=${locked}/><//>
         ${isVP ? html`<${Field} label=${t("plannedDur")}><${NumInput} decimal value=${sess.plannedH} onChange=${set("plannedH")} min="0" disabled=${locked}/><//>` : null}
@@ -1116,7 +1253,12 @@ function SessionView({ id, recId }) {
         <${Field} label=${`${t("endPt")} N / E`}><div class="row"><${NumInput} decimal value=${sess.endLat} onChange=${set("endLat")} disabled=${locked}/><${NumInput} decimal value=${sess.endLng} onChange=${set("endLng")} disabled=${locked}/></div><//>
       </div>` : null}
 
-      ${!locked ? (!sess.started ? html`<div class="row end mt"><${Btn} onClick=${startSession}>${isVP ? t("startSession") : t("startTrack")}<//></div>` :
+      ${!locked && !isVP && Tracker.sessionId === id && Tracker.gate ? html`<div class="gpsgate">
+          <div class="gg1">${t("gpsWait")} <b>${Tracker.last ? "±" + Tracker.last.acc + " m" : ""}</b></div>
+          <div class="gg2">${Date.now() - Tracker.gateStart > 30000 ? t("gpsHintLong") : t("gpsHintCar")}</div>
+          <div class="row end mt"><${Btn} kind="ghost" small onClick=${() => { Tracker.stop(); }}>${t("cancel")}<//><${Btn} kind="secondary" small onClick=${() => Tracker.force()}>${t("gpsForce")}<//></div>
+        </div>` : null}
+      ${!locked ? (!sess.started ? (Tracker.sessionId === id && Tracker.gate ? null : html`<div class="row end mt"><${Btn} onClick=${startSession}>${isVP ? t("startSession") : t("startTrack")}<//></div>`) :
         isVP ? html`<div class=${`timer ${plannedMs && remaining <= 0 ? "over" : ""}`}>
             ${plannedMs ? html`<div><span class="tl">${remaining > 0 ? t("remaining") : t("timeUp")}</span><span class="tv">${fmtDur(Math.abs(remaining))}</span></div>` : null}
             <div><span class="tl">${t("elapsed")}</span><span class="tv">${fmtDur(elapsed)}</span></div>
@@ -1125,6 +1267,7 @@ function SessionView({ id, recId }) {
             <div><span class="tl">${trackOn ? t("tracking") : t("trackPaused")}</span><span class="tv">${(sess.length || trackLength(sess.track)).toLocaleString()} m</span></div>
             <div><span class="tl">${t("trackPts")} · ${t("gpsAcc")}</span><span class="tv">${sess.track.length} · ${Tracker.last ? "±" + Tracker.last.acc + " m" : "…"}</span></div>
             ${!trackOn ? html`<${Btn} small onClick=${() => { updSession(id, n => { n.tracking = true; }); Tracker.start(id); }}>${t("resumeTrack")}<//>` : null}
+            ${trackOn && Tracker.last && Tracker.last.skipped ? html`<div class="warn red">${t("gpsPoor")} (±${Tracker.last.acc} m)</div>` : null}
             ${Tracker.error && Tracker.sessionId === id ? html`<div class="warn">${Tracker.error}</div>` : null}
           </div>`) : null}
     </section>
@@ -1182,10 +1325,12 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   // computed animal position
   useEffect(() => { if (!isVP && r.lat && r.lng && r.dist !== "" && r.azimuth !== "" && !isNaN(+r.dist) && !isNaN(+r.azimuth)) { const p = destPoint(+r.lat, +r.lng, +r.azimuth, +r.dist); if (p.lat !== r.aLat || p.lng !== r.aLng) upd(x => { x.aLat = p.lat; x.aLng = p.lng; }); } }, [r.lat, r.lng, r.dist, r.azimuth]);
   const valid = !!r.species;
+  const rangeBad = ["dirFrom", "dirTo", "azimuth"].some(k => outOfRange(r[k], 0, 360));
   const sexVals = Object.values(r.sexC || {}).filter(x => x !== "" && !isNaN(+x)).map(Number); const sexSum = sexVals.reduce((a, b) => a + b, 0);
   const sexWarn = sexVals.length > 0 && r.count !== "" && !isNaN(+r.count) && sexSum !== +r.count;
   const save = (next) => {
     if (!valid) { showToast(t("species") + "?"); return; }
+    if (rangeBad) { showToast(t("rangeErr")); return; }
     if (sexVals.length && r.count === "") upd(x => { x.count = String(sexSum); });
     else if (sexWarn) { showToast(t("sexMismatch")); return; }
     upd(x => { x.status = "saved"; if (x.timerStart && !x.duration) { x.duration = String(Math.round((Date.now() - x.timerStart) / 1000)); } x.timerStart = null; });
@@ -1214,13 +1359,13 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
         <${Field} label=${t("turbine")}><${NumInput} value=${r.turbine} onChange=${set("turbine")} min="0" disabled=${dis}/><//>
         <${Field} label=${t("turbineDist")}><${NumInput} value=${r.turbineDist} onChange=${set("turbineDist")} min="0" disabled=${dis}/><//>
       </div>` : null}
-      ${isVP ? html`<${Field} label=${t("direction")}><div class="row"><${NumInput} value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/></div><//>` : null}
+      ${isVP ? html`<${Field} label=${t("direction")} hint=${rangeBad ? html`<span class="warn red">${t("rangeErr")}</span>` : null}><div class="row"><${NumInput} range value=${r.dirFrom} onChange=${set("dirFrom")} min="0" max="360" placeholder=${t("from")} disabled=${dis}/>${!dis ? html`<${CompassBtn} onPick=${set("dirFrom")}/>` : null}<span class="arrow">→</span><${NumInput} range value=${r.dirTo} onChange=${set("dirTo")} min="0" max="360" placeholder=${t("to")} disabled=${dis}/>${!dis ? html`<${CompassBtn} onPick=${set("dirTo")}/>` : null}</div><//>` : null}
       ${showHeight ? html`
         <${Field} label=${t("height")}><div class="row"><${NumInput} value=${r.hMin} onChange=${set("hMin")} min="0" placeholder=${t("min")} disabled=${dis}/><span class="arrow">–</span><${NumInput} value=${r.hMax} onChange=${set("hMax")} min="0" placeholder=${t("max")} disabled=${dis}/></div><//>` : null}
       ${isVP ? html`<${Field} label=${t("distance")}><div class="row"><${NumInput} value=${r.distFirst} onChange=${set("distFirst")} min="0" placeholder=${t("distFirst")} disabled=${dis}/><span class="arrow">→</span><${NumInput} value=${r.distLast} onChange=${set("distLast")} min="0" placeholder=${t("distLast")} disabled=${dis}/></div><//>` : html`
         <div class="grid2">
           <${Field} label=${t("distBird")}><${NumInput} value=${r.dist} onChange=${set("dist")} min="0" disabled=${dis}/><//>
-          <${Field} label=${t("azimuth")}><${NumInput} value=${r.azimuth} onChange=${set("azimuth")} min="0" max="360" disabled=${dis}/><//>
+          <${Field} label=${t("azimuth")} hint=${rangeBad ? html`<span class="warn red">${t("rangeErr")}</span>` : null}><div class="row"><${NumInput} range value=${r.azimuth} onChange=${set("azimuth")} min="0" max="360" disabled=${dis}/>${!dis ? html`<${CompassBtn} onPick=${set("azimuth")}/>` : null}</div><//>
         </div>
         <${Field} label=${`${t("observerPos")} N / E`} hint=${gpsMsg}><div class="row"><${NumInput} decimal value=${r.lat} onChange=${set("lat")} disabled=${dis}/><${NumInput} decimal value=${r.lng} onChange=${set("lng")} disabled=${dis}/>${!dis ? html`<${Btn} kind="ghost" small onClick=${getGps}>GPS<//>` : null}</div><//>
         ${r.aLat ? html`<div class="hint mb">${t("birdPos")}: ${r.aLat}, ${r.aLng}</div>` : null}`}
@@ -1339,7 +1484,7 @@ function App() {
   useEffect(() => { document.body.classList.toggle("night", !!s.meta.settings.night); }, [s.meta.settings.night]);
   let view;
   switch (r.view) {
-    case "study": view = html`<${StudyView} id=${r.id}/>`; break;
+    case "study": view = html`<${StudyView} id=${r.id} sub=${r.sub}/>`; break;
     case "session": view = html`<${SessionView} id=${r.id} recId=${r.sub === "rec" ? r.subId : null}/>`; break;
     case "note": view = html`<${NoteView} id=${r.id}/>`; break;
     case "settings": view = html`<${SettingsView}/>`; break;
