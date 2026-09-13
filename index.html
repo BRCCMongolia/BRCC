@@ -157,6 +157,8 @@ input[type=time],input[type=date]{min-width:0}
 .spn{min-width:0} .spn b{display:block;font-size:.98rem} .spn small{display:block;color:var(--muted);font-size:.78rem;font-style:italic} .rank{display:inline-block;min-width:20px;font-weight:800;color:var(--green);margin-right:4px}
 .spst{text-align:center;min-width:40px} .spst b{display:block;font-size:1rem} .spst span{display:block;font-size:.68rem;color:var(--muted)}
 @media(max-width:420px){.sprow{grid-template-columns:1fr auto auto;} .sprow .spst:nth-child(4),.sprow .spst:nth-child(5){display:none}}
+.sec-toggle{display:flex;align-items:center;gap:6px;background:transparent;border:0;padding:6px 0;margin-bottom:6px;cursor:pointer;color:var(--ink);text-align:left;width:100%} .sec-toggle h2{margin:0} .chev2{color:var(--muted);font-size:1rem;width:16px}
+.spn small{font-style:normal}
 </style>
 </head>
 <body>
@@ -225,7 +227,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Ажиглалт", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", secVP: "Ажиглалт", secLT: "Замнал", secReport: "Тайлан", endBeforeStart: "Дууссан цаг эхэлснээсээ өмнө байна — шалгаарай", endEnter: "Дууссан цагийг бичээрэй", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
     rangeErr: "0–360 хооронд байх ёстой", compass: "Луужин", compassTake: "Авах", compassHint: "Утсаа амьтан руу чиглүүлээд «Авах» дарна. Төмөр, машинаас хол байлгана.", compassErr: "Луужин ашиглах боломжгүй — гараар бичнэ үү", compassPerm: "Луужингийн зөвшөөрөл өгөгдөөгүй",
     gpsWait: "GPS хайж байна…", gpsHintCar: "Машинд бол утсаа цонх руу ойртуул, боломжтой бол гадаа гар.", gpsHintLong: "Удаж байна: утасны Байршил (Location) асаалттай эсэхээ шалга · утсаа цонхонд ойртуул эсвэл гадаа гар · тэнгэр харагдах ил газар зогс.", gpsForce: "Ямар ч байсан эхлэх", trackStarted: "Замнал эхэллээ", gpsPoor: "GPS нарийвчлал муу — цэгүүд хаягдаж байна", nextNo: "Дараагийн дугаар", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
@@ -266,7 +268,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", secVP: "Vantage points", secLT: "Transects", secReport: "Report", endBeforeStart: "End time is before start time — please check", endEnter: "Please enter the end time", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
     rangeErr: "Must be between 0 and 360", compass: "Compass", compassTake: "Take", compassHint: "Point the phone at the animal and tap “Take”. Keep away from metal and vehicles.", compassErr: "Compass not available — enter manually", compassPerm: "Compass permission not granted",
     gpsWait: "Searching GPS…", gpsHintCar: "In a car, hold the phone near the window or step outside.", gpsHintLong: "Taking long: check that Location is on · hold the phone near a window or step outside · stand in the open with clear sky.", gpsForce: "Start anyway", trackStarted: "Transect started", gpsPoor: "Poor GPS accuracy — points are being skipped", nextNo: "Next number", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
@@ -523,7 +525,7 @@ function updRecord(sessionId, recId, fn) {
   return updSession(sessionId, s => { s.records = s.records.map(r => { if (r.id !== recId) return r; const n = { ...r }; fn(n); n.updatedAt = Date.now(); return n; }); });
 }
 function newRecord(sess, extra = {}) {
-  const manual = !!sess.start && !sess.startedAt;
+  const manual = !!sess.start && (sess.startManual || !sess.startedAt);
   const lastT = manual ? ([...sess.records].reverse().find(r => r.time) || {}).time || sess.start : nowHM();
   const base = { id: uid(), createdAt: Date.now(), status: "draft", species: null, time: lastT, count: "", ageC: {}, ageOther: "", sexC: {}, activities: [], habitat: "", notes: "",
     weather: { cloud: "", precip: "", wind: "", note: "" } };
@@ -858,8 +860,8 @@ const Input = ({ onChange, value, class: cls, ...p }) => html`<input ...${p} cla
 const outOfRange = (v, min, max) => v !== "" && v !== null && v !== undefined && !isNaN(+v) && ((min !== undefined && +v < +min) || (max !== undefined && +v > +max));
 const NumInput = p => html`<input type="number" inputmode=${p.decimal ? "decimal" : "numeric"} step=${p.decimal ? "0.1" : "1"} min=${p.min} max=${p.max} placeholder=${p.placeholder || ""} class=${`inp ${p.class || ""} ${p.range && outOfRange(p.value, p.min, p.max) ? "bad" : ""}`} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled} />`;
 const TextArea = p => html`<textarea class="inp ta" rows=${p.rows || 2} placeholder=${p.placeholder || ""} value=${p.value ?? ""} onInput=${e => p.onChange(e.target.value)} disabled=${p.disabled}></textarea>`;
-function TimeInput({ value, onChange, disabled }) {
-  return html`<div class="row"><input type="time" class="inp" value=${value || ""} onInput=${e => onChange(e.target.value)} disabled=${disabled}/><${Btn} kind="ghost" small onClick=${() => onChange(nowHM())} disabled=${disabled}>${t("now")}<//></div>`;
+function TimeInput({ value, onChange, disabled, onManual }) {
+  return html`<div class="row"><input type="time" class="inp" value=${value || ""} onInput=${e => { onChange(e.target.value); onManual && onManual(true); }} disabled=${disabled}/><${Btn} kind="ghost" small onClick=${() => { onChange(nowHM()); onManual && onManual(false); }} disabled=${disabled}>${t("now")}<//></div>`;
 }
 function Chips({ options, value, onChange, multi, disabled }) {
   const sel = multi ? (value || []) : value;
@@ -1104,7 +1106,8 @@ function StudyView({ id, sub }) {
   const notes = notesOf(id);
   const sess = Object.values(s.sessions).filter(x => x.studyId === id).sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.createdAt - a.createdAt);
   if (sub === "report") return html`<${ReportView} st=${st} sessions=${sess} notes=${notes}/>`;
-  const groups = []; for (const x of sess) { const g = groups[groups.length - 1]; if (g && g.date === x.date) g.items.push(x); else groups.push({ date: x.date, items: [x] }); }
+  const grp = list => { const groups = []; for (const x of list) { const g = groups[groups.length - 1]; if (g && g.date === x.date) g.items.push(x); else groups.push({ date: x.date, items: [x] }); } return groups; };
+  const vps = sess.filter(x => x.type === "VP"), lts = sess.filter(x => x.type === "LT");
   const create = type => {
     const base = { id: uid(), studyId: id, visitId: null, type, date: todayISO(), number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
     if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
@@ -1123,17 +1126,16 @@ function StudyView({ id, sub }) {
         <button class="addbtn lt" onClick=${() => create("LT")}><b>+ LT</b><span>${t("ltTitle")}</span></button>
         <button class="addbtn note" onClick=${newNote}><b>+ ${t("notes")}</b><span>${t("fieldDiary")}</span></button>
       </div>
-      ${sess.some(x => x.type === "VP" && x.start && x.end) ? html`<${CoverageTable} study=${st} sessions=${sess}/>` : null}
-      <h2 class="mt">${t("sessions")}</h2>
-      ${groups.length ? groups.map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}
     </section>
-    <section class="section">
-      <h2>${t("notes")}</h2>
+    ${sess.some(x => x.type === "VP" && x.start && x.end) ? html`<${Sec} id=${id} k="cov" title=${t("coverage")}><${CoverageTable} study=${st} sessions=${sess}/><//>` : null}
+    <${Sec} id=${id} k="vp" title=${t("secVP")} count=${vps.length}>${grp(vps).length ? grp(vps).map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}<//>
+    <${Sec} id=${id} k="lt" title=${t("secLT")} count=${lts.length}>${grp(lts).length ? grp(lts).map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}<//>
+    <${Sec} id=${id} k="notes" title=${t("notes")} count=${notes.length}>
       ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
-    </section>
-    <section class="section">
+    <//>
+    <${Sec} id=${id} k="report" title=${t("secReport")}>
       <button class="reportbar" onClick=${() => nav("#/study/" + id + "/report")}><div><b>📊 ${t("report")}</b><div class="hint">${t("reportHint")}</div></div><span class="chev">›</span></button>
-    </section>
+    <//>
     <section class="section">
       <div class="row wrap"><${Btn} onClick=${exportZip} disabled=${busy}>${t("exportZip")}<//><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_${safeName(st.name)}_${todayISO()}.csv`, sess)} disabled=${busy}>${t("csvShare")}<//></div>
       <div class="hint">${t("exportZipHint")}</div>
@@ -1142,11 +1144,19 @@ function StudyView({ id, sub }) {
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
   </div>`;
 }
+function Sec({ id, k, title, count, children }) {
+  const st = getStudy(id); const collapsed = !!(st && st.collapsed && st.collapsed[k]);
+  const toggle = () => { Store.s.meta.studies = Store.s.meta.studies.map(x => x.id === id ? { ...x, collapsed: { ...(x.collapsed || {}), [k]: !collapsed } } : x); saveMeta(); };
+  return html`<section class="section sec">
+    <button class="sec-toggle" onClick=${toggle}><span class="chev2">${collapsed ? "▸" : "▾"}</span><h2>${title}${count !== undefined ? html` <span class="muted">(${count})</span>` : null}</h2></button>
+    ${collapsed ? null : children}
+  </section>`;
+}
 function ReportView({ st, sessions, notes }) {
   const rep = reportOf(st, sessions, notes); const L = st.speciesLang === "la" ? "en" : (st.speciesLang || "mn"); const [all, setAll] = useState(false);
-  const spn = sp => speciesName(sp, st.speciesLang || "mn");
+  const spn = sp => speciesName(sp, st.speciesLang === "en" ? "en" : "mn"); const spn2 = sp => speciesName(sp, st.speciesLang === "en" ? "mn" : "en");
   const Tile = ({ big, label, sub }) => html`<div class="tile"><b>${big}</b><span>${label}</span>${sub ? html`<small>${sub}</small>` : null}</div>`;
-  const SpRow = (x, i) => html`<div class="sprow" key=${x.sp.L}><div class="spn"><span class="rank">${i + 1}</span><b>${spn(x.sp)}</b><small>${x.sp.L}</small></div>
+  const SpRow = (x, i) => html`<div class="sprow" key=${x.sp.L}><div class="spn"><span class="rank">${i + 1}</span><b>${spn(x.sp)}</b><small>${spn2(x.sp)}</small></div>
     <div class="spst"><b>${x.total}</b><span>${t("individuals")}</span></div><div class="spst"><b>${x.n}</b><span>n</span></div><div class="spst"><b>${n1(x.mean)}</b><span>${t("meanGroup")}</span></div><div class="spst"><b>${x.min}–${x.max}</b><span>min–max</span></div></div>`;
   return html`<div class="page report">
     <${TopBar} title=${t("report")} sub=${st.name}/>
@@ -1210,8 +1220,11 @@ function SessionView({ id, recId }) {
     const drafts = sess.records.filter(r => r.status === "draft").length;
     if (drafts && !confirmDlg(`${drafts} ${t("incompleteWarn")}\n\n${t("confirmFinish")}`)) return;
     if (!drafts && !confirmDlg(t("confirmFinish"))) return;
-    if (!isVP) { Tracker.stop(); let end = null; try { end = await getPosition({ timeout: 8000 }); } catch (e) { } updSession(id, n => { n.tracking = false; const lp = n.track[n.track.length - 1]; if (end) { n.endLat = end.lat; n.endLng = end.lng; } else if (lp && !n.endLat) { n.endLat = lp.lat; n.endLng = lp.lng; } if (!n.length && n.track.length > 1) n.length = trackLength(n.track); }); }
-    updSession(id, n => { n.status = "closed"; n.end = n.end || nowHM(); });
+    const manual = !!sess.start && (sess.startManual || !sess.startedAt);
+    if (!isVP) { Tracker.stop(); let end = null; if (!manual || sess.track.length) { try { end = await getPosition({ timeout: 8000 }); } catch (e) { } } updSession(id, n => { n.tracking = false; const lp = n.track[n.track.length - 1]; if (end && n.track.length) { n.endLat = end.lat; n.endLng = end.lng; } else if (lp && !n.endLat) { n.endLat = lp.lat; n.endLng = lp.lng; } if (!n.length && n.track.length > 1) n.length = trackLength(n.track); }); }
+    let askEnd = false;
+    updSession(id, n => { n.status = "closed"; if (!n.end) { if (manual) { const lastT = [...n.records].reverse().find(r => r.time); if (lastT) n.end = lastT.time; else askEnd = true; } else n.end = nowHM(); } });
+    if (askEnd) { showToast(t("endEnter")); updSession(id, n => { n.status = "open"; }); return; }
     enqueueRow("session", { ...sessionHeader(Store.s.sessions[id]), id, observations: Store.s.sessions[id].records.length, status: "closed" });
   };
   const reopen = () => { if (confirmDlg(t("confirmReopen"))) updSession(id, n => { n.status = "open"; }); };
@@ -1240,8 +1253,8 @@ function SessionView({ id, recId }) {
         <${Field} label=${t("observer")}><${Input} value=${sess.observer} onChange=${v => { set("observer")(v); Store.s.meta.settings.observer = v; saveMeta(); }} disabled=${locked}/><//>
         <${Field} label=${t("date")}><input type="date" class="inp" value=${sess.date} onInput=${e => set("date")(e.target.value)} disabled=${locked}/><//>
         ${isVP ? html`<${Field} label=${t("plannedDur")}><${NumInput} decimal value=${sess.plannedH} onChange=${set("plannedH")} min="0" disabled=${locked}/><//>` : null}
-        <${Field} label=${t("startTime")}><${TimeInput} value=${sess.start} onChange=${set("start")} disabled=${locked}/><//>
-        <${Field} label=${t("endTime")}><${TimeInput} value=${sess.end} onChange=${set("end")} disabled=${locked}/><//>
+        <${Field} label=${t("startTime")}><${TimeInput} value=${sess.start} onChange=${set("start")} onManual=${m => updSession(id, n => { n.startManual = m; })} disabled=${locked}/><//>
+        <${Field} label=${t("endTime")} hint=${sess.start && sess.end && hmToMin(sess.end) < hmToMin(sess.start) ? html`<span class="warn red">${t("endBeforeStart")}</span>` : null}><${TimeInput} value=${sess.end} onChange=${set("end")} disabled=${locked}/><//>
       </div>
       ${!isVP ? html`<${AdminPicker} aimag=${sess.aimag} soum=${sess.soum} onAimag=${set("aimag")} onSoum=${set("soum")} disabled=${locked}/>` : null}
       ${!isVP ? html`<div class="grid2">
