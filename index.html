@@ -159,6 +159,14 @@ input[type=time],input[type=date]{min-width:0}
 @media(max-width:420px){.sprow{grid-template-columns:1fr auto auto;} .sprow .spst:nth-child(4),.sprow .spst:nth-child(5){display:none}}
 .sec-toggle{display:flex;align-items:center;gap:6px;background:transparent;border:0;padding:6px 0;margin-bottom:6px;cursor:pointer;color:var(--ink);text-align:left;width:100%} .sec-toggle h2{margin:0} .chev2{color:var(--muted);font-size:1rem;width:16px}
 .spn small{font-style:normal}
+.cov .cs.miss{color:var(--red);font-size:1.3rem;font-weight:700;border:0;padding:10px 0;opacity:.7}
+.openrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wxcard{background:var(--card);border:1px solid var(--line);border-left:5px solid #7BA3C9;border-radius:var(--r);margin:0 0 12px}
+.wxhead{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;background:transparent;border:0;padding:10px 12px;text-align:left;color:var(--ink);cursor:pointer}
+.wxsum{font-weight:700;font-size:.98rem} .wxbody{padding:0 12px 12px} .wxbody .lbl{margin-top:8px}
+.dirgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.wxlog{font-size:.8rem;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:6px} .wxlog .cur{font-weight:700;color:var(--ink)}
+.wxline{padding:6px 0}
 </style>
 </head>
 <body>
@@ -227,7 +235,7 @@ const I18N = {
     installHint: "Утсандаа суулгах: хөтчийн цэснээс «Нүүр дэлгэцэд нэмэх».", offline: "Сүлжээгүй — өгөгдөл утсанд хадгалагдаж байна", storageWarn: "Анхаар: хөтчийн өгөгдөл цэвэрлэвэл бүх бүртгэл алдагдана. Тогтмол Excel татаж, нөөцлөөрэй.",
     session: "Ажиглалт", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
-    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", secVP: "Ажиглалт", secLT: "Замнал", secReport: "Тайлан", endBeforeStart: "Дууссан цаг эхэлснээсээ өмнө байна — шалгаарай", endEnter: "Дууссан цагийг бичээрэй", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
+    freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", secVP: "Ажиглалт", wxNotSet: "Цаг агаар — тавиагүй", wxSince: "-с хойш · дараагийн бичлэгүүдэд автоматаар", wdir: "Салхины зүг", temp: "Темп. (°C)", wxHistory: "Өөрчлөлт", wxEdit: "Засах", wxOfRecord: "Энэ бичлэгийн цаг агаар", openBanner: "Нээлттэй ажиглалт", resume: "Үргэлжлүүлэх", dupWarn: "энэ өдөр бүртгэгдсэн байна", notesSearch: "Тэмдэглэлээс хайх…", addVpHere: "Энд шинэ VP нэмэх", secLT: "Замнал", secReport: "Тайлан", endBeforeStart: "Дууссан цаг эхэлснээсээ өмнө байна — шалгаарай", endEnter: "Дууссан цагийг бичээрэй", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
     rangeErr: "0–360 хооронд байх ёстой", compass: "Луужин", compassTake: "Авах", compassHint: "Утсаа амьтан руу чиглүүлээд «Авах» дарна. Төмөр, машинаас хол байлгана.", compassErr: "Луужин ашиглах боломжгүй — гараар бичнэ үү", compassPerm: "Луужингийн зөвшөөрөл өгөгдөөгүй",
     gpsWait: "GPS хайж байна…", gpsHintCar: "Машинд бол утсаа цонх руу ойртуул, боломжтой бол гадаа гар.", gpsHintLong: "Удаж байна: утасны Байршил (Location) асаалттай эсэхээ шалга · утсаа цонхонд ойртуул эсвэл гадаа гар · тэнгэр харагдах ил газар зогс.", gpsForce: "Ямар ч байсан эхлэх", trackStarted: "Замнал эхэллээ", gpsPoor: "GPS нарийвчлал муу — цэгүүд хаягдаж байна", nextNo: "Дараагийн дугаар", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
@@ -268,7 +276,7 @@ const I18N = {
     installHint: "Install on phone: browser menu → “Add to Home Screen”.", offline: "Offline — data is stored on this phone", storageWarn: "Warning: clearing browser data deletes all records. Export Excel and back up regularly.",
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
-    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", secVP: "Vantage points", secLT: "Transects", secReport: "Report", endBeforeStart: "End time is before start time — please check", endEnter: "Please enter the end time", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
+    freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", secVP: "Vantage points", wxNotSet: "Weather — not set", wxSince: " onwards · applied to new records", wdir: "Wind direction", temp: "Temp. (°C)", wxHistory: "Changes", wxEdit: "Edit", wxOfRecord: "Weather for this record", openBanner: "Open surveys", resume: "Resume", dupWarn: "already recorded on this date", notesSearch: "Search notes…", addVpHere: "Add a new VP here", secLT: "Transects", secReport: "Report", endBeforeStart: "End time is before start time — please check", endEnter: "Please enter the end time", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
     rangeErr: "Must be between 0 and 360", compass: "Compass", compassTake: "Take", compassHint: "Point the phone at the animal and tap “Take”. Keep away from metal and vehicles.", compassErr: "Compass not available — enter manually", compassPerm: "Compass permission not granted",
     gpsWait: "Searching GPS…", gpsHintCar: "In a car, hold the phone near the window or step outside.", gpsHintLong: "Taking long: check that Location is on · hold the phone near a window or step outside · stand in the open with clear sky.", gpsForce: "Start anyway", trackStarted: "Transect started", gpsPoor: "Poor GPS accuracy — points are being skipped", nextNo: "Next number", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
@@ -298,6 +306,12 @@ const ACT = {
     ["BU", "Burrow / Den (Нүх, үүрэндээ)"], ["DE", "Dead / Carcass (Сэг зэм)"], ["TR", "Tracks / Signs (Мөр, ул мөр)"]],
 };
 const CLOUD = ["Clear (Цэлмэг)", "Partly cloudy (Хагас үүлтэй)", "Overcast (Бүрхэг)"];
+const CLOUD_ICON = { "Clear (Цэлмэг)": "☀", "Partly cloudy (Хагас үүлтэй)": "🌤", "Overcast (Бүрхэг)": "☁" };
+const PRECIP_ICON = { "None (Байхгүй)": "", "Rain (Бороо)": "🌧", "Snow (Цас)": "🌨", "Fog (Манан)": "🌫" };
+const WDIR = [["N", "Х"], ["NE", "ХБ"], ["E", "Б"], ["SE", "БӨ"], ["S", "Ө"], ["SW", "ӨЗ"], ["W", "З"], ["NW", "ЗХ"]];
+const wdirLabel = code => { const w = WDIR.find(x => x[0] === code); return w ? (LANG === "mn" ? w[1] : w[0]) : code || ""; };
+const WIND_STEPS = ["0", "1", "2", "3", "4", "5", "6", "8", "10", "12"];
+function wxSummary(w) { if (!w) return ""; const parts = []; if (w.cloud) parts.push(`${CLOUD_ICON[w.cloud] || ""} ${w.cloud.split(" (")[LANG === "mn" ? 1 : 0].replace(")", "")}`.trim()); if (w.precip && w.precip !== "None (Байхгүй)") parts.push(`${PRECIP_ICON[w.precip]} ${w.precip.split(" (")[LANG === "mn" ? 1 : 0].replace(")", "")}`); if (w.wind !== "" && w.wind !== undefined && w.wind !== null) parts.push(`${w.wind} ${LANG === "mn" ? "м/с" : "m/s"}${w.wdir ? " " + wdirLabel(w.wdir) : ""}`); else if (w.wdir) parts.push(wdirLabel(w.wdir)); if (w.temp !== "" && w.temp !== undefined && w.temp !== null) parts.push(`${w.temp}°C`); return parts.join(" · "); }
 const PRECIP = ["None (Байхгүй)", "Rain (Бороо)", "Snow (Цас)", "Fog (Манан)"];
 
 /* ---------- storage (IndexedDB key-value, localStorage fallback) ---------- */
@@ -531,9 +545,10 @@ function newRecord(sess, extra = {}) {
     weather: { cloud: "", precip: "", wind: "", note: "" } };
   if (sess.type === "VP") Object.assign(base, { duration: "", timerStart: null, dirFrom: "", dirTo: "", hMin: "", hMax: "", distFirst: "", distLast: "", turbine: "", turbineDist: "" });
   else Object.assign(base, { dist: "", azimuth: "", lat: "", lng: "", acc: "", aLat: "", aLng: "", dirFrom: "", dirTo: "" });
-  // prefill from previous record
+  // prefill from previous record; weather from session-level card
   const prev = [...sess.records].reverse().find(r => r.status === "saved");
   if (prev) { base.weather = { ...prev.weather }; base.habitat = prev.habitat || ""; }
+  if (sess.wx) base.weather = { ...base.weather, ...sess.wx };
   return Object.assign(base, extra);
 }
 function toTrash(item) { Store.s.trash = [{ ...item, trashId: uid(), deletedAt: Date.now() }, ...Store.s.trash]; saveTrash(); }
@@ -645,7 +660,7 @@ const H = [ // key, header
   ["turbine", "Closest turbine"], ["turbineDist", "Distance from the closest turbine (m)"], ["duration", "Duration of over-fly (sec)"],
   ["dirFrom", "Flight direction from (°)"], ["dirTo", "Flight direction to (°)"], ["hMin", "Flight height min (m)"], ["hMax", "Flight height max (m)"], ["distFirst", "Distance from observer first time (m)"], ["distLast", "Distance from observer by the time disappeared (m)"],
   ["dist", "Distance to animal (m)"], ["azimuth", "Azimuth (°)"], ["lat", "Observer N"], ["lng", "Observer E"], ["acc", "GPS accuracy (m)"], ["aLat", "Animal N"], ["aLng", "Animal E"],
-  ["activity", "Activity / Behaviour"], ["cloud", "Cloud"], ["precip", "Precipitation"], ["wind", "Wind (m/s)"], ["wNote", "Weather note"], ["habitat", "Habitat"], ["notes", "Notes"],
+  ["activity", "Activity / Behaviour"], ["cloud", "Cloud"], ["precip", "Precipitation"], ["wind", "Wind (m/s)"], ["wdir", "Wind direction"], ["temp", "Temperature (°C)"], ["wNote", "Weather note"], ["habitat", "Habitat"], ["notes", "Notes"],
   ["status", "Record status"], ["id", "Record ID"], ["sessionId", "Survey ID"],
 ];
 const num = v => (v === "" || v === null || v === undefined || isNaN(+v)) ? (v || "") : +v;
@@ -662,7 +677,7 @@ function recordRow(s, r, idx) {
   return { ...sessionHeader(s), recNo: idx + 1, group: sp.g ? GROUPS[sp.g].en : "", spM: sp.M || "", spE: sp.E || "", spL: sp.L || "", time: r.time || "", count: num(r.count), ...ageSexCols(r),
     turbine: r.turbine || "", turbineDist: num(r.turbineDist), duration: num(r.duration), dirFrom: num(r.dirFrom), dirTo: num(r.dirTo), hMin: num(r.hMin), hMax: num(r.hMax), distFirst: num(r.distFirst), distLast: num(r.distLast),
     dist: num(r.dist), azimuth: num(r.azimuth), lat: num(r.lat), lng: num(r.lng), acc: num(r.acc), aLat: num(r.aLat), aLng: num(r.aLng),
-    activity: (r.activities || []).join("; "), cloud: r.weather?.cloud || "", precip: r.weather?.precip || "", wind: num(r.weather?.wind), wNote: r.weather?.note || "", habitat: r.habitat || "", notes: r.notes || "",
+    activity: (r.activities || []).join("; "), cloud: r.weather?.cloud || "", precip: r.weather?.precip || "", wind: num(r.weather?.wind), wdir: r.weather?.wdir || "", temp: num(r.weather?.temp), wNote: r.weather?.note || "", habitat: r.habitat || "", notes: r.notes || "",
     status: r.status, id: r.id };
 }
 function buildWorkbook(sessions, notes) {
@@ -739,6 +754,11 @@ async function studyZip(st, sessions, notes) {
   }
   return makeZip(files);
 }
+/* ----- weather helpers ----- */
+function sessionClock(sess) { const manual = !!sess.start && (sess.startManual || !sess.startedAt); if (!manual) return nowHM(); return ([...sess.records].reverse().find(r => r.time) || {}).time || sess.start || nowHM(); }
+function lastWx(studyId, exceptId) { const x = Object.values(Store.s.sessions).filter(s => s.studyId === studyId && s.id !== exceptId && s.wx).sort((a, b) => b.updatedAt - a.updatedAt)[0]; return x ? { ...x.wx } : null; }
+function setWx(sessId, patch) { updSession(sessId, n => { n.wx = { ...(n.wx || {}), ...patch }; const tm = sessionClock(n); n.wxLog = [...(n.wxLog || [])]; const last = n.wxLog[n.wxLog.length - 1]; if (last && last.t === tm) Object.assign(last, n.wx); else n.wxLog.push({ t: tm, ...n.wx }); }); }
+
 /* ----- LT numbering ----- */
 const splitNo = n => { const m = String(n || "").trim().match(/^(.*?)(\d+)$/); return m ? { pre: m[1], num: +m[2], w: m[2].length } : null; };
 function nextTransectNumbers(studyId) {
@@ -959,8 +979,10 @@ function WeatherFields({ value, onChange, disabled }) {
     <${Field} label=${t("precip")}><${Chips} options=${PRECIP} value=${w.precip} onChange=${set("precip")} disabled=${disabled}/><//>
     <div class="grid2">
       <${Field} label=${t("wind")}><${NumInput} decimal value=${w.wind} onChange=${set("wind")} min="0" disabled=${disabled}/><//>
-      <${Field} label=${t("weatherNote")}><${Input} value=${w.note} onChange=${set("note")} disabled=${disabled}/><//>
+      <${Field} label=${t("temp")}><${NumInput} decimal value=${w.temp} onChange=${set("temp")} min="-60" max="60" disabled=${disabled}/><//>
     </div>
+    <${Field} label=${t("wdir")}><${Chips} options=${WDIR.map(x => wdirLabel(x[0]))} value=${wdirLabel(w.wdir)} onChange=${l => set("wdir")((WDIR.find(x => wdirLabel(x[0]) === l) || [""])[0])} disabled=${disabled}/><//>
+    <${Field} label=${t("weatherNote")}><${Input} value=${w.note} onChange=${set("note")} disabled=${disabled}/><//>
   </div>`;
 }
 
@@ -1053,6 +1075,32 @@ function CompassBtn({ onPick, disabled }) {
   return html`<button type="button" class="btn ghost small cbtn" disabled=${disabled} onClick=${async () => { if (await compassPermission()) setOpen(true); else showToast(t("compassPerm")); }} title=${t("compass")}>🧭</button>
     ${open ? html`<${CompassModal} onClose=${() => setOpen(false)} onPick=${v => { setOpen(false); onPick(String(v)); }}/>` : null}`;
 }
+
+/* ---------- Session weather card ---------- */
+function WeatherCard({ sess, locked }) {
+  const [open, setOpen] = useState(false); const w = sess.wx || {}; const log = sess.wxLog || [];
+  const setk = k => v => setWx(sess.id, { [k]: v });
+  const [windCustom, setWindCustom] = useState(w.wind !== undefined && w.wind !== "" && !WIND_STEPS.includes(String(w.wind)));
+  const sum = wxSummary(w);
+  return html`<div class=${`wxcard ${open ? "open" : ""}`}>
+    <button type="button" class="wxhead" onClick=${() => setOpen(!open)}>
+      <div><div class="wxsum">${sum || t("wxNotSet")}</div>${log.length ? html`<div class="hint">${log[log.length - 1].t}${t("wxSince")}</div>` : null}</div><span class="chev2">${open ? "▴" : "▾"}</span>
+    </button>
+    ${open ? html`<div class="wxbody">
+      <div class="lbl">${t("cloud")}</div><${Chips} options=${CLOUD.map(c => `${CLOUD_ICON[c]} ${c}`)} value=${w.cloud ? `${CLOUD_ICON[w.cloud]} ${w.cloud}` : ""} onChange=${v => setk("cloud")(v ? v.replace(/^\S+\s/, "") : "")} disabled=${locked}/>
+      <div class="lbl">${t("precip")}</div><${Chips} options=${PRECIP} value=${w.precip} onChange=${setk("precip")} disabled=${locked}/>
+      <div class="lbl">${t("wind")}</div>
+      <div class="strip">${WIND_STEPS.map(n => html`<button type="button" key=${n} class=${`chip sm ${String(w.wind) === n && !windCustom ? "on" : ""}`} disabled=${locked} onClick=${() => { setWindCustom(false); setk("wind")(String(w.wind) === n ? "" : n); }}>${n}</button>`)}
+        <button type="button" class=${`chip sm ${windCustom ? "on" : ""}`} disabled=${locked} onClick=${() => setWindCustom(true)}>15+</button>
+        ${windCustom ? html`<input type="number" inputmode="decimal" class="inp sm" value=${w.wind ?? ""} onInput=${e => setk("wind")(e.target.value)} disabled=${locked}/>` : null}</div>
+      <div class="grid2 mt">
+        <div><div class="lbl">${t("wdir")}</div><div class="dirgrid">${WDIR.map(([code, mn]) => html`<button type="button" key=${code} class=${`chip sm ${w.wdir === code ? "on" : ""}`} disabled=${locked} onClick=${() => setk("wdir")(w.wdir === code ? "" : code)}>${LANG === "mn" ? mn : code}</button>`)}</div></div>
+        <div><div class="lbl">${t("temp")}</div><input type="number" inputmode="decimal" class="inp" style="max-width:110px" value=${w.temp ?? ""} onInput=${e => setk("temp")(e.target.value)} disabled=${locked}/></div>
+      </div>
+      ${log.length > 1 ? html`<div class="wxlog">${t("wxHistory")}: ${log.map((l, i) => html`<span key=${i} class=${i === log.length - 1 ? "cur" : ""}>${l.t} ${wxSummary(l)}${i < log.length - 1 ? " → " : ""}</span>`)}</div>` : null}
+    </div>` : null}
+  </div>`;
+}
 </script>
 <script>/* ===== BRCC Mongolia — views ===== */
 
@@ -1062,6 +1110,10 @@ function Home() {
   const studies = [...s.meta.studies].sort((a, b) => b.createdAt - a.createdAt);
   return html`<div class="page">
     <${TopBar} back=${false} title=${t("appTitle")} sub=${t("appSub")} right=${html`<button class="iconbtn" onClick=${() => nav("#/settings")} aria-label=${t("settings")}>⚙</button>`}/>
+    ${(() => { const open = Object.values(s.sessions).filter(x => x.status === "open" && x.started).sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3); return open.length ? html`<section class="section">
+      <div class="lbl">${t("openBanner")}</div>
+      ${open.map(x => { const st = getStudy(x.studyId) || {}; return html`<button key=${x.id} class="card link open openrow" onClick=${() => nav("#/session/" + x.id)}><div><div class="card-t"><span class=${`tag big ${x.type}`}>${x.type}</span> ${x.number || ""} <span class="muted">· ${st.name}</span></div><div class="card-s">${x.date} · ${x.start || "—"} – … · ${x.records.length} ${t("recordsLow")}</div></div><span class="tag warn">${t("resume")} ›</span></button>`; })}
+    </section>` : null; })()}
     <section class="section">
       <div class="sec-h"><h2>${t("studies")}</h2><${Btn} onClick=${() => setCreating(true)}>+ ${t("newStudy")}<//></div>
       ${studies.length ? studies.map(st => {
@@ -1101,7 +1153,7 @@ function StudyModal({ study, onClose }) {
 
 /* ---------- Study ---------- */
 function StudyView({ id, sub }) {
-  const s = useStore(); const st = getStudy(id); const [edit, setEdit] = useState(false); const [busy, setBusy] = useState(false);
+  const s = useStore(); const st = getStudy(id); const [edit, setEdit] = useState(false); const [busy, setBusy] = useState(false); const [nq, setNq] = useState("");
   if (!st) return html`<div class="page"><${TopBar} title="?"/><${Empty}>${t("empty")}<//></div>`;
   const notes = notesOf(id);
   const sess = Object.values(s.sessions).filter(x => x.studyId === id).sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.createdAt - a.createdAt);
@@ -1109,7 +1161,7 @@ function StudyView({ id, sub }) {
   const grp = list => { const groups = []; for (const x of list) { const g = groups[groups.length - 1]; if (g && g.date === x.date) g.items.push(x); else groups.push({ date: x.date, items: [x] }); } return groups; };
   const vps = sess.filter(x => x.type === "VP"), lts = sess.filter(x => x.type === "LT");
   const create = type => {
-    const base = { id: uid(), studyId: id, visitId: null, type, date: todayISO(), number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false };
+    const base = { id: uid(), studyId: id, visitId: null, type, date: todayISO(), number: "", observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false, wx: lastWx(id), wxLog: [] };
     if (type === "VP") Object.assign(base, { plannedH: "3", startedAt: null, alarmed: false });
     else { const prev = lastTransect(id) || {}; const nums = nextTransectNumbers(id); Object.assign(base, { aimag: prev.aimag || "", soum: prev.soum || "", place: prev.place || "", habitat: prev.habitat || "", width: prev.width || "", number: nums.length === 1 ? nums[0] : "", length: "", startLat: "", startLng: "", endLat: "", endLng: "", track: [], tracking: false }); }
     saveSession(base); nav("#/session/" + base.id);
@@ -1131,7 +1183,8 @@ function StudyView({ id, sub }) {
     <${Sec} id=${id} k="vp" title=${t("secVP")} count=${vps.length}>${grp(vps).length ? grp(vps).map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}<//>
     <${Sec} id=${id} k="lt" title=${t("secLT")} count=${lts.length}>${grp(lts).length ? grp(lts).map(g => html`<div key=${g.date} class="dategroup"><div class="datehd">${g.date}</div>${g.items.map(x => html`<${SessionCard} key=${x.id} x=${x}/>`)}</div>`) : html`<${Empty}>${t("emptySessions")}<//>`}<//>
     <${Sec} id=${id} k="notes" title=${t("notes")} count=${notes.length}>
-      ${notes.map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
+      ${notes.length >= 3 ? html`<input class="inp mb" placeholder=${t("notesSearch")} value=${nq} onInput=${e => setNq(e.target.value)}/>` : null}
+      ${notes.filter(n => !nq || norm(n.text).includes(norm(nq)) || String(n.n) === nq.trim()).map(n => html`<button key=${n.id} class="card link" onClick=${() => nav("#/note/" + n.id)}><div class="card-t">${t("notes")} ${n.n} <span class="muted">· ${n.date}</span>${n.photos && n.photos.length ? html`<span class="tag">📷 ${n.photos.length}</span>` : null}</div><div class="card-s clamp">${n.text || "…"}</div></button>`)}
     <//>
     <${Sec} id=${id} k="report" title=${t("secReport")}>
       <button class="reportbar" onClick=${() => nav("#/study/" + id + "/report")}><div><b>📊 ${t("report")}</b><div class="hint">${t("reportHint")}</div></div><span class="chev">›</span></button>
@@ -1180,11 +1233,12 @@ function ReportView({ st, sessions, notes }) {
 }
 function CoverageTable({ study, sessions }) {
   const cv = coverageOf(study, sessions); const bl = { m: t("bandM"), d: t("bandD"), e: t("bandE") }; const bd = k => cv.bands.find(b => b.k === k);
-  return html`<div class="covwrap"><h2>${t("coverage")}</h2><div class="hint mb">${t("coverageHint")}</div>
+  const newVp = num => { const base = { id: uid(), studyId: study.id, visitId: null, type: "VP", date: todayISO(), number: num, observer: Store.s.meta.settings.observer || "", start: "", end: "", status: "open", records: [], createdAt: Date.now(), updatedAt: Date.now(), started: false, plannedH: "3", startedAt: null, alarmed: false, wx: lastWx(study.id), wxLog: [] }; saveSession(base); nav("#/session/" + base.id); };
+  return html`<div class="covwrap">
     <div class="cov"><table>
       <tr><th>VP</th>${["m", "d", "e"].map(k => html`<th class=${k} key=${k}>${bl[k]}<br/>${bd(k).start.slice(0, 2)}–${bd(k).end.slice(0, 2)}</th>`)}<th>${t("total")}</th></tr>
       ${cv.rows.map(r => html`<tr key=${r.vp}><td>${r.vp}</td>
-        ${["m", "d", "e"].map(k => r[k].length ? html`<td class=${k} key=${k}>${r[k].map(x => html`<button type="button" class="cs" key=${x.id} onClick=${() => nav("#/session/" + x.id)}>${fmtDateMon(x.date)}<br/>${x.start}–${x.end}<br/><b>${h1(x.h)}</b></button>`)}</td>` : html`<td class="miss" key=${k}>—</td>`)}
+        ${["m", "d", "e"].map(k => r[k].length ? html`<td class=${k} key=${k}>${r[k].map(x => html`<button type="button" class="cs" key=${x.id} onClick=${() => nav("#/session/" + x.id)}>${fmtDateMon(x.date)}<br/>${x.start}–${x.end}<br/><b>${h1(x.h)}</b></button>`)}</td>` : html`<td class="miss" key=${k}><button type="button" class="cs miss" title=${t("addVpHere")} onClick=${() => { if (confirmDlg(`${t("addVpHere")}: VP ${r.vp}?`)) newVp(r.vp === "?" ? "" : r.vp); }}>+</button></td>`)}
         <td>${h1(r.total)}</td></tr>`)}
       <tr class="tot"><td>${t("allTotal")}</td><td class="m">${h1(cv.tot.m)}</td><td class="d">${h1(cv.tot.d)}</td><td class="e">${h1(cv.tot.e)}</td><td>${h1(cv.tot.total)}</td></tr>
     </table></div></div>`;
@@ -1247,7 +1301,7 @@ function SessionView({ id, recId }) {
 
     <section class="section card hdr">
       <div class="grid2">
-        <${Field} label=${isVP ? t("vpNo") : t("ltNo")}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} placeholder="U1"/>
+        <${Field} label=${isVP ? t("vpNo") : t("ltNo")} hint=${(() => { const d = Object.values(s.sessions).find(x => x.id !== id && x.studyId === sess.studyId && x.type === sess.type && x.date === sess.date && (x.number || "").trim() && (x.number || "").trim().toLowerCase() === (sess.number || "").trim().toLowerCase()); return d ? html`<span class="warn">${sess.type} ${d.number} ${t("dupWarn")} (${d.start || "—"}–${d.end || "…"})</span>` : null; })()}><${Input} value=${sess.number} onChange=${set("number")} disabled=${locked} placeholder="U1"/>
           ${!isVP && !locked && !sess.started ? (() => { const nums = nextTransectNumbers(sess.studyId).filter(n => n !== sess.number); return nums.length ? html`<div class="chips mt">${nums.map(n => html`<button type="button" key=${n} class="chip sm" onClick=${() => set("number")(n)}>${n}</button>`)}</div>` : null; })() : null}
         <//>
         <${Field} label=${t("observer")}><${Input} value=${sess.observer} onChange=${v => { set("observer")(v); Store.s.meta.settings.observer = v; saveMeta(); }} disabled=${locked}/><//>
@@ -1285,6 +1339,7 @@ function SessionView({ id, recId }) {
           </div>`) : null}
     </section>
 
+    <${WeatherCard} sess=${sess} locked=${locked}/>
     <section class="section">
       <div class="sec-h"><h2>${t("records")} <span class="muted">(${sess.records.length})</span></h2>
         ${!locked ? html`<div class="row"><${Btn} kind="secondary" onClick=${quick}>⚡ ${t("quickCapture")}<//><${Btn} onClick=${() => addRecord({})}>+ ${t("addRecord")}<//></div>` : null}
@@ -1332,7 +1387,7 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
   const upd = fn => updRecord(sess.id, r.id, fn); const set = k => v => upd(x => { x[k] = v; });
   const g = r.species ? r.species.g : null; const showHeight = isVP && (!g || g === "B");
   const running = r.timerStart && !r.duration;
-  const [gpsMsg, setGpsMsg] = useState("");
+  const [gpsMsg, setGpsMsg] = useState(""); const [wxEdit, setWxEdit] = useState(false);
   const getGps = async () => { setGpsMsg(t("gpsSearching")); try { const p = await getPosition(); upd(x => { x.lat = p.lat; x.lng = p.lng; x.acc = p.acc; }); setGpsMsg(`±${p.acc} m`); } catch (e) { setGpsMsg(t("gpsFail")); } };
   useEffect(() => { if (!isVP && !r.lat && !locked) { const lp = Tracker.last && !Tracker.last.skipped ? Tracker.last : null; if (lp) upd(x => { x.lat = lp.lat; x.lng = lp.lng; x.acc = lp.acc; }); else getGps(); } }, []);
   // computed animal position
@@ -1385,7 +1440,7 @@ function RecordForm({ sess, rec, lang, windFarm, locked }) {
       <${Field} label=${isVP ? t("activity") : t("behaviour")}>
         ${g === "B" || g === "M" ? html`<${ActivityPicker} group=${g} value=${r.activities} onChange=${set("activities")} disabled=${dis}/>` : html`<${Input} value=${(r.activities || []).join("; ")} onChange=${v => set("activities")(v ? [v] : [])} placeholder=${t("freeText")} disabled=${dis}/>`}
       <//>
-      <${Field} label=${t("weather")}><${WeatherFields} value=${r.weather} onChange=${set("weather")} disabled=${dis}/><//>
+      <${Field} label=${t("wxOfRecord")}>${wxEdit ? html`<${WeatherFields} value=${r.weather} onChange=${set("weather")} disabled=${dis}/>` : html`<div class="row between wxline"><span class="muted">${wxSummary(r.weather) || t("wxNotSet")}</span>${!dis ? html`<${Btn} kind="ghost" small onClick=${() => setWxEdit(true)}>${t("wxEdit")}<//>` : null}</div>`}<//>
       <${Field} label=${t("habitat")}><${Input} value=${r.habitat} onChange=${set("habitat")} disabled=${dis}/><//>
       <${Field} label=${t("noteField")}><${TextArea} value=${r.notes} onChange=${set("notes")} disabled=${dis}/><//>
       ${!dis ? html`<div class="sticky-actions">
