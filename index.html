@@ -174,6 +174,10 @@ input[type=time],input[type=date]{min-width:0}
 .btn.wide{width:100%}
 .accbox{margin-bottom:12px} .accbox .btn{margin-top:8px}
 .emailbox{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:var(--r);background:var(--card)} .emailbox .email{font-size:1.02rem;word-break:break-all}
+.sendbox{margin-top:10px;padding:12px 14px;border-radius:var(--r);background:var(--amber-l);border:1px solid #E9C46A;border-left:6px solid var(--amber)}
+.sendbox.done{background:var(--green-l);border-color:#A9D59A;border-left-color:var(--green)}
+.sendhd{font-weight:800;font-size:1.02rem;color:var(--amber);margin-bottom:6px} .sendbox.done .sendhd{color:var(--green-d)}
+.sendlist{margin:0 0 10px;padding-left:20px;font-size:.92rem;line-height:1.4} .sendlist li{margin-bottom:4px} .sendlist .email{word-break:break-all}
 </style>
 </head>
 <body>
@@ -189,7 +193,7 @@ const AIMAGS=Object.keys(ADMIN).sort((a,b)=>a.localeCompare(b,"mn"));
 <script>/* ===== BRCC Mongolia — core (i18n, constants, storage, export) ===== */
 const { html, render, useState, useEffect, useRef, useMemo, useCallback } = htmPreact;
 
-const APP_VERSION = "2.0.1";
+const APP_VERSION = "2.1.0";
 const DATA_EMAIL = "data.brcc@gmail.com";
 const ACCESS_OFFLINE_DAYS = 30, ACCESS_RECHECK_HOURS = 24, ACCESS_WARN_DAYS = 7;
 const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxjIWgF4zwSSjlpZbZ_tlRvMdn-2s3KbxGyKThTfTyBQ2xO3txEjuOqvXTPgAQ1kI-d/exec";
@@ -245,7 +249,7 @@ const I18N = {
     session: "Ажиглалт", type: "Төрөл", status: "Төлөв", open: "Нээлттэй", closed: "Дууссан", all: "Бүгд", none: "—",
     sortHint: "Сүүлийнх дээр", recordNo: "№", chooseGroup: "Энэ зүйл аль бүлэгт багтах вэ?", customSpeciesSaved: "Шинэ зүйл жагсаалтад нэмэгдлээ",
     freeText: "Гараар бичнэ", listSpecies: "зүйл", detailsLater: "Дараа бөглөж болно", showList: "Бүх жагсаалт", hideList: "Жагсаалт нуух", sexMismatch: "Хүйсний нийлбэр тоо толгойтой таарахгүй байна", recordsLow: "ажиглалт", csvShare: "CSV илгээх", report: "Товч тайлан", secVP: "Ажиглалт", accTitle: "Нэвтрэх код", accHint: "Кодыг Биологийн Нөөцийг Хамгаалах Төвөөс авна", accEnter: "Орох", accChecking: "Шалгаж байна…", accBad: "Код буруу, идэвхгүй эсвэл хугацаа нь дууссан", accOffline: "Код шалгахад сүлжээ шаардлагатай — сүлжээтэй газар дахин оролдоно уу", accErr: "Шалгаж чадсангүй — дараа дахин оролдоно уу", accValid: "хүртэл хүчинтэй", accNoExp: "Хугацаагүй", accExpSoon: "Нэвтрэх кодын хугацаа удахгүй дуусна — Төвөөс сунгуулна уу", accStale: "Код 30 хоног шалгагдаагүй — сүлжээтэй газар аппаа нээнэ үү", accLocked: "Нэвтрэх код идэвхгүй болсон эсвэл хугацаа нь дууссан", accLogout: "Гарах (код солих)", accCode: "Код", accName: "Нэр",
-    dataEmailLine: "Судалгаа дуусаад ZIP файлаа энэ хаяг руу илгээнэ үү:", dataEmailPhotos: "Мөн судалгаанд холбогдох болон тэмдэглэлд оруулсан зургуудаа (утасны галерейгаас, бүрэн чанараар) энэ хаяг руу илгээнэ үү.", copyEmail: "Имэйл хуулах", copied: "Хуулагдлаа", openMail: "Имэйл нээх", wxNotSet: "Цаг агаар — тавиагүй", wxSince: "-с хойш · дараагийн бичлэгүүдэд автоматаар", wdir: "Салхины зүг", temp: "Темп. (°C)", wxHistory: "Өөрчлөлт", wxEdit: "Засах", wxOfRecord: "Энэ бичлэгийн цаг агаар", openBanner: "Нээлттэй ажиглалт", resume: "Үргэлжлүүлэх", dupWarn: "энэ өдөр бүртгэгдсэн байна", notesSearch: "Тэмдэглэлээс хайх…", addVpHere: "Энд шинэ VP нэмэх", secLT: "Замнал", secReport: "Тайлан", endBeforeStart: "Дууссан цаг эхэлснээсээ өмнө байна — шалгаарай", endEnter: "Дууссан цагийг бичээрэй", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
+    dataEmailLine: "Судалгаа дуусаад ZIP файлаа энэ хаяг руу илгээнэ үү:", sendTitle: "Судалгаа дуусахад заавал", sentBtn: "Илгээсэн ✓", sentOn: "Илгээсэн", notSent: "Өгөгдөл илгээгээгүй", unsent: "Илгээгээгүй болгох", sentConfirm: "ZIP файл болон зургуудаа data.brcc@gmail.com руу илгээсэн үү?", dataEmailPhotos: "Мөн судалгаанд холбогдох болон тэмдэглэлд оруулсан зургуудаа (утасны галерейгаас, бүрэн чанараар) энэ хаяг руу илгээнэ үү.", copyEmail: "Имэйл хуулах", copied: "Хуулагдлаа", openMail: "Имэйл нээх", wxNotSet: "Цаг агаар — тавиагүй", wxSince: "-с хойш · дараагийн бичлэгүүдэд автоматаар", wdir: "Салхины зүг", temp: "Темп. (°C)", wxHistory: "Өөрчлөлт", wxEdit: "Засах", wxOfRecord: "Энэ бичлэгийн цаг агаар", openBanner: "Нээлттэй ажиглалт", resume: "Үргэлжлүүлэх", dupWarn: "энэ өдөр бүртгэгдсэн байна", notesSearch: "Тэмдэглэлээс хайх…", addVpHere: "Энд шинэ VP нэмэх", secLT: "Замнал", secReport: "Тайлан", endBeforeStart: "Дууссан цаг эхэлснээсээ өмнө байна — шалгаарай", endEnter: "Дууссан цагийг бичээрэй", reportHint: "Огноо, ажиглагч, зүйл, бодгаль, VP/LT, тэмдэглэл", period: "Хугацаа", observers: "Ажиглагчид", vpStats: "Цэгэн ажиглалт (VP)", ltStats: "Шугаман замнал (LT)", points: "цэг", surveysN: "ажиглалт", hours: "цаг", transectsN: "замнал", kmTotal: "км", speciesN: "зүйл", individuals: "бодгаль", nRec: "n", meanGroup: "дундаж", byGroup: "Бүлгээр", topSpecies: "Хамгийн олон бүртгэгдсэн 5 зүйл", allSpecies: "Бүх зүйл", notesN: "Тэмдэглэл", photosN: "Зураг", noData: "Өгөгдөл байхгүй", showAll: "Бүгдийг харах", hideAll: "Нуух",
     rangeErr: "0–360 хооронд байх ёстой", compass: "Луужин", compassTake: "Авах", compassHint: "Утсаа амьтан руу чиглүүлээд «Авах» дарна. Төмөр, машинаас хол байлгана.", compassErr: "Луужин ашиглах боломжгүй — гараар бичнэ үү", compassPerm: "Луужингийн зөвшөөрөл өгөгдөөгүй",
     gpsWait: "GPS хайж байна…", gpsHintCar: "Машинд бол утсаа цонх руу ойртуул, боломжтой бол гадаа гар.", gpsHintLong: "Удаж байна: утасны Байршил (Location) асаалттай эсэхээ шалга · утсаа цонхонд ойртуул эсвэл гадаа гар · тэнгэр харагдах ил газар зогс.", gpsForce: "Ямар ч байсан эхлэх", trackStarted: "Замнал эхэллээ", gpsPoor: "GPS нарийвчлал муу — цэгүүд хаягдаж байна", nextNo: "Дараагийн дугаар", coverage: "Ажиглалтын хугацаа", coverageHint: "VP тус бүр · цагийн үеэр · нийт цаг", bandM: "Өглөө", bandD: "Өдөр", bandE: "Орой", total: "Нийт", allTotal: "Бүгд", bands: "Ажиглалтын цагийн үе", bandsHint: "Ажиглалт хамгийн их давхцсан үедээ тооцогдоно", exportZip: "Бүгдийг татах (ZIP)", exportZipHint: "Excel + CSV + замнал бүрийн KMZ + тэмдэглэл, зураг", csvCopied: "CSV хуулагдлаа — мессеж, имэйлд буулгаад илгээнэ үү", ageOther: "Бусад (гараар)",
   },
@@ -287,7 +291,7 @@ const I18N = {
     session: "Survey", type: "Type", status: "Status", open: "Open", closed: "Finished", all: "All", none: "—",
     sortHint: "Latest first", recordNo: "No.", chooseGroup: "Which group does this species belong to?", customSpeciesSaved: "New species added to the list",
     freeText: "Free text", listSpecies: "species", detailsLater: "Details can be filled later", showList: "Show full list", hideList: "Hide list", sexMismatch: "Sex counts do not add up to the number of individuals", recordsLow: "observations", csvShare: "Send CSV", report: "Summary report", secVP: "Vantage points", accTitle: "Access code", accHint: "Get a code from the Biological Resource Conservation Center", accEnter: "Enter", accChecking: "Checking…", accBad: "Code is invalid, inactive or expired", accOffline: "Internet is needed to check the code — try again when online", accErr: "Could not check — try again later", accValid: "valid until", accNoExp: "No expiry", accExpSoon: "Your access code expires soon — ask the Center to extend it", accStale: "Code not verified for 30 days — open the app with internet", accLocked: "Access code was deactivated or expired", accLogout: "Sign out (change code)", accCode: "Code", accName: "Name",
-    dataEmailLine: "When the study is finished, send the ZIP file to:", dataEmailPhotos: "Also send the photos related to the study and the notes (full quality, from your phone gallery) to this address.", copyEmail: "Copy email", copied: "Copied", openMail: "Open mail", wxNotSet: "Weather — not set", wxSince: " onwards · applied to new records", wdir: "Wind direction", temp: "Temp. (°C)", wxHistory: "Changes", wxEdit: "Edit", wxOfRecord: "Weather for this record", openBanner: "Open surveys", resume: "Resume", dupWarn: "already recorded on this date", notesSearch: "Search notes…", addVpHere: "Add a new VP here", secLT: "Transects", secReport: "Report", endBeforeStart: "End time is before start time — please check", endEnter: "Please enter the end time", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
+    dataEmailLine: "When the study is finished, send the ZIP file to:", sendTitle: "Required when the study is finished", sentBtn: "Sent ✓", sentOn: "Sent", notSent: "Data not sent", unsent: "Mark as not sent", sentConfirm: "Have you sent the ZIP file and the photos to data.brcc@gmail.com?", dataEmailPhotos: "Also send the photos related to the study and the notes (full quality, from your phone gallery) to this address.", copyEmail: "Copy email", copied: "Copied", openMail: "Open mail", wxNotSet: "Weather — not set", wxSince: " onwards · applied to new records", wdir: "Wind direction", temp: "Temp. (°C)", wxHistory: "Changes", wxEdit: "Edit", wxOfRecord: "Weather for this record", openBanner: "Open surveys", resume: "Resume", dupWarn: "already recorded on this date", notesSearch: "Search notes…", addVpHere: "Add a new VP here", secLT: "Transects", secReport: "Report", endBeforeStart: "End time is before start time — please check", endEnter: "Please enter the end time", reportHint: "Dates, observers, species, individuals, VP/LT, notes", period: "Period", observers: "Observers", vpStats: "Vantage points (VP)", ltStats: "Line transects (LT)", points: "points", surveysN: "surveys", hours: "h", transectsN: "transects", kmTotal: "km", speciesN: "species", individuals: "individuals", nRec: "n", meanGroup: "mean", byGroup: "By group", topSpecies: "Top 5 species", allSpecies: "All species", notesN: "Notes", photosN: "Photos", noData: "No data", showAll: "Show all", hideAll: "Hide",
     rangeErr: "Must be between 0 and 360", compass: "Compass", compassTake: "Take", compassHint: "Point the phone at the animal and tap “Take”. Keep away from metal and vehicles.", compassErr: "Compass not available — enter manually", compassPerm: "Compass permission not granted",
     gpsWait: "Searching GPS…", gpsHintCar: "In a car, hold the phone near the window or step outside.", gpsHintLong: "Taking long: check that Location is on · hold the phone near a window or step outside · stand in the open with clear sky.", gpsForce: "Start anyway", trackStarted: "Transect started", gpsPoor: "Poor GPS accuracy — points are being skipped", nextNo: "Next number", coverage: "Observation effort", coverageHint: "Per VP · by time of day · total hours", bandM: "Morning", bandD: "Day", bandE: "Evening", total: "Total", allTotal: "All", bands: "Time-of-day bands", bandsHint: "A survey is counted in the band it overlaps most", exportZip: "Download all (ZIP)", exportZipHint: "Excel + CSV + KMZ per transect + notes with photos", csvCopied: "CSV copied — paste it into a message or email", ageOther: "Other (free text)",
   }
@@ -795,7 +799,7 @@ function reportOf(study, sessions, notes) {
   const bySp = new Map(); for (const r of recs) { const k = r.species.L; if (!bySp.has(k)) bySp.set(k, { sp: r.species, list: [] }); bySp.get(k).list.push(r); }
   const species = [...bySp.values()].map(x => ({ sp: x.sp, ...stat(x.list) })).sort((a, b) => b.total - a.total || b.n - a.n);
   const photos = notes.reduce((a, n) => a + (n.photos || []).length, 0);
-  return { study, from: dates[0] || "", to: dates[dates.length - 1] || "", observers, vpPoints: new Set(vps.map(s => (s.number || "?").trim())).size, vpN: vps.length, vpHours, ltN: lts.length, ltKm, all: stat(recs), groups, species, notesN: notes.length, photos };
+  return { study, sentAt: study.sentAt || null, from: dates[0] || "", to: dates[dates.length - 1] || "", observers, vpPoints: new Set(vps.map(s => (s.number || "?").trim())).size, vpN: vps.length, vpHours, ltN: lts.length, ltKm, all: stat(recs), groups, species, notesN: notes.length, photos };
 }
 const n1 = v => (Math.round(v * 10) / 10).toFixed(1);
 function reportText(rep, lang) {
@@ -803,7 +807,7 @@ function reportText(rep, lang) {
   out.push(`${rep.study.name} — ${t("report")}`, "=".repeat(40));
   out.push(`${t("period")}: ${fmtDateMon(rep.from)} – ${fmtDateMon(rep.to)}`); out.push(`${t("observers")}: ${rep.observers.join(", ") || "—"}`);
   out.push(`VP: ${rep.vpPoints} ${t("points")}, ${rep.vpN} ${t("surveysN")}, ${n1(rep.vpHours)} ${t("hours")}`); out.push(`LT: ${rep.ltN} ${t("transectsN")}, ${n1(rep.ltKm)} ${t("kmTotal")}`);
-  out.push(`${t("notesN")}: ${rep.notesN}, ${t("photosN")}: ${rep.photos}`, "");
+  out.push(`${t("notesN")}: ${rep.notesN}, ${t("photosN")}: ${rep.photos}`); out.push(`${t("sentOn")}: ${rep.sentAt ? fmtDT(rep.sentAt) : "—"}`, "");
   out.push(`${t("byGroup")}:`); for (const g of rep.groups) out.push(`  ${gl(g.g)}: ${g.species} ${t("speciesN")}, ${g.total} ${t("individuals")}, n=${g.n}, ${t("meanGroup")} ${n1(g.mean)}, min ${g.min}, max ${g.max}`);
   out.push("", `${t("allSpecies")} (${rep.species.length}):`); for (const x of rep.species) out.push(`  ${speciesName(x.sp, L)} (${x.sp.L}): ${x.total} ${t("individuals")}, n=${x.n}, ${t("meanGroup")} ${n1(x.mean)}, min ${x.min}, max ${x.max}`);
   return "\uFEFF" + out.join("\n");
@@ -1176,7 +1180,7 @@ function Home() {
         const ss = Object.values(s.sessions).filter(x => x.studyId === st.id); const nvp = ss.filter(x => x.type === "VP").length, nlt = ss.length - nvp;
         return html`<button key=${st.id} class="card link" onClick=${() => nav("#/study/" + st.id)}>
           <div class="card-t">${st.name}${st.windFarm ? html`<span class="tag">WF</span>` : null}</div>
-          <div class="card-s">VP ${nvp} · LT ${nlt} · ${t("notes")} ${notesOf(st.id).length}</div>
+          <div class="card-s">VP ${nvp} · LT ${nlt} · ${t("notes")} ${notesOf(st.id).length}${ss.some(x => x.status === "closed") && !st.sentAt ? html` <span class="tag warn">${t("notSent")}</span>` : st.sentAt ? html` <span class="tag">✓ ${t("sentOn")}</span>` : null}</div>
         </button>`;
       }) : html`<${Empty}>${t("emptyStudies")}<//>`}
     </section>
@@ -1248,7 +1252,7 @@ function StudyView({ id, sub }) {
     <section class="section">
       <div class="row wrap"><${Btn} onClick=${exportZip} disabled=${busy}>${t("exportZip")}<//><${Btn} kind="secondary" onClick=${exportStudy} disabled=${busy}>${t("exportStudy")}<//><${Btn} kind="secondary" onClick=${() => shareCsv(`BRCC_${safeName(st.name)}_${todayISO()}.csv`, sess)} disabled=${busy}>${t("csvShare")}<//></div>
       <div class="hint">${t("exportZipHint")}</div>
-      <${EmailBox} study=${st.name}/>
+      <${EmailBox} study=${st.name} studyId=${id}/>
       <div class="row wrap mt"><${Btn} kind="danger" small onClick=${del}>${t("delete")}<//></div>
     </section>
     ${edit ? html`<${StudyModal} study=${st} onClose=${() => setEdit(false)}/>` : null}
@@ -1605,10 +1609,21 @@ function useRoute() {
   useEffect(() => { const f = () => { setR(parse()); window.scrollTo(0, 0); }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   return r;
 }
-function EmailBox({ study }) {
+function EmailBox({ study, studyId }) {
   const copy = async () => { try { await navigator.clipboard.writeText(DATA_EMAIL); showToast(t("copied")); } catch (e) { const ta = document.createElement("textarea"); ta.value = DATA_EMAIL; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); showToast(t("copied")); } catch (e2) { } ta.remove(); } };
   const subject = encodeURIComponent(`BRCC — ${study || "field data"}`);
-  return html`<div class="emailbox"><div class="hint">${t("dataEmailLine")}</div><div class="row wrap"><b class="email">${DATA_EMAIL}</b><${Btn} kind="ghost" small onClick=${copy}>${t("copyEmail")}<//><a class="btn ghost small" href=${`mailto:${DATA_EMAIL}?subject=${subject}`}>${t("openMail")}<//></div><div class="hint mt">${t("dataEmailPhotos")}</div></div>`;
+  const st = studyId ? getStudy(studyId) : null; const sent = st && st.sentAt;
+  const mark = () => { if (!confirmDlg(t("sentConfirm"))) return; Store.s.meta.studies = Store.s.meta.studies.map(x => x.id === studyId ? { ...x, sentAt: Date.now() } : x); saveMeta(); enqueueRow("session", { id: "study-" + studyId, study: st.name, type: "STUDY", status: "sent", end: todayISO() }); showToast(t("sentOn")); };
+  const unmark = () => { Store.s.meta.studies = Store.s.meta.studies.map(x => x.id === studyId ? { ...x, sentAt: null } : x); saveMeta(); };
+  return html`<div class=${`sendbox ${sent ? "done" : ""}`}>
+    <div class="sendhd">${sent ? `✓ ${t("sentOn")} · ${fmtDT(sent)}` : `⚠ ${t("sendTitle")}`}</div>
+    <ol class="sendlist">
+      <li>${t("dataEmailLine")} <b class="email">${DATA_EMAIL}</b></li>
+      <li>${t("dataEmailPhotos")}</li>
+    </ol>
+    <div class="row wrap"><${Btn} kind="ghost" small onClick=${copy}>${t("copyEmail")}<//><a class="btn ghost small" href=${`mailto:${DATA_EMAIL}?subject=${subject}`}>${t("openMail")}<//>
+      ${studyId ? (sent ? html`<${Btn} kind="ghost" small onClick=${unmark}>${t("unsent")}<//>` : html`<${Btn} small onClick=${mark}>${t("sentBtn")}<//>`) : null}</div>
+  </div>`;
 }
 function CodeGate() {
   const s = useStore(); const [code, setCode] = useState(""); const [busy, setBusy] = useState(false);
